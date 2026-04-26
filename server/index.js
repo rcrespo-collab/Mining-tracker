@@ -23,6 +23,6 @@ app.use('/api', docRouter);
 
 app.get('/health', (req, res) => res.json({ status: 'ok' }));
 
-app.listen(PORT, () => {
-  console.log(`Mining Tracker API running on http://localhost:${PORT}`);
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Mining Tracker API running on http://0.0.0.0:${PORT}`);
 });
