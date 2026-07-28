@@ -27,6 +27,13 @@ undefined, and every placeholder asset still to be supplied.
 
 ## Design-system decisions
 
+- **Typeface: Trebuchet MS, site-wide** (per request). Applied to all three type
+  roles — headings, body/UI and data labels — replacing the original
+  Newsreader / Inter Tight / IBM Plex Mono set. Trebuchet MS is a system font, so
+  the `@fontsource` packages were removed and no font files are bundled or
+  fetched; the "no external font request" guarantee still holds. The mono role
+  keeps its uppercase + letter-spacing treatment for data labels but is no longer
+  monospaced. Fallback stack: `'Segoe UI', Tahoma, Verdana, sans-serif`.
 - **Slate darkened for AA.** The brief's `--color-slate` `#6B7488` is 4.25:1 on
   mist (below AA 4.5:1 for normal text). Darkened to `#5D6678` (5.24:1 on mist,
   5.77:1 on paper). The brief explicitly sanctions "or darken for text use".

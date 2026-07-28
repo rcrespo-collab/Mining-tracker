@@ -1,10 +1,6 @@
 @import 'tailwindcss';
 
-/* Self-hosted variable fonts — no external CDN calls. */
-@import '@fontsource-variable/newsreader/index.css';
-@import '@fontsource-variable/inter-tight/index.css';
-@import '@fontsource/ibm-plex-mono/400.css';
-@import '@fontsource/ibm-plex-mono/500.css';
+/* Site typeface: Trebuchet MS (system font — no download, no external CDN call). */
 
 /* =========================================================================
    Design tokens — Nyawira Consulting
@@ -24,9 +20,10 @@
   --color-slate: #5d6678; /* secondary copy, captions (AA-darkened) */
   --color-hairline: #d8dee9;
 
-  --font-display: 'Newsreader Variable', Georgia, 'Times New Roman', serif;
-  --font-body: 'Inter Tight Variable', system-ui, -apple-system, sans-serif;
-  --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', monospace;
+  /* Trebuchet MS across the whole site (headings, body, and data labels). */
+  --font-display: 'Trebuchet MS', 'Segoe UI', Tahoma, Verdana, sans-serif;
+  --font-body: 'Trebuchet MS', 'Segoe UI', Tahoma, Verdana, sans-serif;
+  --font-mono: 'Trebuchet MS', 'Segoe UI', Tahoma, Verdana, sans-serif;
 
   /* Fluid type scale (clamp-based). Line-height baked per step. */
   --text-display-xl: clamp(3.25rem, 2.15rem + 4.6vw, 5rem);

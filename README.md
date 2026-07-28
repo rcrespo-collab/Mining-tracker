@@ -4,15 +4,16 @@ Production-ready bilingual (English / European Portuguese) marketing site for
 Nyawira Consulting, a boutique strategic and investment advisory firm operating
 in African markets.
 
-Static site, no CMS, no database, no client-side framework. Fonts are
-self-hosted; there are zero external network requests at runtime.
+Static site, no CMS, no database, no client-side framework. The site typeface is
+Trebuchet MS (a system font, no download); there are zero external network
+requests at runtime.
 
 ## Stack
 
 - **Astro 5** (static output) · TypeScript (strict)
 - **Tailwind CSS v4** via `@tailwindcss/vite`, design tokens in `@theme`
 - Astro native **i18n** routing (`en` default, `pt` non-prefixed default)
-- Self-hosted variable fonts via `@fontsource` (Newsreader, Inter Tight, IBM Plex Mono)
+- **Trebuchet MS** as the site typeface (system font — no download, no external font request)
 - `@astrojs/sitemap` for the multi-locale sitemap
 
 ## Getting started
