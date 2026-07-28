@@ -1,0 +1,266 @@
+---
+import type { Locale } from '../i18n/routes';
+import { ui } from '../i18n/ui';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = ui[locale].form;
+
+// Configurable endpoint; empty string → graceful mailto fallback (see script).
+const endpoint = import.meta.env.PUBLIC_FORM_ENDPOINT ?? '';
+---
+
+<form
+  class="contact-form"
+  data-contact-form
+  data-endpoint={endpoint}
+  data-mailto="info@nyawiraconsulting.com"
+  novalidate
+>
+  <div class="field">
+    <label for="cf-name">{t.name}</label>
+    <input
+      id="cf-name"
+      name="name"
+      type="text"
+      autocomplete="name"
+      required
+      aria-required="true"
+      aria-describedby="cf-name-err"
+    />
+    <span class="field-error" id="cf-name-err" data-error-for="name" aria-live="polite"></span>
+  </div>
+
+  <div class="field">
+    <label for="cf-company">{t.company}</label>
+    <input
+      id="cf-company"
+      name="company"
+      type="text"
+      autocomplete="organization"
+    />
+  </div>
+
+  <div class="field">
+    <label for="cf-email">{t.email}</label>
+    <input
+      id="cf-email"
+      name="email"
+      type="email"
+      autocomplete="email"
+      required
+      aria-required="true"
+      aria-describedby="cf-email-err"
+    />
+    <span class="field-error" id="cf-email-err" data-error-for="email" aria-live="polite"></span>
+  </div>
+
+  <div class="field">
+    <label for="cf-message">{t.message}</label>
+    <textarea
+      id="cf-message"
+      name="message"
+      rows="5"
+      required
+      aria-required="true"
+      aria-describedby="cf-message-err"
+      placeholder={t.messagePlaceholder}></textarea>
+    <span class="field-error" id="cf-message-err" data-error-for="message" aria-live="polite"></span>
+  </div>
+
+  <div class="form-foot">
+    <button type="submit" class="btn btn-primary" data-submit>{t.submit}</button>
+    <p class="form-status" data-form-status role="status" aria-live="polite"></p>
+  </div>
+
+  <!-- Localised strings for the client script. -->
+  <script
+    is:inline
+    type="application/json"
+    data-form-strings
+    set:html={JSON.stringify({
+      required: t.required,
+      invalidEmail: t.invalidEmail,
+      success: t.success,
+      error: t.error,
+      sending: t.sending,
+    })}
+  />
+</form>
+
+<style>
+  .contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    max-width: 40rem;
+  }
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+  }
+  .field label {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--color-ink);
+  }
+  .field input,
+  .field textarea {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    color: var(--color-graphite);
+    background: var(--color-paper);
+    border: 1px solid var(--color-hairline);
+    border-radius: var(--radius-btn);
+    padding: 0.75rem 0.85rem;
+    width: 100%;
+  }
+  .field textarea {
+    resize: vertical;
+    min-height: 7rem;
+  }
+  .field input:hover,
+  .field textarea:hover {
+    border-color: var(--color-slate);
+  }
+  .field input[aria-invalid='true'],
+  .field textarea[aria-invalid='true'] {
+    border-color: #b3261e;
+  }
+  .field-error {
+    color: #b3261e;
+    font-size: 0.85rem;
+    min-height: 1.1em;
+  }
+  .form-foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem 1.5rem;
+  }
+  .form-status {
+    font-size: 0.95rem;
+    margin: 0;
+  }
+  .form-status[data-state='success'] {
+    color: #0f6d3a;
+  }
+  .form-status[data-state='error'] {
+    color: #b3261e;
+  }
+</style>
+
+<script>
+  interface Strings {
+    required: string;
+    invalidEmail: string;
+    success: string;
+    error: string;
+    sending: string;
+  }
+
+  const forms = document.querySelectorAll<HTMLFormElement>('[data-contact-form]');
+  forms.forEach((form) => {
+    const stringsEl = form.querySelector('[data-form-strings]');
+    const S: Strings = stringsEl ? JSON.parse(stringsEl.textContent || '{}') : ({} as Strings);
+    const endpoint = form.getAttribute('data-endpoint') || '';
+    const mailto = form.getAttribute('data-mailto') || '';
+    const statusEl = form.querySelector<HTMLElement>('[data-form-status]');
+    const submitBtn = form.querySelector<HTMLButtonElement>('[data-submit]');
+
+    const setError = (name: string, msg: string) => {
+      const field = form.querySelector<HTMLElement>(`[data-error-for="${name}"]`);
+      const input = form.querySelector<HTMLInputElement | HTMLTextAreaElement>(`[name="${name}"]`);
+      if (field) field.textContent = msg;
+      if (input) input.setAttribute('aria-invalid', msg ? 'true' : 'false');
+    };
+
+    const validate = (): boolean => {
+      let ok = true;
+      const data = new FormData(form);
+      const name = (data.get('name') as string | null)?.trim() || '';
+      const email = (data.get('email') as string | null)?.trim() || '';
+      const message = (data.get('message') as string | null)?.trim() || '';
+
+      setError('name', name ? '' : S.required);
+      if (!name) ok = false;
+
+      if (!email) {
+        setError('email', S.required);
+        ok = false;
+      } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        setError('email', S.invalidEmail);
+        ok = false;
+      } else {
+        setError('email', '');
+      }
+
+      setError('message', message ? '' : S.required);
+      if (!message) ok = false;
+
+      return ok;
+    };
+
+    const setStatus = (msg: string, state: '' | 'success' | 'error') => {
+      if (!statusEl) return;
+      statusEl.textContent = msg;
+      if (state) statusEl.setAttribute('data-state', state);
+      else statusEl.removeAttribute('data-state');
+    };
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!validate()) {
+        // Move focus to the first invalid field for keyboard/AT users.
+        form.querySelector<HTMLElement>('[aria-invalid="true"]')?.focus();
+        return;
+      }
+
+      const data = new FormData(form);
+      const payload = {
+        name: data.get('name'),
+        company: data.get('company'),
+        email: data.get('email'),
+        message: data.get('message'),
+      };
+
+      // No endpoint configured → graceful mailto fallback.
+      if (!endpoint) {
+        const subject = encodeURIComponent(`Website enquiry — ${payload.name}`);
+        const body = encodeURIComponent(
+          `Name: ${payload.name}\nCompany: ${payload.company || '—'}\nEmail: ${payload.email}\n\n${payload.message}`,
+        );
+        window.location.href = `mailto:${mailto}?subject=${subject}&body=${body}`;
+        setStatus(S.success, 'success');
+        return;
+      }
+
+      if (submitBtn) submitBtn.disabled = true;
+      setStatus(S.sending, '');
+      try {
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        if (!res.ok) throw new Error(String(res.status));
+        form.reset();
+        setStatus(S.success, 'success');
+      } catch {
+        setStatus(S.error, 'error');
+      } finally {
+        if (submitBtn) submitBtn.disabled = false;
+      }
+    });
+
+    // Clear a field's error as the user corrects it.
+    form.querySelectorAll<HTMLInputElement>('input, textarea').forEach((input) => {
+      input.addEventListener('input', () => {
+        if (input.getAttribute('aria-invalid') === 'true') setError(input.name, '');
+      });
+    });
+  });
+</script>

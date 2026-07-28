@@ -1,0 +1,72 @@
+---
+import ServiceLayout from '../../layouts/ServiceLayout.astro';
+import CapabilityList from '../../components/CapabilityList.astro';
+import TitledBlocks from '../../components/TitledBlocks.astro';
+import ClosingCta from '../../components/ClosingCta.astro';
+import { en as c } from '../../content/en';
+import { ui } from '../../i18n/ui';
+import { routeFor } from '../../i18n/routes';
+
+const locale = 'en' as const;
+const t = ui[locale];
+const s = c.strategicAdvisory;
+---
+
+<ServiceLayout
+  locale={locale}
+  title={s.meta.title}
+  description={s.meta.description}
+  eyebrow={t.nav.whatWeDo}
+  heading={s.heading}
+  lede={s.opening}
+  serviceName={s.serviceName}
+  serviceType={s.serviceType}
+  breadcrumb={[
+    { label: t.breadcrumbHome, href: routeFor('home', locale) },
+    { label: t.nav.whatWeDo, href: routeFor('what-we-do', locale) },
+    { label: s.heading },
+  ]}
+>
+  <section class="section">
+    <div class="container">
+      <div class="split">
+        <h2 class="mono split-label">{s.capabilitiesLabel}</h2>
+        <div class="split-body">
+          <CapabilityList items={s.capabilities} locale={locale} />
+          <p class="note">{s.note}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section surface-mist">
+    <div class="container">
+      <TitledBlocks blocks={s.blocks} columns={2} />
+    </div>
+  </section>
+
+  <ClosingCta heading={s.closingHeading} ctaHref={routeFor('contact', locale)} ctaLabel={t.cta.primary} />
+</ServiceLayout>
+
+<style>
+  .split {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  .split-label {
+    color: var(--color-blue);
+    letter-spacing: 0.1em;
+  }
+  .note {
+    margin-top: 1.5rem;
+    color: var(--color-slate);
+    font-size: 0.9rem;
+  }
+  @media (min-width: 860px) {
+    .split {
+      grid-template-columns: 16rem 1fr;
+      gap: 3rem;
+    }
+  }
+</style>

@@ -1,0 +1,97 @@
+---
+import ServiceLayout from '../../../layouts/ServiceLayout.astro';
+import ClosingCta from '../../../components/ClosingCta.astro';
+import { pt as c } from '../../../content/pt';
+import { ui } from '../../../i18n/ui';
+import { routeFor } from '../../../i18n/routes';
+
+const locale = 'pt' as const;
+const t = ui[locale];
+const s = c.projectManagement;
+---
+
+<ServiceLayout
+  locale={locale}
+  title={s.meta.title}
+  description={s.meta.description}
+  eyebrow={t.nav.whatWeDo}
+  heading={s.heading}
+  lede={s.opening}
+  serviceName={s.serviceName}
+  serviceType={s.serviceType}
+  breadcrumb={[
+    { label: t.breadcrumbHome, href: routeFor('home', locale) },
+    { label: t.nav.whatWeDo, href: routeFor('what-we-do', locale) },
+    { label: s.heading },
+  ]}
+>
+  <section class="section">
+    <div class="container">
+      <div class="split">
+        <h2 class="mono split-label">{s.contentLabel}</h2>
+        <ul class="pm-list">
+          {s.content.map((item) => <li>{item}</li>)}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container-narrow">
+      <div class="empowerment surface-gradient on-dark">
+        <p class="mono empowerment-label">{s.empowermentLabel}</p>
+        <p class="empowerment-text">{s.empowerment}</p>
+      </div>
+    </div>
+  </section>
+
+  <ClosingCta heading={s.closingHeading} ctaHref={routeFor('contact', locale)} ctaLabel={t.cta.primary} />
+</ServiceLayout>
+
+<style>
+  .split {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  .split-label {
+    color: var(--color-blue);
+    letter-spacing: 0.1em;
+  }
+  .pm-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .pm-list li {
+    font-size: var(--text-body-l);
+    color: var(--color-graphite);
+    padding: 1.15rem 0;
+    border-top: 1px solid var(--color-hairline);
+    line-height: 1.5;
+  }
+  .pm-list li:last-child {
+    border-bottom: 1px solid var(--color-hairline);
+  }
+  .empowerment {
+    padding: clamp(2rem, 5vw, 3.5rem);
+  }
+  .empowerment-label {
+    color: var(--color-cyan);
+    letter-spacing: 0.1em;
+    margin-bottom: 1rem;
+  }
+  .empowerment-text {
+    font-family: var(--font-display);
+    font-size: var(--text-display-m);
+    line-height: 1.3;
+    color: var(--color-paper);
+    text-wrap: balance;
+  }
+  @media (min-width: 860px) {
+    .split {
+      grid-template-columns: 16rem 1fr;
+      gap: 3rem;
+    }
+  }
+</style>

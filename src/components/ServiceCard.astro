@@ -1,0 +1,66 @@
+---
+interface Props {
+  href: string;
+  eyebrow?: string;
+  title: string;
+  body: string;
+  cta: string;
+}
+const { href, eyebrow, title, body, cta } = Astro.props;
+---
+
+<a class="service-card" href={href}>
+  {eyebrow && <span class="mono service-eyebrow">{eyebrow}</span>}
+  <h3 class="service-title">{title}</h3>
+  <p class="service-body">{body}</p>
+  <span class="service-cta">
+    {cta}
+    <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+      <path d="M3 8h9M8 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+    </svg>
+  </span>
+</a>
+
+<style>
+  .service-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1.75rem 0;
+    text-decoration: none;
+    color: var(--color-graphite);
+    border-top: 1px solid var(--color-hairline);
+    transition: border-color 160ms var(--ease-out);
+    height: 100%;
+  }
+  .service-card:hover {
+    border-top-color: var(--color-cyan);
+    color: var(--color-graphite);
+  }
+  .service-eyebrow {
+    color: var(--color-blue);
+    letter-spacing: 0.1em;
+  }
+  .service-title {
+    font-size: var(--text-display-m);
+    line-height: 1.15;
+  }
+  .service-body {
+    color: var(--color-graphite);
+    font-size: 1rem;
+    line-height: 1.6;
+    flex: 1;
+  }
+  .service-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--color-blue);
+    font-weight: 500;
+    font-size: 0.95rem;
+    margin-top: 0.25rem;
+  }
+  .service-card:hover .service-cta {
+    color: var(--color-blue-lift);
+  }
+</style>

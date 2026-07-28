@@ -1,0 +1,71 @@
+---
+interface Block {
+  title: string;
+  body: string;
+}
+interface Props {
+  label?: string;
+  eyebrow?: string;
+  blocks: Block[];
+  columns?: 1 | 2 | 3;
+  numbered?: false;
+}
+const { label, eyebrow, blocks, columns = 2 } = Astro.props;
+---
+
+<div class="titled-blocks">
+  {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+  {label && <h2 class="tb-label">{label}</h2>}
+  <ul class:list={['tb-grid', `cols-${columns}`]}>
+    {
+      blocks.map((b) => (
+        <li class="tb-item">
+          <h3 class="tb-title">{b.title}</h3>
+          <p class="tb-body">{b.body}</p>
+        </li>
+      ))
+    }
+  </ul>
+</div>
+
+<style>
+  .tb-label {
+    font-size: var(--text-display-m);
+    margin-bottom: 2rem;
+    color: var(--color-ink);
+  }
+  .tb-grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  .tb-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--color-hairline);
+  }
+  .tb-title {
+    font-size: 1.3rem;
+    color: var(--color-ink);
+    line-height: 1.2;
+  }
+  .tb-body {
+    color: var(--color-graphite);
+    line-height: 1.6;
+  }
+  @media (min-width: 720px) {
+    .cols-2 {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2.5rem 3rem;
+    }
+    .cols-3 {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2.5rem;
+    }
+  }
+</style>

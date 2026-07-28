@@ -1,0 +1,14 @@
+---
+import SectorPage from '../../../components/SectorPage.astro';
+import { pt as c } from '../../../content/pt';
+
+const locale = 'pt' as const;
+const content = c.sectorPages['financial-services'];
+---
+
+<SectorPage
+  locale={locale}
+  content={content}
+  services={c.whatWeDo.services}
+  closingHeading={c.contact.heading}
+/>

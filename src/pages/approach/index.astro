@@ -1,0 +1,100 @@
+---
+import PageLayout from '../../layouts/PageLayout.astro';
+import TitledBlocks from '../../components/TitledBlocks.astro';
+import { en as c } from '../../content/en';
+import { ui } from '../../i18n/ui';
+import { routeFor } from '../../i18n/routes';
+
+const locale = 'en' as const;
+const t = ui[locale];
+const p = c.approach;
+---
+
+<PageLayout
+  locale={locale}
+  title={p.meta.title}
+  description={p.meta.description}
+  eyebrow={t.nav.approach}
+  heading={p.heading}
+  lede={p.opening}
+  breadcrumb={[{ label: t.breadcrumbHome, href: routeFor('home', locale) }, { label: p.heading }]}
+>
+  <section class="section">
+    <div class="container">
+      <TitledBlocks eyebrow={p.stagesLabel} blocks={p.stages} columns={2} />
+    </div>
+  </section>
+
+  <section class="section surface-ink on-dark">
+    <div class="container">
+      <p class="eyebrow">{p.processLinksLabel}</p>
+      <div class="process-links">
+        <a class="process-link" href={routeFor('sell-side', locale)}>
+          <h2 class="process-link-title">{p.sellSideTitle}</h2>
+          <p class="process-link-body">{p.sellSideBody}</p>
+          <span class="process-link-cta">
+            {t.cta.discussTransaction}
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M3 8h9M8 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </span>
+        </a>
+        <a class="process-link" href={routeFor('buy-side', locale)}>
+          <h2 class="process-link-title">{p.buySideTitle}</h2>
+          <p class="process-link-body">{p.buySideBody}</p>
+          <span class="process-link-cta">
+            {t.cta.discussTransaction}
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M3 8h9M8 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </span>
+        </a>
+      </div>
+    </div>
+  </section>
+</PageLayout>
+
+<style>
+  .process-links {
+    margin-top: 1.5rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  .process-link {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 2.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    text-decoration: none;
+    color: var(--color-paper);
+    transition: border-color 160ms var(--ease-out), background-color 160ms var(--ease-out);
+  }
+  .process-link:hover {
+    border-color: var(--color-cyan);
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--color-paper);
+  }
+  .process-link-title {
+    font-size: var(--text-display-m);
+    color: var(--color-paper);
+  }
+  .process-link-body {
+    color: rgba(255, 255, 255, 0.82);
+    line-height: 1.6;
+    flex: 1;
+  }
+  .process-link-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--color-cyan);
+    font-weight: 500;
+  }
+  @media (min-width: 760px) {
+    .process-links {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+</style>

@@ -1,0 +1,110 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import TitledBlocks from '../components/TitledBlocks.astro';
+import PullQuote from '../components/PullQuote.astro';
+import LogoRow from '../components/LogoRow.astro';
+import ClosingCta from '../components/ClosingCta.astro';
+import { en as c } from '../content/en';
+import { ui } from '../i18n/ui';
+import { routeFor } from '../i18n/routes';
+
+const locale = 'en' as const;
+const t = ui[locale];
+const a = c.about;
+---
+
+<PageLayout
+  locale={locale}
+  title={a.meta.title}
+  description={a.meta.description}
+  eyebrow={t.nav.about}
+  heading={a.heading}
+  breadcrumb={[{ label: t.breadcrumbHome, href: routeFor('home', locale) }, { label: a.heading }]}
+>
+  <section class="section">
+    <div class="container-narrow">
+      <p class="lede-lg">{a.opening}</p>
+    </div>
+  </section>
+
+  <section class="section surface-mist">
+    <div class="container mission-grid">
+      <div class="mv">
+        <h2 class="mono mv-label">{a.missionLabel}</h2>
+        <p class="mv-text">{a.mission}</p>
+      </div>
+      <div class="mv">
+        <h2 class="mono mv-label">{a.visionLabel}</h2>
+        <p class="mv-text">{a.vision}</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <TitledBlocks label={a.valuesLabel} blocks={a.values} columns={2} />
+    </div>
+  </section>
+
+  <section class="section surface-mist">
+    <div class="container">
+      <TitledBlocks label={a.apartLabel} blocks={a.apart} columns={2} />
+    </div>
+  </section>
+
+  <PullQuote quote={a.integrityQuote} attribution="Integrity" />
+
+  <section class="section">
+    <div class="container">
+      <div class="team-block">
+        <p class="eyebrow">{a.teamLabel}</p>
+        <p class="team-paragraph">{a.teamParagraph}</p>
+      </div>
+      <LogoRow caption={a.logoCaption} />
+    </div>
+  </section>
+
+  <ClosingCta heading={c.contact.heading} ctaHref={routeFor('contact', locale)} ctaLabel={t.cta.primary} />
+</PageLayout>
+
+<style>
+  .lede-lg {
+    font-family: var(--font-display);
+    font-size: var(--text-display-m);
+    line-height: 1.3;
+    color: var(--color-ink);
+    text-wrap: balance;
+  }
+  .mission-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+  .mv-label {
+    color: var(--color-blue);
+    letter-spacing: 0.1em;
+    margin-bottom: 1rem;
+  }
+  .mv-text {
+    font-size: var(--text-body-l);
+    color: var(--color-graphite);
+    line-height: 1.6;
+    max-width: 40ch;
+  }
+  .team-block {
+    max-width: 62rem;
+    margin-bottom: 3rem;
+  }
+  .team-paragraph {
+    font-size: var(--text-body-l);
+    color: var(--color-graphite);
+    margin-top: 1rem;
+    line-height: 1.65;
+  }
+  @media (min-width: 760px) {
+    .mission-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+    }
+  }
+</style>

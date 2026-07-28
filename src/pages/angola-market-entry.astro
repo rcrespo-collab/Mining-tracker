@@ -1,0 +1,29 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import Sections from '../components/Sections.astro';
+import ClosingCta from '../components/ClosingCta.astro';
+import { en as c } from '../content/en';
+import { ui } from '../i18n/ui';
+import { routeFor } from '../i18n/routes';
+
+const locale = 'en' as const;
+const t = ui[locale];
+const p = c.angolaMarketEntry;
+---
+
+<PageLayout
+  locale={locale}
+  title={p.meta.title}
+  description={p.meta.description}
+  eyebrow={t.nav.whatWeDo}
+  heading={p.heading}
+  lede={p.opening}
+  breadcrumb={[
+    { label: t.breadcrumbHome, href: routeFor('home', locale) },
+    { label: t.nav.whatWeDo, href: routeFor('what-we-do', locale) },
+    { label: p.heading },
+  ]}
+>
+  <Sections sections={p.sections} locale={locale} />
+  <ClosingCta heading={p.closingHeading} ctaHref={routeFor('contact', locale)} ctaLabel={t.cta.primary} />
+</PageLayout>
