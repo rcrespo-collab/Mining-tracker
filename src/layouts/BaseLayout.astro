@@ -1,0 +1,143 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { alternates, normalizePath, type Locale } from '../i18n/routes';
+import { ui } from '../i18n/ui';
+
+interface JsonLd {
+  [key: string]: unknown;
+}
+
+interface Props {
+  title: string;
+  description: string;
+  locale: Locale;
+  /** Additional JSON-LD blocks (Service, BreadcrumbList) for this page. */
+  schemas?: JsonLd[];
+  /** Override the og:type (default "website"). */
+  ogType?: string;
+}
+
+const { title, description, locale, schemas = [], ogType = 'website' } = Astro.props;
+const t = ui[locale];
+
+const site = Astro.site?.toString().replace(/\/$/, '') ?? 'https://www.nyawiraconsulting.com';
+const path = normalizePath(Astro.url.pathname);
+const canonical = new URL(path === '/' ? '/' : path, Astro.site ?? 'https://www.nyawiraconsulting.com').toString();
+
+// hreflang alternates from the single-source route map.
+const langAlternates = alternates(path).map(({ locale: l, path: p }) => ({
+  hreflang: l === 'pt' ? 'pt-PT' : 'en',
+  href: new URL(p, Astro.site ?? 'https://www.nyawiraconsulting.com').toString(),
+}));
+const xDefault = new URL(
+  alternates(path).find((a) => a.locale === 'en')?.path ?? '/',
+  Astro.site ?? 'https://www.nyawiraconsulting.com',
+).toString();
+
+const ogImage = `${site}/og/og-${locale}.png`;
+
+// Organization JSON-LD — present on every page.
+const organization: JsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'Nyawira Consulting',
+  url: site,
+  logo: `${site}/logos/nyawira-mark.svg`,
+  email: 'info@nyawiraconsulting.com',
+  description:
+    'Boutique strategic and investment advisory firm for public and private institutions across African markets.',
+  areaServed: 'Africa',
+  sameAs: ['[LINKEDIN_URL]'],
+};
+---
+
+<!doctype html>
+<html lang={t.htmlLang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+
+    <!-- hreflang: reciprocal pairs + x-default → EN -->
+    {langAlternates.map((a) => <link rel="alternate" hreflang={a.hreflang} href={a.href} />)}
+    <link rel="alternate" hreflang="x-default" href={xDefault} />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content="Nyawira Consulting" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:locale" content={locale === 'pt' ? 'pt_PT' : 'en'} />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(organization)} />
+    {schemas.map((s) => <script is:inline type="application/ld+json" set:html={JSON.stringify(s)} />)}
+
+    <!--
+      ANALYTICS SLOT
+      Intentionally empty. No analytics ship by default (zero external requests).
+      Drop a privacy-respecting, self-hosted snippet here if analytics is added.
+    -->
+  </head>
+  <body>
+    <a class="skip-link" href="#main">{t.skipToContent}</a>
+    <Header locale={locale} />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer locale={locale} />
+
+    <!--
+      Language preference persistence (no redirect, ever).
+      Records the visitor's explicit switcher choice for their own reference on
+      return visits. Never used to auto-redirect — per the SEO brief.
+    -->
+    <script>
+      document.addEventListener('click', (e) => {
+        const el = (e.target as HTMLElement)?.closest('[data-lang-set]');
+        if (el) {
+          try {
+            localStorage.setItem('nyawira-lang', el.getAttribute('data-lang-set') || '');
+          } catch {
+            /* storage blocked — non-fatal */
+          }
+        }
+      });
+    </script>
+
+    <!-- Scroll reveal for the process ribbon (and any [data-reveal] element). -->
+    <script>
+      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const revealables = document.querySelectorAll('[data-reveal]');
+      if (prefersReduced || !('IntersectionObserver' in window)) {
+        revealables.forEach((el) => el.classList.add('is-visible'));
+      } else {
+        const io = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+                io.unobserve(entry.target);
+              }
+            });
+          },
+          { rootMargin: '0px 0px -10% 0px', threshold: 0.15 },
+        );
+        revealables.forEach((el) => io.observe(el));
+      }
+    </script>
+  </body>
+</html>

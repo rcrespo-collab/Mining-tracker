@@ -1,0 +1,47 @@
+---
+import PageLayout, { type Crumb } from './PageLayout.astro';
+import { type Locale } from '../i18n/routes';
+
+interface Props {
+  locale: Locale;
+  title: string;
+  description: string;
+  eyebrow?: string;
+  heading: string;
+  lede?: string;
+  breadcrumb?: Crumb[];
+  /** Service schema fields */
+  serviceName: string;
+  serviceType?: string;
+}
+
+const { locale, title, description, eyebrow, heading, lede, breadcrumb = [], serviceName, serviceType } = Astro.props;
+const site = Astro.site?.toString().replace(/\/$/, '') ?? 'https://www.nyawiraconsulting.com';
+
+const serviceSchema: Record<string, unknown> = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: serviceName,
+  ...(serviceType ? { serviceType } : {}),
+  description,
+  areaServed: 'Africa',
+  provider: {
+    '@type': 'Organization',
+    name: 'Nyawira Consulting',
+    url: site,
+  },
+};
+---
+
+<PageLayout
+  locale={locale}
+  title={title}
+  description={description}
+  eyebrow={eyebrow}
+  heading={heading}
+  lede={lede}
+  breadcrumb={breadcrumb}
+  schemas={[serviceSchema]}
+>
+  <slot />
+</PageLayout>

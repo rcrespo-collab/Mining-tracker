@@ -1,0 +1,112 @@
+---
+import type { SectionBlock } from '../content/types';
+import { routeFor, type Locale } from '../i18n/routes';
+
+interface Props {
+  sections: SectionBlock[];
+  locale: Locale;
+}
+const { sections, locale } = Astro.props;
+---
+
+<div class="sections">
+  {
+    sections.map((sec, i) => (
+      <section class:list={['sec', { 'sec-alt': i % 2 === 1 }]}>
+        <div class="container">
+          <div class="sec-inner">
+            <h2 class="sec-title">{sec.title}</h2>
+            <div class="sec-body">
+              {sec.paras?.map((p) => <p class="sec-para">{p}</p>)}
+              {sec.points && (
+                <ul class="sec-points">
+                  {sec.points.map((pt) => (
+                    <li>
+                      <span class="sec-mark" aria-hidden="true" />
+                      <span>{pt}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+              {sec.linkKey && sec.linkLabel && (
+                <a class="sec-link" href={routeFor(sec.linkKey, locale)}>
+                  {sec.linkLabel}
+                  <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <path d="M3 8h9M8 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                </a>
+              )}
+            </div>
+          </div>
+        </div>
+      </section>
+    ))
+  }
+</div>
+
+<style>
+  .sec {
+    padding-block: clamp(2.5rem, 5vw, 4rem);
+    border-top: 1px solid var(--color-hairline);
+  }
+  .sec-alt {
+    background: var(--color-mist);
+  }
+  .sec-inner {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  .sec-title {
+    font-size: var(--text-display-m);
+    color: var(--color-ink);
+  }
+  .sec-para {
+    color: var(--color-graphite);
+    font-size: var(--text-body-l);
+    line-height: 1.65;
+    max-width: 60ch;
+    margin-bottom: 1rem;
+  }
+  .sec-para:last-child {
+    margin-bottom: 0;
+  }
+  .sec-points {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.85rem;
+  }
+  .sec-points li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.85rem;
+    align-items: start;
+    color: var(--color-graphite);
+    font-size: var(--text-body-l);
+    line-height: 1.5;
+  }
+  .sec-mark {
+    width: 8px;
+    height: 8px;
+    margin-top: 0.5rem;
+    background: var(--color-cyan);
+    flex-shrink: 0;
+  }
+  .sec-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 0.5rem;
+    color: var(--color-blue);
+    font-weight: 500;
+    text-decoration: none;
+  }
+  @media (min-width: 860px) {
+    .sec-inner {
+      grid-template-columns: 18rem 1fr;
+      gap: 3rem;
+    }
+  }
+</style>

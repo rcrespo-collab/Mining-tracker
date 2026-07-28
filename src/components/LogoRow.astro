@@ -1,0 +1,75 @@
+---
+import { teamLogos } from '../content/shared';
+
+interface Props {
+  caption: string;
+}
+const { caption } = Astro.props;
+
+const slug = (name: string) =>
+  name
+    .toLowerCase()
+    .replace('perella weinberg', 'perella-weinberg')
+    .replace('pjt partners', 'pjt')
+    .replace(/\s+/g, '-');
+---
+
+<div class="logo-row">
+  <span class="mono logo-caption">{caption}</span>
+  <ul class="logo-list">
+    {
+      teamLogos.map((name) => (
+        <li>
+          <img
+            src={`/logos/${slug(name)}.svg`}
+            alt={name}
+            width="140"
+            height="40"
+            loading="lazy"
+            decoding="async"
+          />
+        </li>
+      ))
+    }
+  </ul>
+</div>
+
+<style>
+  .logo-row {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  .logo-caption {
+    color: var(--color-slate);
+    letter-spacing: 0.1em;
+  }
+  .logo-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem 2rem;
+    align-items: center;
+  }
+  .logo-list img {
+    /* Monochrome — grayscale, no colour, per brief. */
+    filter: grayscale(1);
+    opacity: 0.65;
+    max-width: 100%;
+    height: auto;
+    width: auto;
+    max-height: 34px;
+  }
+  @media (min-width: 560px) {
+    .logo-list {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  @media (min-width: 900px) {
+    .logo-list {
+      grid-template-columns: repeat(6, 1fr);
+    }
+  }
+</style>

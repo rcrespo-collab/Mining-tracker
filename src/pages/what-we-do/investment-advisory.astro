@@ -1,0 +1,155 @@
+---
+import ServiceLayout from '../../layouts/ServiceLayout.astro';
+import CapabilityList from '../../components/CapabilityList.astro';
+import TitledBlocks from '../../components/TitledBlocks.astro';
+import { en as c } from '../../content/en';
+import { ui } from '../../i18n/ui';
+import { routeFor } from '../../i18n/routes';
+
+const locale = 'en' as const;
+const t = ui[locale];
+const s = c.investmentAdvisory;
+---
+
+<ServiceLayout
+  locale={locale}
+  title={s.meta.title}
+  description={s.meta.description}
+  eyebrow={t.nav.whatWeDo}
+  heading={s.heading}
+  lede={s.opening}
+  serviceName={s.serviceName}
+  serviceType={s.serviceType}
+  breadcrumb={[
+    { label: t.breadcrumbHome, href: routeFor('home', locale) },
+    { label: t.nav.whatWeDo, href: routeFor('what-we-do', locale) },
+    { label: s.heading },
+  ]}
+>
+  <section class="section">
+    <div class="container">
+      <div class="split">
+        <h2 class="mono split-label">{s.capabilitiesLabel}</h2>
+        <div class="split-body">
+          <CapabilityList items={s.capabilities} locale={locale} />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Four service areas -->
+  <section class="section surface-mist">
+    <div class="container">
+      <p class="eyebrow">{s.areasLabel}</p>
+      <ul class="areas">
+        {s.areas.map((area) => <li class="area">{area}</li>)}
+      </ul>
+    </div>
+  </section>
+
+  <!-- How we work on a transaction -->
+  <section class="section">
+    <div class="container">
+      <TitledBlocks label={s.howLabel} blocks={s.how} columns={2} />
+    </div>
+  </section>
+
+  <!-- Dual process links -->
+  <section class="section surface-ink on-dark">
+    <div class="container">
+      <p class="eyebrow">{s.processLinkLabel}</p>
+      <div class="process-links">
+        <a class="process-link" href={routeFor('sell-side', locale)}>
+          <span class="mono process-link-tag">Five phases</span>
+          <span class="process-link-title">{s.sellSideLabel}</span>
+          <svg width="20" height="20" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M3 8h9M8 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </a>
+        <a class="process-link" href={routeFor('buy-side', locale)}>
+          <span class="mono process-link-tag">Four phases</span>
+          <span class="process-link-title">{s.buySideLabel}</span>
+          <svg width="20" height="20" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M3 8h9M8 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </a>
+      </div>
+    </div>
+  </section>
+</ServiceLayout>
+
+<style>
+  .split {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  .split-label {
+    color: var(--color-blue);
+    letter-spacing: 0.1em;
+  }
+  .areas {
+    list-style: none;
+    margin: 1.5rem 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  .area {
+    font-family: var(--font-display);
+    font-size: clamp(1.3rem, 3vw, 1.75rem);
+    color: var(--color-ink);
+    padding: 1.1rem 0;
+    border-top: 1px solid var(--color-hairline);
+  }
+  .area:last-child {
+    border-bottom: 1px solid var(--color-hairline);
+  }
+  .process-links {
+    margin-top: 1.5rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+  .process-link {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.75rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    text-decoration: none;
+    color: var(--color-paper);
+    transition: border-color 160ms var(--ease-out), background-color 160ms var(--ease-out);
+  }
+  .process-link:hover {
+    border-color: var(--color-cyan);
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--color-paper);
+  }
+  .process-link-tag {
+    color: var(--color-cyan);
+    letter-spacing: 0.08em;
+  }
+  .process-link-title {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    flex: 1;
+  }
+  .process-link svg {
+    color: var(--color-cyan);
+  }
+  @media (min-width: 860px) {
+    .split {
+      grid-template-columns: 16rem 1fr;
+      gap: 3rem;
+    }
+    .areas {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0 3rem;
+    }
+    .process-links {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+</style>

@@ -1,0 +1,55 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Cta from '../components/Cta.astro';
+import { en as c } from '../content/en';
+import { ui } from '../i18n/ui';
+import { routeFor } from '../i18n/routes';
+
+const locale = 'en' as const;
+const t = ui[locale];
+const p = c.notFound;
+---
+
+<BaseLayout locale={locale} title={p.meta.title} description={p.meta.description}>
+  <section class="notfound surface-gradient on-dark">
+    <div class="container notfound-inner">
+      <p class="eyebrow">404</p>
+      <h1 class="notfound-h1">{p.heading}</h1>
+      <p class="notfound-body">{p.body}</p>
+      <div class="notfound-actions">
+        <Cta href={routeFor('what-we-do', locale)} label={t.nav.whatWeDo} variant="primary" />
+        <Cta href={routeFor('credentials', locale)} label={t.nav.credentials} variant="outline" />
+        <Cta href={routeFor('contact', locale)} label={t.cta.primary} variant="outline" />
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .notfound {
+    display: flex;
+    align-items: center;
+    min-height: 70vh;
+    padding-block: clamp(3rem, 8vw, 6rem);
+  }
+  .notfound-inner {
+    max-width: 44rem;
+  }
+  .notfound-h1 {
+    font-size: var(--text-display-l);
+    color: var(--color-paper);
+    margin-top: 1rem;
+  }
+  .notfound-body {
+    margin-top: 1.25rem;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: var(--text-body-l);
+    max-width: 40ch;
+  }
+  .notfound-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 2.5rem;
+  }
+</style>
