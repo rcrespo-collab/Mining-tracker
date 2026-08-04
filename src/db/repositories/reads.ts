@@ -144,6 +144,34 @@ export async function getRoleTally(userId: string, lastN = 10): Promise<{ role: 
   return [...tally.entries()].map(([role, count]) => ({ role, count }));
 }
 
+/**
+ * Horsemen counts over a trailing window (S-26 trends). Contempt is read from
+ * the denormalised flag; the others from the encrypted horsemen blob.
+ */
+export async function getHorsemanCounts(
+  userId: string,
+  now: Date,
+  days: number,
+): Promise<{ contempt: number; defensiveness: number; criticism: number; stonewalling: number }> {
+  const db = getDb();
+  const key = getKey();
+  const since = now.getTime() - days * 24 * 3600 * 1000;
+  const events = (await db.select().from(conflictEvent).where(eq(conflictEvent.userId, userId))).filter(
+    (ev) => ev.occurredAt.getTime() >= since,
+  );
+  const ids = new Set(events.map((ev) => ev.id));
+  const behaviours = (await db.select().from(conflictBehaviour)).filter((b) => ids.has(b.conflictId));
+  const counts = { contempt: 0, defensiveness: 0, criticism: 0, stonewalling: 0 };
+  for (const b of behaviours) {
+    if (b.contemptPresent) counts.contempt += 1;
+    const list = unpackEnumArray(decryptNullable(b.horsemen, key), e.horseman.schema);
+    if (list.includes('defensiveness')) counts.defensiveness += 1;
+    if (list.includes('criticism')) counts.criticism += 1;
+    if (list.includes('stonewalling')) counts.stonewalling += 1;
+  }
+  return counts;
+}
+
 /** Merged chronological timeline (S-21) — conflicts and positives, newest first. */
 export type TimelineItem =
   | {

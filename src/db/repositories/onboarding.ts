@@ -112,6 +112,14 @@ export async function completeOnboardingSolo(userId: string): Promise<void> {
     .where(eq(user.id, userId));
 }
 
+/** Persist the security/appearance flags shown on the You tab (S-34). */
+export async function setUserFlags(
+  userId: string,
+  flags: { pinEnabled?: boolean; discreetMode?: boolean },
+): Promise<void> {
+  await getDb().update(user).set(flags).where(eq(user.id, userId));
+}
+
 /** Decrypt a stored partner alias for display (only the user ever sees it). */
 export function decryptAlias(cipher: string | null): string | null {
   if (cipher == null) return null;

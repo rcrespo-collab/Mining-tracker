@@ -267,6 +267,11 @@ exclamation marks, no therapy-speak, no jargon.
   4 hours (240 min) so a very long cooldown cannot dominate the score.
 - **D11 Encryption library:** field-level AES-256-GCM uses the audited pure-JS
   `@noble/ciphers` (no native module, runs under Hermes and in Node tests).
+- **D16 Trigger baseline (S-24):** §7.5 needs P(flag | ordinary day); ambient
+  day-level logging is Phase 2. Phase 1 uses a conservative fixed default
+  baseline per flag so insights can surface only once the n=8/lift/occurrence
+  thresholds are also met. The S-24 caveat ("association, not proof — small
+  sample") is always shown.
 - **D15 Charts:** Phase-1 charts (S-07 breakdown, S-26 trends) are drawn with
   `react-native-svg` primitives (sparkline, bars) for reliability and zero setup;
   `victory-native` remains in the stack for richer Phase-2 charts.
