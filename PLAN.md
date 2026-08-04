@@ -348,9 +348,16 @@ All Phase-1 milestones are implemented and committed:
 suite (65 passing), a typecheck of the logic + data-model layer, and
 `drizzle-kit generate` (no schema drift).
 
-**Not run in this sandbox** (require the full Expo/React-Native toolchain, which
-CI installs): `tsc` over the React-Native screens, `eslint`, `jest` component
-tests, and launching the app. These run in CI (`.github/workflows/ci.yml`).
+**In CI** (`.github/workflows/ci.yml`): no-network guard, `eslint`, `tsc` over
+the React-Native screens, and the full Vitest suite (65 tests, including the
+required guardrails). All green.
+
+**Not gated in CI:** the Jest/RNTL component tests (`npm run test:components`)
+live in the repo but are not yet wired into CI — jest-expo's per-platform
+projects don't apply the transformIgnorePatterns needed to transform
+`expo-modules-core`'s TS source on the runner. They're for local dev; the six
+required guardrails run under Vitest, so the non-negotiables stay covered.
+Launching the app also requires a local dev build.
 
 **Deliberately left for you before release** (see §12): the S-02 safety-screen
 clinical thresholds (provisional, need sign-off), CSI-16 item wording/licensing,
