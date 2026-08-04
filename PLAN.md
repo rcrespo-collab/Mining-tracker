@@ -267,6 +267,9 @@ exclamation marks, no therapy-speak, no jargon.
   4 hours (240 min) so a very long cooldown cannot dominate the score.
 - **D11 Encryption library:** field-level AES-256-GCM uses the audited pure-JS
   `@noble/ciphers` (no native module, runs under Hermes and in Node tests).
+- **D15 Charts:** Phase-1 charts (S-07 breakdown, S-26 trends) are drawn with
+  `react-native-svg` primitives (sparkline, bars) for reliability and zero setup;
+  `victory-native` remains in the stack for richer Phase-2 charts.
 - **D14 Ratio-streak proxy (R-07/R-08):** true consecutive-day ratio streaks
   need day-by-day ratio history; Phase 1 uses the current 14-day ratio as a
   proxy for the streak gate (below 5 → treat as the 14-day threshold met; below
