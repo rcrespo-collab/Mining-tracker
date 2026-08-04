@@ -1,5 +1,5 @@
 import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core';
-import { pk, bool, enumText, enumCheck } from './_common';
+import { pk, bool, enumText, enumCheck, constraints } from './_common';
 import { user } from './user';
 import * as e from '../enums';
 
@@ -26,7 +26,7 @@ export const relationship = sqliteTable(
     inCouplesTherapy: bool('in_couples_therapy'),
     therapistShareToken: text('therapist_share_token'),
   },
-  (t) => [enumCheck('relationship_status_ck', t.status, e.relationshipStatus.values)],
+  (t) => constraints(enumCheck('relationship_status_ck', t.status, e.relationshipStatus.values)),
 );
 
 export type Relationship = typeof relationship.$inferSelect;

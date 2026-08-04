@@ -1,5 +1,5 @@
 import { sqliteTable, text, integer, real } from 'drizzle-orm/sqlite-core';
-import { bool, enumText, enumCheck } from './_common';
+import { bool, enumText, enumCheck, constraints } from './_common';
 import { conflictEvent } from './conflictEvent';
 import * as e from '../enums';
 
@@ -24,10 +24,10 @@ export const conflictSeverity = sqliteTable(
     recoveryMinutes: integer('recovery_minutes'),
     compositeSeverity: real('composite_severity'), // internal only
   },
-  (t) => [
+  (t) => constraints(
     enumCheck('conflict_severity_slope_ck', t.escalationSlope, e.escalationSlope.values),
     enumCheck('conflict_severity_personal_ck', t.personalisation, e.personalisation.values),
-  ],
+  ),
 );
 
 export type ConflictSeverity = typeof conflictSeverity.$inferSelect;

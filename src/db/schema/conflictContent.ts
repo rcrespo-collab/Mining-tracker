@@ -1,5 +1,5 @@
 import { sqliteTable, text } from 'drizzle-orm/sqlite-core';
-import { enumText, enumCheck } from './_common';
+import { enumText, enumCheck, constraints } from './_common';
 import { conflictEvent } from './conflictEvent';
 import * as e from '../enums';
 
@@ -21,10 +21,10 @@ export const conflictContent = sqliteTable(
     perpetualThemeId: text('perpetual_theme_id'),
     narrative: text('narrative'), // encrypted
   },
-  (t) => [
+  (t) => constraints(
     enumCheck('conflict_content_topic_ck', t.surfaceTopic, e.surfaceTopic.values),
     enumCheck('conflict_content_hidden_ck', t.hiddenIssue, e.hiddenIssue.values),
-  ],
+  ),
 );
 
 export type ConflictContent = typeof conflictContent.$inferSelect;

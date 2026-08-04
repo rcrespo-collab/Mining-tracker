@@ -1,5 +1,5 @@
 import { sqliteTable, text, integer, real } from 'drizzle-orm/sqlite-core';
-import { enumText, enumCheck } from './_common';
+import { enumText, enumCheck, constraints } from './_common';
 import { conflictEvent } from './conflictEvent';
 import * as e from '../enums';
 
@@ -19,11 +19,11 @@ export const conflictContext = sqliteTable(
     sleepHours: real('sleep_hours'),
     alcoholUnits: integer('alcohol_units'),
   },
-  (t) => [
+  (t) => constraints(
     enumCheck('conflict_context_setting_ck', t.setting, e.setting.values),
     enumCheck('conflict_context_privacy_ck', t.privacy, e.privacy.values),
     enumCheck('conflict_context_stress_ck', t.stressOrigin, e.stressOrigin.values),
-  ],
+  ),
 );
 
 export type ConflictContext = typeof conflictContext.$inferSelect;

@@ -21,7 +21,6 @@ import {
   type UnrepairedRupture,
 } from '../../../src/db/repositories/reads';
 import { getResumableDraft } from '../../../src/db/repositories/conflicts';
-import { ritualWeeklyCounts } from '../../../src/db/repositories/rituals';
 import { runInterventionEvaluation, type ActiveSurfacing } from '../../../src/features/interventionRunner';
 import { InterventionCard } from '../../../src/features/InterventionCard';
 import { ownRoleLabel } from '../../../src/copy/labels';
@@ -51,7 +50,6 @@ export default function Home() {
     const total = tally.reduce((s, t) => s + t.count, 0);
     const top = tally.sort((a, b) => b.count - a.count)[0];
     setPattern(top && total >= 3 ? `${ownRoleLabel[top.role]} in ${top.count} of ${total} conflicts.` : null);
-    void ritualWeeklyCounts;
     setSurfacing(await runInterventionEvaluation(userId, now));
   }, [userId]);
 

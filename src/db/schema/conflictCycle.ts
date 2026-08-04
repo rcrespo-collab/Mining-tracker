@@ -1,5 +1,5 @@
 import { sqliteTable, text } from 'drizzle-orm/sqlite-core';
-import { bool, enumText, enumCheck } from './_common';
+import { bool, enumText, enumCheck, constraints } from './_common';
 import { conflictEvent } from './conflictEvent';
 import * as e from '../enums';
 
@@ -29,14 +29,14 @@ export const conflictCycle = sqliteTable(
     attachmentNeed: enumText('attachment_need', e.attachmentNeed.values), // Share: O
     needVoiced: bool('need_voiced'),
   },
-  (t) => [
+  (t) => constraints(
     enumCheck('conflict_cycle_own_role_ck', t.ownRole, e.ownRole.values),
     enumCheck('conflict_cycle_partner_role_ck', t.partnerRole, e.partnerRole.values),
     enumCheck('conflict_cycle_type_ck', t.cycleType, e.cycleType.values),
     enumCheck('conflict_cycle_secondary_ck', t.secondaryEmotion, e.secondaryEmotion.values),
     enumCheck('conflict_cycle_primary_ck', t.primaryEmotion, e.primaryEmotion.values),
     enumCheck('conflict_cycle_need_ck', t.attachmentNeed, e.attachmentNeed.values),
-  ],
+  ),
 );
 
 export type ConflictCycle = typeof conflictCycle.$inferSelect;

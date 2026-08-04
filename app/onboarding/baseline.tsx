@@ -9,7 +9,7 @@ import { Screen, Text, Button, RadioGroup } from '../../src/components';
 import { useTheme } from '../../src/design/theme';
 import { CSI16_ITEMS, scoreCsi16 } from '../../src/lib/assessments/csi16';
 import { saveAssessment } from '../../src/db/repositories/assessments';
-import { completeOnboardingSolo, setOnboardingStage } from '../../src/db/repositories/onboarding';
+import { setOnboardingStage } from '../../src/db/repositories/onboarding';
 import { useSessionStore } from '../../src/stores/sessionStore';
 
 export default function Baseline() {

@@ -5,9 +5,9 @@
  */
 import { eq } from 'drizzle-orm';
 import { getDb } from '../client';
-import { interventionLog, conflictEvent, conflictBehaviour, conflictRepair, positiveEvent } from '../schema';
+import { interventionLog, conflictEvent, conflictBehaviour, positiveEvent } from '../schema';
 import { newId } from '../../lib/id';
-import { computeConnectionRatio, computeTriggerAssociations } from '../../lib/metrics';
+import { computeConnectionRatio } from '../../lib/metrics';
 import { getMetricsInputs, getTriggerInputs, getUnrepairedRuptures } from './reads';
 import type { InterventionKind, Vulnerability } from '../enums';
 import type { EvaluationContext, Surfacing } from '../../lib/interventions';
@@ -87,8 +87,6 @@ export async function buildEvaluationContext(
   const conflictCount = triggers.length;
   const dominantCount = Math.max(0, ...vulnCounts.values());
   const dominantVulnerabilityShare = conflictCount > 0 ? dominantCount / conflictCount : 0;
-  // Reference to keep the association helper exercised for future R-13 copy.
-  void computeTriggerAssociations;
 
   // Days since last log of any type.
   const posRows = await db.select().from(positiveEvent).where(eq(positiveEvent.userId, userId));
@@ -100,9 +98,6 @@ export async function buildEvaluationContext(
   const daysSinceLastLog = lastLog > 0 ? (now.getTime() - lastLog) / MS_PER_DAY : 0;
 
   const unrepaired = await getUnrepairedRuptures(userId, now);
-  // Only ruptures with any depth of logging count toward follow-up nudges.
-  const repairRows = await db.select().from(conflictRepair);
-  void repairRows;
 
   return {
     now,

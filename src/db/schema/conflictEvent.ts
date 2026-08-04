@@ -1,5 +1,5 @@
 import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core';
-import { pk, ts, bool, enumText, enumCheck } from './_common';
+import { pk, ts, bool, enumText, enumCheck, constraints } from './_common';
 import { user } from './user';
 import { relationship } from './relationship';
 import * as e from '../enums';
@@ -28,7 +28,7 @@ export const conflictEvent = sqliteTable(
     completedSteps: integer('completed_steps').notNull(), // 0–7
     loggedWhileFlooded: bool('logged_while_flooded').notNull(),
   },
-  (t) => [enumCheck('conflict_event_depth_ck', t.entryDepth, e.entryDepth.values)],
+  (t) => constraints(enumCheck('conflict_event_depth_ck', t.entryDepth, e.entryDepth.values)),
 );
 
 export type ConflictEvent = typeof conflictEvent.$inferSelect;

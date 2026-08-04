@@ -1,5 +1,5 @@
 import { sqliteTable, text } from 'drizzle-orm/sqlite-core';
-import { pk, ts, bool, enumText, enumCheck } from './_common';
+import { pk, ts, bool, enumText, enumCheck, constraints } from './_common';
 import * as e from '../enums';
 
 /**
@@ -23,7 +23,7 @@ export const sharedItem = sqliteTable(
     withdrawnAt: ts('withdrawn_at'),
     viewed: bool('viewed'), // not exposed to sender
   },
-  (t) => [enumCheck('shared_item_source_ck', t.sourceType, e.sharedSourceType.values)],
+  (t) => constraints(enumCheck('shared_item_source_ck', t.sourceType, e.sharedSourceType.values)),
 );
 
 export type SharedItem = typeof sharedItem.$inferSelect;

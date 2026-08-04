@@ -1,5 +1,5 @@
 import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core';
-import { pk, bool, enumText, enumCheck } from './_common';
+import { pk, bool, enumText, enumCheck, constraints } from './_common';
 import { relationship } from './relationship';
 import * as e from '../enums';
 
@@ -29,11 +29,11 @@ export const perpetualTheme = sqliteTable(
     ownCoreNeed: text('own_core_need'),
     acceptanceTrackActive: bool('acceptance_track_active'),
   },
-  (t) => [
+  (t) => constraints(
     enumCheck('perpetual_theme_hidden_ck', t.dominantHiddenIssue, e.hiddenIssue.values),
     enumCheck('perpetual_theme_class_ck', t.classification, e.perpetualClassification.values),
     enumCheck('perpetual_theme_trend_ck', t.intensityTrend, e.intensityTrend.values),
-  ],
+  ),
 );
 
 export type PerpetualTheme = typeof perpetualTheme.$inferSelect;

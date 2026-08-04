@@ -1,5 +1,5 @@
 import { sqliteTable, text, real } from 'drizzle-orm/sqlite-core';
-import { pk, ts, enumText, enumCheck } from './_common';
+import { pk, ts, enumText, enumCheck, constraints } from './_common';
 import { user } from './user';
 import * as e from '../enums';
 
@@ -24,10 +24,10 @@ export const assessmentResult = sqliteTable(
     subscales: text('subscales'), // JSON
     band: enumText('band', e.assessmentBand.values),
   },
-  (t) => [
+  (t) => constraints(
     enumCheck('assessment_instrument_ck', t.instrument, e.instrument.values),
     enumCheck('assessment_band_ck', t.band, e.assessmentBand.values),
-  ],
+  ),
 );
 
 export type AssessmentResult = typeof assessmentResult.$inferSelect;

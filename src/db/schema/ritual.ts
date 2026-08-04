@@ -1,5 +1,5 @@
 import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core';
-import { pk, ts, enumText, enumCheck } from './_common';
+import { pk, ts, enumText, enumCheck, constraints } from './_common';
 import { relationship } from './relationship';
 import * as e from '../enums';
 
@@ -17,10 +17,10 @@ export const ritualInstance = sqliteTable(
     completedBy: enumText('completed_by', e.completedBy.values),
     qualityRating: integer('quality_rating'), // 1–5
   },
-  (t) => [
+  (t) => constraints(
     enumCheck('ritual_type_ck', t.ritualType, e.ritualType.values),
     enumCheck('ritual_completed_by_ck', t.completedBy, e.completedBy.values),
-  ],
+  ),
 );
 
 export type RitualInstance = typeof ritualInstance.$inferSelect;

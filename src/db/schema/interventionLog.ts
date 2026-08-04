@@ -1,5 +1,5 @@
 import { sqliteTable, text } from 'drizzle-orm/sqlite-core';
-import { pk, ts, enumText, enumCheck } from './_common';
+import { pk, ts, enumText, enumCheck, constraints } from './_common';
 import { user } from './user';
 import * as e from '../enums';
 
@@ -23,10 +23,10 @@ export const interventionLog = sqliteTable(
     completedAt: ts('completed_at'),
     outcome: enumText('outcome', e.interventionOutcome.values),
   },
-  (t) => [
+  (t) => constraints(
     enumCheck('intervention_kind_ck', t.intervention, e.interventionKind.values),
     enumCheck('intervention_outcome_ck', t.outcome, e.interventionOutcome.values),
-  ],
+  ),
 );
 
 export type InterventionLog = typeof interventionLog.$inferSelect;

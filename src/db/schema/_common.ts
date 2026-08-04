@@ -13,6 +13,7 @@
 import { sql } from 'drizzle-orm';
 import { text, integer, type AnySQLiteColumn } from 'drizzle-orm/sqlite-core';
 import { check } from 'drizzle-orm/sqlite-core';
+import type { CheckBuilder } from 'drizzle-orm/sqlite-core';
 
 /** A UUID primary key column. */
 export const pk = () => text('id').primaryKey();
@@ -39,4 +40,13 @@ export function enumCheck(
 ) {
   const list = values.map((v) => `'${v}'`).join(', ');
   return check(name, sql.raw(`"${column.name}" IS NULL OR "${column.name}" IN (${list})`));
+}
+
+/**
+ * Collect table constraints into the object shape drizzle-orm's table-config
+ * callback expects (`Record<string, CheckBuilder>`). Keys are synthetic — the
+ * real constraint name is embedded in each `check(name, ...)`.
+ */
+export function constraints(...items: CheckBuilder[]): Record<string, CheckBuilder> {
+  return Object.fromEntries(items.map((c, i) => [`ck_${i}`, c]));
 }

@@ -1,5 +1,5 @@
 import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core';
-import { pk, ts, bool, enumText, enumCheck } from './_common';
+import { pk, ts, bool, enumText, enumCheck, constraints } from './_common';
 import * as e from '../enums';
 
 /** §6.1 `user` — one row in solo mode. */
@@ -22,12 +22,12 @@ export const user = sqliteTable(
     discreetMode: bool('discreet_mode').notNull(),
     ageConfirmed18: bool('age_confirmed_18').notNull(), // §9.5 age gate (D9)
   },
-  (t) => [
+  (t) => constraints(
     enumCheck('user_gender_ck', t.gender, e.gender.values),
     enumCheck('user_onboarding_ck', t.onboardingStage, e.onboardingStage.values),
     enumCheck('user_mode_ck', t.mode, e.userMode.values),
     enumCheck('user_safety_flag_ck', t.safetyFlag, e.safetyFlag.values),
-  ],
+  ),
 );
 
 export type User = typeof user.$inferSelect;

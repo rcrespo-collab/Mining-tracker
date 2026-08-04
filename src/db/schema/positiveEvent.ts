@@ -1,5 +1,5 @@
 import { sqliteTable, text, integer, real } from 'drizzle-orm/sqlite-core';
-import { pk, ts, bool, enumText, enumCheck } from './_common';
+import { pk, ts, bool, enumText, enumCheck, constraints } from './_common';
 import { user } from './user';
 import * as e from '../enums';
 
@@ -24,7 +24,7 @@ export const positiveEvent = sqliteTable(
     intensity: integer('intensity').notNull(), // 1–3, default 2
     weight: real('weight'), // ratio weight §7.2
   },
-  (t) => [enumCheck('positive_event_type_ck', t.type, e.positiveType.values)],
+  (t) => constraints(enumCheck('positive_event_type_ck', t.type, e.positiveType.values)),
 );
 
 export type PositiveEvent = typeof positiveEvent.$inferSelect;

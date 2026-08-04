@@ -1,5 +1,5 @@
 import { sqliteTable, text, real } from 'drizzle-orm/sqlite-core';
-import { bool, enumText, enumCheck } from './_common';
+import { bool, enumText, enumCheck, constraints } from './_common';
 import { conflictEvent } from './conflictEvent';
 import * as e from '../enums';
 
@@ -25,12 +25,12 @@ export const conflictAttribution = sqliteTable(
     attributionIndex: real('attribution_index'), // −1..+1 (stubbed null in P1)
     reappraisalCompleted: bool('reappraisal_completed'),
   },
-  (t) => [
+  (t) => constraints(
     enumCheck('conflict_attribution_locus_ck', t.locus, e.attributionLocus.values),
     enumCheck('conflict_attribution_stability_ck', t.stability, e.attributionStability.values),
     enumCheck('conflict_attribution_globality_ck', t.globality, e.attributionGlobality.values),
     enumCheck('conflict_attribution_intent_ck', t.intentionality, e.attributionIntentionality.values),
-  ],
+  ),
 );
 
 export type ConflictAttribution = typeof conflictAttribution.$inferSelect;

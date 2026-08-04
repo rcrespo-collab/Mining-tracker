@@ -1,5 +1,5 @@
 import { sqliteTable, text, real } from 'drizzle-orm/sqlite-core';
-import { ts, bool, enumText, enumCheck } from './_common';
+import { ts, bool, enumText, enumCheck, constraints } from './_common';
 import { conflictEvent } from './conflictEvent';
 import * as e from '../enums';
 
@@ -28,7 +28,7 @@ export const conflictRepair = sqliteTable(
     reconnectionRitual: text('reconnection_ritual'),
     aftermathCompleted: bool('aftermath_completed'),
   },
-  (t) => [enumCheck('conflict_repair_resolution_ck', t.resolution, e.resolution.values)],
+  (t) => constraints(enumCheck('conflict_repair_resolution_ck', t.resolution, e.resolution.values)),
 );
 
 export type ConflictRepair = typeof conflictRepair.$inferSelect;
