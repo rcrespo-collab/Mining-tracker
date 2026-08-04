@@ -262,6 +262,11 @@ exclamation marks, no therapy-speak, no jargon.
 - **D8 Quick-exit "neutral page":** an innocuous local decoy route (e.g. a plain
   notes/weather-style blank), since there's no browser to open to.
 - **D9 Age gate (§9.5):** an 18+ confirmation added to onboarding basics (S-03).
+- **D10 Severity recovery-time scale:** §7.1 gives the 0.10 weight for
+  `norm(recovery_minutes)` but no scale; the composite saturates recovery at
+  4 hours (240 min) so a very long cooldown cannot dominate the score.
+- **D11 Encryption library:** field-level AES-256-GCM uses the audited pure-JS
+  `@noble/ciphers` (no native module, runs under Hermes and in Node tests).
 
 ---
 
