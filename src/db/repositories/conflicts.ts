@@ -45,6 +45,8 @@ import type {
   Resolution,
 } from '../enums';
 
+const MS_PER_HOUR = 3600 * 1000;
+
 async function setSteps(conflictId: string, steps: number): Promise<void> {
   await getDb().update(conflictEvent).set({ completedSteps: steps }).where(eq(conflictEvent.id, conflictId));
 }
@@ -86,6 +88,18 @@ export async function saveQuickConflict(input: QuickLogInput): Promise<string> {
 }
 
 // ── Deep log (S-11…S-18) ─────────────────────────────────────────────────────
+
+/**
+ * Upgrade an existing (e.g. quick) conflict to a deep entry, carrying the
+ * flooded-override flag through. Used when the deep log continues from a quick
+ * log or the cooldown gate.
+ */
+export async function upgradeToDeep(conflictId: string, loggedWhileFlooded: boolean): Promise<void> {
+  await getDb()
+    .update(conflictEvent)
+    .set({ entryDepth: 'deep', loggedWhileFlooded })
+    .where(eq(conflictEvent.id, conflictId));
+}
 
 /** Create a resumable deep-log draft (entry to step 1). */
 export async function createDeepDraft(
@@ -348,6 +362,40 @@ export async function saveStep7(conflictId: string, input: Step7Repair): Promise
       },
     });
   await setSteps(conflictId, 7);
+}
+
+/**
+ * Light repair-status update from the follow-up screen (S-20), without walking
+ * the full step 7. Computes time-to-repair when reconnecting.
+ */
+export async function updateRepairFollowup(
+  conflictId: string,
+  input: { reconnected: boolean; resolution: Resolution | null },
+): Promise<void> {
+  const db = getDb();
+  const evt = (await db.select().from(conflictEvent).where(eq(conflictEvent.id, conflictId)).limit(1))[0];
+  const occurredAt = evt?.occurredAt ?? new Date();
+  const now = new Date();
+  const reconnectedAt = input.reconnected ? now : null;
+  const timeToRepairHours = input.reconnected ? (now.getTime() - occurredAt.getTime()) / MS_PER_HOUR : null;
+  await db
+    .insert(conflictRepair)
+    .values({
+      conflictId,
+      reconnected: input.reconnected,
+      resolution: input.resolution ?? undefined,
+      reconnectedAt,
+      timeToRepairHours,
+    })
+    .onConflictDoUpdate({
+      target: conflictRepair.conflictId,
+      set: {
+        reconnected: input.reconnected,
+        resolution: input.resolution ?? null,
+        reconnectedAt,
+        timeToRepairHours,
+      },
+    });
 }
 
 // ── Reads ────────────────────────────────────────────────────────────────────
