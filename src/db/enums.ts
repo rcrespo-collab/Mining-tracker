@@ -219,6 +219,10 @@ export const sharedSourceType = makeEnum([
 ]);
 
 // ── intervention_log (§6.16) ─────────────────────────────────────────────────
+// The base catalogue from §6.16, plus four buckets that §8 requires logging but
+// §6.16 does not enumerate (repair follow-up R-03/R-04 surfaces to S-20, trigger
+// insight R-13, re-engagement R-17, perpetual reframe R-18). Extending the enum
+// keeps intervention_log honest — see PLAN.md decision D12.
 export const interventionKind = makeEnum([
   'self_soothe',
   'softened_startup',
@@ -229,6 +233,10 @@ export const interventionKind = makeEnum([
   'contempt_alert',
   'professional_referral',
   'crisis_resources',
+  'repair_followup',
+  'trigger_insight',
+  'reengagement',
+  'perpetual_reframe',
 ]);
 export const interventionOutcome = makeEnum(['completed', 'dismissed', 'snoozed']);
 

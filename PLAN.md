@@ -267,6 +267,12 @@ exclamation marks, no therapy-speak, no jargon.
   4 hours (240 min) so a very long cooldown cannot dominate the score.
 - **D11 Encryption library:** field-level AES-256-GCM uses the audited pure-JS
   `@noble/ciphers` (no native module, runs under Hermes and in Node tests).
+- **D12 intervention_log enum extension:** §8 says "log every surfacing to
+  intervention_log," but §6.16's `intervention` enum lacks buckets for R-03/R-04
+  (repair follow-up), R-13 (trigger insight), R-17 (re-engagement), and R-18
+  (perpetual reframe). To keep the log honest I added `repair_followup`,
+  `trigger_insight`, `reengagement`, and `perpetual_reframe` to that enum. The
+  precise rule is always also stored in `trigger_rule` (e.g. "R-13").
 
 ---
 
