@@ -1,11 +1,18 @@
 {
-  "extends": "astro/tsconfigs/strict",
-  "include": [".astro/types.d.ts", "**/*.ts", "**/*.tsx", "**/*.astro"],
-  "exclude": ["dist"],
+  "extends": "expo/tsconfig.base",
   "compilerOptions": {
     "strict": true,
-    "strictNullChecks": true,
-    "verbatimModuleSyntax": true,
-    "allowJs": true
-  }
+    "noUncheckedIndexedAccess": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    }
+  },
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    ".expo/types/**/*.ts",
+    "expo-env.d.ts"
+  ],
+  "exclude": ["node_modules"]
 }

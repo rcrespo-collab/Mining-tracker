@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+
+jobs:
+  guardrails:
+    name: Guardrails & logic tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install --legacy-peer-deps
+
+      # Structural privacy guarantee: no network primitives in app source.
+      # Runs before anything else so a network call fails fast (docs/SPEC.md §11).
+      - name: No-network guard
+        run: npm run check:no-network
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      # Pure-logic + guardrail suites (metrics, rules, schema guarantee,
+      # severity containment, safety routing, no-network assertion).
+      - name: Logic & guardrail tests (Vitest)
+        run: npm run test:logic
+
+      # Component tests (React Native Testing Library under Jest).
+      - name: Component tests (Jest)
+        run: npm run test:components

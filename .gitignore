@@ -1,15 +1,34 @@
-# build output
-dist/
-.astro/
-
 # dependencies
 node_modules/
 
-# env
-.env
-.env.*
-!.env.example
+# expo
+.expo/
+dist/
+web-build/
+*.orig.*
 
-# os / editor
-.DS_Store
+# native
+ios/
+android/
+
+# metro
+.metro-health-check*
+
+# testing / coverage
+coverage/
+
+# env / secrets
+.env*.local
+.env
+
+# misc
 *.log
+.DS_Store
+npm-debug.*
+yarn-error.*
+
+# drizzle generated (kept: migrations/*.sql committed; journal cache ignored)
+drizzle/.cache/
+
+# node_modules may be a symlink in sandbox verification
+node_modules

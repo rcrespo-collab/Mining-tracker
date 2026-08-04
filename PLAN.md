@@ -8,23 +8,15 @@ code is written.
 
 ---
 
-## 0. One blocking decision I need from you first
+## 0. Repo layout — RESOLVED
 
-**Repo layout.** This repository currently holds the **Nyawira Consulting Astro
-marketing site** on both `main` and this branch. Its `package.json`, `tsconfig.json`,
-and `src/` collide directly with what an Expo app needs at the same paths. The two
-projects cannot share a repo root cleanly. Three options:
+**Decision (confirmed with owner):** the Repair app is a **fresh, standalone project
+with nothing to do with the Nyawira marketing site** that previously occupied this repo.
+It is built **at the repo root on branch `claude/repair-phase-1-mvp-zo67sg`**; the
+Nyawira marketing files are removed from this branch only. The marketing site remains
+fully intact on `main` — nothing is lost. This branch's PR is the standalone app.
 
-| Option | What happens | Trade-off |
-|---|---|---|
-| **A — Subdirectory (recommended)** | Expo app lives in `app/` (or `repair/`); the marketing site stays untouched at root. Prompt paths become `app/src/db/...` etc. | Nothing is destroyed. Slight deviation from the prompt's `src/…` paths. |
-| **B — Replace at root** | This branch removes the Astro site and puts the Expo app at the root, exactly matching the prompt's `src/…` paths. | The marketing site is gone from this branch's tree (still on `main`). Only safe if this repo is meant to become the app. |
-| **C — Fresh repo** | I don't touch this one; the app belongs in a new repository. | Cleanest separation, but outside this session's single-repo scope. |
-
-I've written the rest of this plan assuming **Option A** (`app/` subdirectory), which
-is reversible and destroys nothing. If you want B, I'll adjust every path to `src/…`
-and remove the site on this branch. **I will not delete the existing site without
-your explicit go-ahead.** Everything below is otherwise independent of this choice.
+Consequently the prompt's `src/…` paths are honoured verbatim (no subdirectory prefix).
 
 ---
 
@@ -104,10 +96,9 @@ Tests and lint run before every commit.
 
 ---
 
-## 4. File structure (Option A shown; Option B drops the `app/` prefix)
+## 4. File structure (app at repo root)
 
 ```
-app/
   app/                         # expo-router routes
     _layout.tsx                # root: PIN/biometric gate, theme, onboarding redirect
     onboarding/                # S-01…S-05
@@ -251,7 +242,8 @@ exclamation marks, no therapy-speak, no jargon.
 
 ## 11. Decisions (ambiguities resolved; will also live in-repo)
 
-- **D1 Repo layout:** Option A (`app/` subdirectory) pending your confirmation (see §0).
+- **D1 Repo layout:** RESOLVED — app at repo root on this branch; Nyawira site removed
+  from this branch, preserved on `main` (see §0).
 - **D2 Encryption:** field-level AES on sensitive columns with the key in
   `expo-secure-store`, **instead of** SQLCipher/op-sqlite. Rationale: keeps the app
   buildable on standard Expo without a custom native dev-build, and still delivers
