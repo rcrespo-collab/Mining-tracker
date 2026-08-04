@@ -1,78 +1,73 @@
-# Nyawira Consulting — website
+# Repair
 
-Production-ready bilingual (English / European Portuguese) marketing site for
-Nyawira Consulting, a boutique strategic and investment advisory firm operating
-in African markets.
+A private, offline-first mobile app that helps someone track conflict with their
+partner in a way that **shortens time-to-repair** and **grows the positive
+interaction base** — rather than accumulating a record of grievances.
 
-Static site, no CMS, no database, no client-side framework. The site typeface is
-Trebuchet MS (a system font, no download); there are zero external network
-requests at runtime.
+This repository contains **Phase 1 (MVP)** as scoped in `docs/SPEC.md` §12: solo
+mode, no backend, no accounts, no partner linking. The full product specification
+in `docs/SPEC.md` is authoritative; `PLAN.md` records the build plan and every
+decision made where the spec was ambiguous.
+
+## Why there is no backend
+
+Zero backend is a deliberate design choice. It makes the Phase 1 privacy
+guarantees **structural rather than promised**: all data lives on the device,
+encrypted at rest, and the app makes **no network calls whatsoever**. A CI check
+(`scripts/check-no-network.mjs`) fails the build if any network primitive appears
+in application source.
 
 ## Stack
 
-- **Astro 5** (static output) · TypeScript (strict)
-- **Tailwind CSS v4** via `@tailwindcss/vite`, design tokens in `@theme`
-- Astro native **i18n** routing (`en` default, `pt` non-prefixed default)
-- **Trebuchet MS** as the site typeface (system font — no download, no external font request)
-- `@astrojs/sitemap` for the multi-locale sitemap
+- **Expo (React Native) + TypeScript + expo-router** (file-based routing)
+- **expo-sqlite + Drizzle ORM** — all data local to the device
+- **expo-secure-store** for the encryption key; field-level encryption for
+  narrative, behaviour, cycle and assessment data
+- **expo-local-authentication** for the PIN/biometric gate
+- **Zustand** for UI state · **date-fns** · **react-native-svg** + **victory-native**
+- **Vitest** for logic and guardrail tests · **React Native Testing Library** (Jest)
+  for components
+- No analytics SDK. No crash-reporting SDK that transmits payloads.
+
+## The non-negotiables
+
+These are the reason the product exists (see `PLAN.md` §9 for how each is enforced):
+
+1. No partner-rating fields exist anywhere in the schema.
+2. No raw export (no share sheet, CSV, PDF, or copy-all).
+3. No severity ranking or sorting; the timeline is chronological only.
+4. The cooldown gate is a hard gate.
+5. The safety screen runs before any relationship content.
+6. Positive logging is first-class and lowest-friction.
+7. No streaks, no gamification, no guilt notifications.
 
 ## Getting started
 
 ```bash
 npm install
-npm run dev        # http://localhost:4321
-npm run build      # static build → ./dist
-npm run preview    # serve ./dist
-npm run check      # astro check (types + a11y hints)
+npm start            # Expo dev server
 ```
 
-Node 20+ required.
+## Checks
 
-## Environment variables
-
-| Var | Purpose | Default |
-|---|---|---|
-| `PUBLIC_FORM_ENDPOINT` | Contact-form POST target. If unset, the form falls back to a `mailto:` compose. | *(unset)* |
-| `PUBLIC_SITE_URL` | Canonical origin (canonical/hreflang/sitemap/OG). | `https://www.nyawiraconsulting.com` |
-
-## Project layout
-
-```
-src/
-├── components/        UI + the signature ProcessRibbon; islands: ContactForm, CredentialsFilter
-├── layouts/           BaseLayout (SEO/JSON-LD/hreflang) · PageLayout · ServiceLayout
-├── content/
-│   ├── en/index.ts    English copy (implements SiteContent)
-│   ├── pt/index.ts    Portuguese mirror (implements SiteContent)
-│   ├── shared.ts      cross-locale taxonomy + the 12 canonical credentials (bilingual)
-│   └── types.ts       SiteContent interface
-├── i18n/
-│   ├── routes.ts      single source of truth for the EN↔PT route map
-│   └── ui.ts          nav / CTA / form / footer chrome strings
-├── pages/             EN routes at root, PT routes under /pt
-└── styles/global.css  @theme tokens, type scale, base, motion
-public/
-├── logos/  og/        placeholder marks + generated OG images
-└── robots.txt, favicon.svg
+```bash
+npm run check:no-network   # fails if any network primitive appears in src/ or app/
+npm run lint
+npm run typecheck
+npm run test:logic         # Vitest: metrics, rules, and the six guardrail tests
+npm run test:components    # Jest + RNTL component tests
+npm test                   # no-network guard + logic suite
 ```
 
-## Signature element
+## Layout
 
-The **process ribbon** (`src/components/ProcessRibbon.astro`) on
-`/approach/sell-side` and `/approach/buy-side`: a rising, numbered Nyawira track
-in cyan on the navy gradient over a flat, muted "typical alternative" track, with
-the vertical gap widening across the sequence to encode the firm's argument. It
-becomes a vertical stepper below 768px. It is the only place `01/02/03` numbering
-is used.
-
-## Deployment
-
-Static output in `./dist`. Config included for **Netlify** (`netlify.toml`) and
-**Vercel** (`vercel.json`). Any static host works — point it at the build command
-`npm run build` and the `dist` directory.
-
-## Notes
-
-See [`NOTES.md`](./NOTES.md) for design/content decisions and the list of
-placeholder assets still to be supplied (address, LinkedIn, real logos, legal
-copy).
+```
+app/            expo-router routes (onboarding + 5 tabs)
+src/db/         Drizzle schema (one file per §6 table group), enums, repositories, crypto
+src/lib/        metrics/ · interventions/ · safety/ · assessments/ · notifications
+src/design/     design tokens and theme (warm, calm, WCAG AA, full dark mode)
+src/components/ shared UI primitives
+src/copy/       exact wireframe copy from the spec, centralized for clinical audit
+docs/SPEC.md    authoritative product specification
+PLAN.md         build plan and decisions
+```

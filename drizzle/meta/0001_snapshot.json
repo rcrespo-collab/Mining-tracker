@@ -1,0 +1,1543 @@
+{
+  "version": "6",
+  "dialect": "sqlite",
+  "id": "f2cb934d-c539-4d12-a750-1e0804bf92d3",
+  "prevId": "ea231cdc-f9f6-4fa5-847f-92460e5cc55e",
+  "tables": {
+    "user": {
+      "name": "user",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "display_name": {
+          "name": "display_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "dob_year": {
+          "name": "dob_year",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "gender": {
+          "name": "gender",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "locale": {
+          "name": "locale",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "timezone": {
+          "name": "timezone",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "onboarding_stage": {
+          "name": "onboarding_stage",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "mode": {
+          "name": "mode",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "safety_flag": {
+          "name": "safety_flag",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "safety_screened_at": {
+          "name": "safety_screened_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "linked_mode_eligible": {
+          "name": "linked_mode_eligible",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "pin_enabled": {
+          "name": "pin_enabled",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "discreet_mode": {
+          "name": "discreet_mode",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "age_confirmed_18": {
+          "name": "age_confirmed_18",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "user_gender_ck": {
+          "name": "user_gender_ck",
+          "value": "\"gender\" IS NULL OR \"gender\" IN ('female', 'male', 'non_binary', 'other', 'undisclosed')"
+        },
+        "user_onboarding_ck": {
+          "name": "user_onboarding_ck",
+          "value": "\"onboarding_stage\" IS NULL OR \"onboarding_stage\" IN ('welcome', 'safety', 'basics', 'baseline', 'mode', 'complete')"
+        },
+        "user_mode_ck": {
+          "name": "user_mode_ck",
+          "value": "\"mode\" IS NULL OR \"mode\" IN ('solo', 'linked')"
+        },
+        "user_safety_flag_ck": {
+          "name": "user_safety_flag_ck",
+          "value": "\"safety_flag\" IS NULL OR \"safety_flag\" IN ('clear', 'caution', 'elevated')"
+        }
+      }
+    },
+    "relationship": {
+      "name": "relationship",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "partner_alias": {
+          "name": "partner_alias",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "partner_user_id": {
+          "name": "partner_user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "status": {
+          "name": "status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "together_since": {
+          "name": "together_since",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "cohabiting": {
+          "name": "cohabiting",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "children_in_home": {
+          "name": "children_in_home",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "in_couples_therapy": {
+          "name": "in_couples_therapy",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "therapist_share_token": {
+          "name": "therapist_share_token",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "relationship_user_id_user_id_fk": {
+          "name": "relationship_user_id_user_id_fk",
+          "tableFrom": "relationship",
+          "tableTo": "user",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "relationship_status_ck": {
+          "name": "relationship_status_ck",
+          "value": "\"status\" IS NULL OR \"status\" IN ('dating', 'engaged', 'cohabiting', 'married', 'civil_union', 'separated')"
+        }
+      }
+    },
+    "conflict_event": {
+      "name": "conflict_event",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "relationship_id": {
+          "name": "relationship_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "occurred_at": {
+          "name": "occurred_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "duration_min": {
+          "name": "duration_min",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "entry_depth": {
+          "name": "entry_depth",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "completed_steps": {
+          "name": "completed_steps",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "logged_while_flooded": {
+          "name": "logged_while_flooded",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "conflict_event_user_id_user_id_fk": {
+          "name": "conflict_event_user_id_user_id_fk",
+          "tableFrom": "conflict_event",
+          "tableTo": "user",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "conflict_event_relationship_id_relationship_id_fk": {
+          "name": "conflict_event_relationship_id_relationship_id_fk",
+          "tableFrom": "conflict_event",
+          "tableTo": "relationship",
+          "columnsFrom": [
+            "relationship_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "conflict_event_depth_ck": {
+          "name": "conflict_event_depth_ck",
+          "value": "\"entry_depth\" IS NULL OR \"entry_depth\" IN ('quick', 'deep')"
+        }
+      }
+    },
+    "conflict_context": {
+      "name": "conflict_context",
+      "columns": {
+        "conflict_id": {
+          "name": "conflict_id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "setting": {
+          "name": "setting",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "privacy": {
+          "name": "privacy",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "vulnerabilities": {
+          "name": "vulnerabilities",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "stress_origin": {
+          "name": "stress_origin",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "days_since_positive": {
+          "name": "days_since_positive",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "sleep_hours": {
+          "name": "sleep_hours",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "alcohol_units": {
+          "name": "alcohol_units",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "conflict_context_conflict_id_conflict_event_id_fk": {
+          "name": "conflict_context_conflict_id_conflict_event_id_fk",
+          "tableFrom": "conflict_context",
+          "tableTo": "conflict_event",
+          "columnsFrom": [
+            "conflict_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "conflict_context_setting_ck": {
+          "name": "conflict_context_setting_ck",
+          "value": "\"setting\" IS NULL OR \"setting\" IN ('home', 'car', 'phone', 'text', 'work', 'in_public', 'travel', 'other')"
+        },
+        "conflict_context_privacy_ck": {
+          "name": "conflict_context_privacy_ck",
+          "value": "\"privacy\" IS NULL OR \"privacy\" IN ('alone', 'children_present', 'others_present', 'public')"
+        },
+        "conflict_context_stress_ck": {
+          "name": "conflict_context_stress_ck",
+          "value": "\"stress_origin\" IS NULL OR \"stress_origin\" IN ('internal', 'external_spillover', 'both', 'unclear')"
+        }
+      }
+    },
+    "conflict_content": {
+      "name": "conflict_content",
+      "columns": {
+        "conflict_id": {
+          "name": "conflict_id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "surface_topic": {
+          "name": "surface_topic",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "surface_topic_detail": {
+          "name": "surface_topic_detail",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "hidden_issue": {
+          "name": "hidden_issue",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "perpetual_theme_id": {
+          "name": "perpetual_theme_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "narrative": {
+          "name": "narrative",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "conflict_content_conflict_id_conflict_event_id_fk": {
+          "name": "conflict_content_conflict_id_conflict_event_id_fk",
+          "tableFrom": "conflict_content",
+          "tableTo": "conflict_event",
+          "columnsFrom": [
+            "conflict_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "conflict_content_topic_ck": {
+          "name": "conflict_content_topic_ck",
+          "value": "\"surface_topic\" IS NULL OR \"surface_topic\" IN ('money', 'chores_division', 'sex_intimacy', 'time_together', 'phones_screens', 'in_laws', 'parenting', 'work_hours', 'jealousy_trust', 'communication', 'plans_future', 'health_habits', 'pets', 'mess_order', 'punctuality', 'friends_social', 'alcohol', 'driving', 'other')"
+        },
+        "conflict_content_hidden_ck": {
+          "name": "conflict_content_hidden_ck",
+          "value": "\"hidden_issue\" IS NULL OR \"hidden_issue\" IN ('power_control', 'caring', 'recognition', 'commitment', 'trust_integrity', 'acceptance', 'autonomy_freedom', 'closeness_distance', 'unclear')"
+        }
+      }
+    },
+    "conflict_severity": {
+      "name": "conflict_severity",
+      "columns": {
+        "conflict_id": {
+          "name": "conflict_id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "peak_intensity": {
+          "name": "peak_intensity",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "escalation_slope": {
+          "name": "escalation_slope",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "personalisation": {
+          "name": "personalisation",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "flooding_signs": {
+          "name": "flooding_signs",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "flooded": {
+          "name": "flooded",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "recovery_minutes": {
+          "name": "recovery_minutes",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "composite_severity": {
+          "name": "composite_severity",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "conflict_severity_conflict_id_conflict_event_id_fk": {
+          "name": "conflict_severity_conflict_id_conflict_event_id_fk",
+          "tableFrom": "conflict_severity",
+          "tableTo": "conflict_event",
+          "columnsFrom": [
+            "conflict_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "conflict_severity_slope_ck": {
+          "name": "conflict_severity_slope_ck",
+          "value": "\"escalation_slope\" IS NULL OR \"escalation_slope\" IN ('slow', 'gradual', 'rapid')"
+        },
+        "conflict_severity_personal_ck": {
+          "name": "conflict_severity_personal_ck",
+          "value": "\"personalisation\" IS NULL OR \"personalisation\" IN ('issue_focused', 'drifted', 'personal')"
+        }
+      }
+    },
+    "conflict_behaviour": {
+      "name": "conflict_behaviour",
+      "columns": {
+        "conflict_id": {
+          "name": "conflict_id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "horsemen": {
+          "name": "horsemen",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "contempt_present": {
+          "name": "contempt_present",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "antidotes": {
+          "name": "antidotes",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "own_contribution": {
+          "name": "own_contribution",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "conflict_behaviour_conflict_id_conflict_event_id_fk": {
+          "name": "conflict_behaviour_conflict_id_conflict_event_id_fk",
+          "tableFrom": "conflict_behaviour",
+          "tableTo": "conflict_event",
+          "columnsFrom": [
+            "conflict_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "conflict_cycle": {
+      "name": "conflict_cycle",
+      "columns": {
+        "conflict_id": {
+          "name": "conflict_id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "own_role": {
+          "name": "own_role",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "partner_role": {
+          "name": "partner_role",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "cycle_type": {
+          "name": "cycle_type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "secondary_emotion": {
+          "name": "secondary_emotion",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "primary_emotion": {
+          "name": "primary_emotion",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "attachment_need": {
+          "name": "attachment_need",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "need_voiced": {
+          "name": "need_voiced",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "conflict_cycle_conflict_id_conflict_event_id_fk": {
+          "name": "conflict_cycle_conflict_id_conflict_event_id_fk",
+          "tableFrom": "conflict_cycle",
+          "tableTo": "conflict_event",
+          "columnsFrom": [
+            "conflict_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "conflict_cycle_own_role_ck": {
+          "name": "conflict_cycle_own_role_ck",
+          "value": "\"own_role\" IS NULL OR \"own_role\" IN ('pursue', 'withdraw', 'alternating', 'unclear')"
+        },
+        "conflict_cycle_partner_role_ck": {
+          "name": "conflict_cycle_partner_role_ck",
+          "value": "\"partner_role\" IS NULL OR \"partner_role\" IN ('pursue', 'withdraw', 'alternating', 'unclear')"
+        },
+        "conflict_cycle_type_ck": {
+          "name": "conflict_cycle_type_ck",
+          "value": "\"cycle_type\" IS NULL OR \"cycle_type\" IN ('pursue_withdraw', 'withdraw_pursue', 'attack_attack', 'withdraw_withdraw', 'mixed')"
+        },
+        "conflict_cycle_secondary_ck": {
+          "name": "conflict_cycle_secondary_ck",
+          "value": "\"secondary_emotion\" IS NULL OR \"secondary_emotion\" IN ('anger', 'irritation', 'frustration', 'coldness', 'contempt', 'indifference', 'anxiety')"
+        },
+        "conflict_cycle_primary_ck": {
+          "name": "conflict_cycle_primary_ck",
+          "value": "\"primary_emotion\" IS NULL OR \"primary_emotion\" IN ('hurt', 'fear', 'loneliness', 'shame', 'rejection', 'inadequacy', 'helplessness', 'feeling_unimportant', 'feeling_trapped')"
+        },
+        "conflict_cycle_need_ck": {
+          "name": "conflict_cycle_need_ck",
+          "value": "\"attachment_need\" IS NULL OR \"attachment_need\" IN ('are_you_there_for_me', 'do_i_matter', 'do_you_respect_me', 'can_i_trust_you', 'do_i_get_to_be_me')"
+        }
+      }
+    },
+    "conflict_attribution": {
+      "name": "conflict_attribution",
+      "columns": {
+        "conflict_id": {
+          "name": "conflict_id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "initial_attribution": {
+          "name": "initial_attribution",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "reappraisal": {
+          "name": "reappraisal",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "locus": {
+          "name": "locus",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "stability": {
+          "name": "stability",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "globality": {
+          "name": "globality",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "intentionality": {
+          "name": "intentionality",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "attribution_index": {
+          "name": "attribution_index",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "reappraisal_completed": {
+          "name": "reappraisal_completed",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "conflict_attribution_conflict_id_conflict_event_id_fk": {
+          "name": "conflict_attribution_conflict_id_conflict_event_id_fk",
+          "tableFrom": "conflict_attribution",
+          "tableTo": "conflict_event",
+          "columnsFrom": [
+            "conflict_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "conflict_attribution_locus_ck": {
+          "name": "conflict_attribution_locus_ck",
+          "value": "\"locus\" IS NULL OR \"locus\" IN ('partner', 'self', 'situation', 'both')"
+        },
+        "conflict_attribution_stability_ck": {
+          "name": "conflict_attribution_stability_ck",
+          "value": "\"stability\" IS NULL OR \"stability\" IN ('stable', 'unstable')"
+        },
+        "conflict_attribution_globality_ck": {
+          "name": "conflict_attribution_globality_ck",
+          "value": "\"globality\" IS NULL OR \"globality\" IN ('global', 'specific')"
+        },
+        "conflict_attribution_intent_ck": {
+          "name": "conflict_attribution_intent_ck",
+          "value": "\"intentionality\" IS NULL OR \"intentionality\" IN ('intentional', 'unintentional')"
+        }
+      }
+    },
+    "conflict_repair": {
+      "name": "conflict_repair",
+      "columns": {
+        "conflict_id": {
+          "name": "conflict_id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "own_repair_attempt": {
+          "name": "own_repair_attempt",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "own_repair_received": {
+          "name": "own_repair_received",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "partner_repair_attempt": {
+          "name": "partner_repair_attempt",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "partner_repair_accepted": {
+          "name": "partner_repair_accepted",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "repair_types": {
+          "name": "repair_types",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "resolution": {
+          "name": "resolution",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "reconnected": {
+          "name": "reconnected",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "reconnected_at": {
+          "name": "reconnected_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "time_to_repair_hours": {
+          "name": "time_to_repair_hours",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "reconnection_ritual": {
+          "name": "reconnection_ritual",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "aftermath_completed": {
+          "name": "aftermath_completed",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "conflict_repair_conflict_id_conflict_event_id_fk": {
+          "name": "conflict_repair_conflict_id_conflict_event_id_fk",
+          "tableFrom": "conflict_repair",
+          "tableTo": "conflict_event",
+          "columnsFrom": [
+            "conflict_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "conflict_repair_resolution_ck": {
+          "name": "conflict_repair_resolution_ck",
+          "value": "\"resolution\" IS NULL OR \"resolution\" IN ('resolved', 'de_escalated', 'parked', 'open', 'perpetual')"
+        }
+      }
+    },
+    "positive_event": {
+      "name": "positive_event",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "occurred_at": {
+          "name": "occurred_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "type": {
+          "name": "type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "note": {
+          "name": "note",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "expressed_to_partner": {
+          "name": "expressed_to_partner",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "intensity": {
+          "name": "intensity",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "weight": {
+          "name": "weight",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "positive_event_user_id_user_id_fk": {
+          "name": "positive_event_user_id_user_id_fk",
+          "tableFrom": "positive_event",
+          "tableTo": "user",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "positive_event_type_ck": {
+          "name": "positive_event_type_ck",
+          "value": "\"type\" IS NULL OR \"type\" IN ('appreciation', 'affection', 'turned_toward', 'shared_humour', 'act_of_service', 'felt_close', 'shared_meaning', 'sexual_intimacy', 'support_received', 'support_given')"
+        }
+      }
+    },
+    "perpetual_theme": {
+      "name": "perpetual_theme",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "relationship_id": {
+          "name": "relationship_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "label": {
+          "name": "label",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "dominant_hidden_issue": {
+          "name": "dominant_hidden_issue",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "conflict_count": {
+          "name": "conflict_count",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "first_seen": {
+          "name": "first_seen",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "last_seen": {
+          "name": "last_seen",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "classification": {
+          "name": "classification",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "intensity_trend": {
+          "name": "intensity_trend",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "dreams_explored": {
+          "name": "dreams_explored",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "own_dream": {
+          "name": "own_dream",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "own_core_need": {
+          "name": "own_core_need",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "acceptance_track_active": {
+          "name": "acceptance_track_active",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "perpetual_theme_relationship_id_relationship_id_fk": {
+          "name": "perpetual_theme_relationship_id_relationship_id_fk",
+          "tableFrom": "perpetual_theme",
+          "tableTo": "relationship",
+          "columnsFrom": [
+            "relationship_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "perpetual_theme_hidden_ck": {
+          "name": "perpetual_theme_hidden_ck",
+          "value": "\"dominant_hidden_issue\" IS NULL OR \"dominant_hidden_issue\" IN ('power_control', 'caring', 'recognition', 'commitment', 'trust_integrity', 'acceptance', 'autonomy_freedom', 'closeness_distance', 'unclear')"
+        },
+        "perpetual_theme_class_ck": {
+          "name": "perpetual_theme_class_ck",
+          "value": "\"classification\" IS NULL OR \"classification\" IN ('solvable', 'perpetual_dialogue', 'gridlocked')"
+        },
+        "perpetual_theme_trend_ck": {
+          "name": "perpetual_theme_trend_ck",
+          "value": "\"intensity_trend\" IS NULL OR \"intensity_trend\" IN ('rising', 'flat', 'falling')"
+        }
+      }
+    },
+    "assessment_result": {
+      "name": "assessment_result",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "instrument": {
+          "name": "instrument",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "taken_at": {
+          "name": "taken_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "raw_responses": {
+          "name": "raw_responses",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "score": {
+          "name": "score",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "subscales": {
+          "name": "subscales",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "band": {
+          "name": "band",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "assessment_result_user_id_user_id_fk": {
+          "name": "assessment_result_user_id_user_id_fk",
+          "tableFrom": "assessment_result",
+          "tableTo": "user",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "assessment_instrument_ck": {
+          "name": "assessment_instrument_ck",
+          "value": "\"instrument\" IS NULL OR \"instrument\" IN ('csi16', 'ecr_s', 'safety_screen', 'custom')"
+        },
+        "assessment_band_ck": {
+          "name": "assessment_band_ck",
+          "value": "\"band\" IS NULL OR \"band\" IN ('low', 'moderate', 'high')"
+        }
+      }
+    },
+    "ritual_instance": {
+      "name": "ritual_instance",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "relationship_id": {
+          "name": "relationship_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "ritual_type": {
+          "name": "ritual_type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "scheduled_for": {
+          "name": "scheduled_for",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "completed_at": {
+          "name": "completed_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "completed_by": {
+          "name": "completed_by",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "quality_rating": {
+          "name": "quality_rating",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "ritual_instance_relationship_id_relationship_id_fk": {
+          "name": "ritual_instance_relationship_id_relationship_id_fk",
+          "tableFrom": "ritual_instance",
+          "tableTo": "relationship",
+          "columnsFrom": [
+            "relationship_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "ritual_type_ck": {
+          "name": "ritual_type_ck",
+          "value": "\"ritual_type\" IS NULL OR \"ritual_type\" IN ('stress_reducing_conversation', 'state_of_union', 'six_second_kiss', 'departure_ritual', 'reunion_ritual', 'weekly_date', 'appreciation_daily')"
+        },
+        "ritual_completed_by_ck": {
+          "name": "ritual_completed_by_ck",
+          "value": "\"completed_by\" IS NULL OR \"completed_by\" IN ('me', 'both', 'neither')"
+        }
+      }
+    },
+    "shared_item": {
+      "name": "shared_item",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "from_user_id": {
+          "name": "from_user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "to_user_id": {
+          "name": "to_user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "source_type": {
+          "name": "source_type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "source_id": {
+          "name": "source_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "payload": {
+          "name": "payload",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "shared_at": {
+          "name": "shared_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "withdrawn_at": {
+          "name": "withdrawn_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "viewed": {
+          "name": "viewed",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "shared_item_source_ck": {
+          "name": "shared_item_source_ck",
+          "value": "\"source_type\" IS NULL OR \"source_type\" IN ('conflict_disclosure', 'cycle_map', 'positive_event', 'appreciation', 'ritual', 'dream')"
+        }
+      }
+    },
+    "intervention_log": {
+      "name": "intervention_log",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "trigger_rule": {
+          "name": "trigger_rule",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "intervention": {
+          "name": "intervention",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "surfaced_at": {
+          "name": "surfaced_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "engaged_at": {
+          "name": "engaged_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "completed_at": {
+          "name": "completed_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "outcome": {
+          "name": "outcome",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "intervention_log_user_id_user_id_fk": {
+          "name": "intervention_log_user_id_user_id_fk",
+          "tableFrom": "intervention_log",
+          "tableTo": "user",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "intervention_kind_ck": {
+          "name": "intervention_kind_ck",
+          "value": "\"intervention\" IS NULL OR \"intervention\" IN ('self_soothe', 'softened_startup', 'aftermath', 'dreams', 'acceptance_track', 'ratio_nudge', 'contempt_alert', 'professional_referral', 'crisis_resources', 'repair_followup', 'trigger_insight', 'reengagement', 'perpetual_reframe')"
+        },
+        "intervention_outcome_ck": {
+          "name": "intervention_outcome_ck",
+          "value": "\"outcome\" IS NULL OR \"outcome\" IN ('completed', 'dismissed', 'snoozed')"
+        }
+      }
+    }
+  },
+  "views": {},
+  "enums": {},
+  "_meta": {
+    "schemas": {},
+    "tables": {},
+    "columns": {}
+  },
+  "internal": {
+    "indexes": {}
+  }
+}

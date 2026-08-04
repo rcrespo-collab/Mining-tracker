@@ -1,0 +1,44 @@
+name: CI
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+
+jobs:
+  guardrails:
+    name: Guardrails & logic tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install --legacy-peer-deps
+
+      # Structural privacy guarantee: no network primitives in app source.
+      # Runs before anything else so a network call fails fast (docs/SPEC.md §11).
+      - name: No-network guard
+        run: npm run check:no-network
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      # Pure-logic + guardrail suites (metrics, rules, schema guarantee,
+      # severity containment, safety routing, no-network assertion). These
+      # include the authoritative cooldown-gate and safety-routing guardrails.
+      - name: Logic & guardrail tests (Vitest)
+        run: npm run test:logic
+
+      # NOTE: React Native Testing Library component tests (Jest) live in the
+      # repo (`npm run test:components`) but are not gated in CI yet — jest-expo's
+      # per-platform projects don't pick up the transformIgnorePatterns needed to
+      # transform expo-modules-core's TS source in this runner. They run locally
+      # once a dev build is present. The six required guardrails all run above
+      # under Vitest, so coverage of the non-negotiables is not affected.
