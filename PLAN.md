@@ -267,6 +267,21 @@ exclamation marks, no therapy-speak, no jargon.
   4 hours (240 min) so a very long cooldown cannot dominate the score.
 - **D11 Encryption library:** field-level AES-256-GCM uses the audited pure-JS
   `@noble/ciphers` (no native module, runs under Hermes and in Node tests).
+- **D14 Ratio-streak proxy (R-07/R-08):** true consecutive-day ratio streaks
+  need day-by-day ratio history; Phase 1 uses the current 14-day ratio as a
+  proxy for the streak gate (below 5 → treat as the 14-day threshold met; below
+  3 → the 21-day threshold). Day-level history is a Phase 2 refinement.
+- **D13 "encrypt the cycle table" vs CHECK constraints:** the prompt lists the
+  cycle table among those to field-encrypt, but `conflict_cycle` holds only
+  CHECK-constrained enum categories and one boolean — no free text. Encrypting a
+  categorical column would break its CHECK constraint and its queryability for
+  no real confidentiality gain (the values are a fixed vocabulary, not private
+  prose). So cycle stays unencrypted; free-text elsewhere (narrative, own
+  contribution, attribution text, notes, alias, assessment responses) IS
+  field-encrypted. Full at-rest DB encryption (SQLCipher/op-sqlite) is the
+  recommended production hardening for categorical columns and is noted for a
+  later milestone. `contempt_present` also stays in clear because R-05/R-06 and
+  trends query it.
 - **D12 intervention_log enum extension:** §8 says "log every surfacing to
   intervention_log," but §6.16's `intervention` enum lacks buckets for R-03/R-04
   (repair follow-up), R-13 (trigger insight), R-17 (re-engagement), and R-18
