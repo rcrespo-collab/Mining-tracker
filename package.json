@@ -19,6 +19,7 @@
     "db:generate": "drizzle-kit generate"
   },
   "dependencies": {
+    "@noble/ciphers": "^1.0.0",
     "date-fns": "^4.1.0",
     "drizzle-orm": "^0.36.4",
     "expo": "~52.0.0",
