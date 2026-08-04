@@ -325,3 +325,34 @@ because getting them wrong is the failure mode the whole product is built to avo
 
 **Next step:** on your go-ahead for the layout (§0) and this plan, I start Milestone 1
 (scaffold + CI guards) and commit per milestone.
+
+---
+
+## 13. Build status (Phase 1 complete)
+
+All Phase-1 milestones are implemented and committed:
+
+- Scaffold, CI guards, no-network guard ✓
+- Full §6 data model (16 tables), enums, migrations, field-level AES-256-GCM
+  encryption + secure-store keystore ✓
+- All five §7 metrics with boundary tests ✓
+- Safety scoring, cooldown gate, §8 rules engine + evaluator (rate limits) ✓
+- Design system (warm/calm, light+dark) and shared components ✓
+- Onboarding S-01…S-05; log flows S-08…S-22; Home/timeline; Patterns (S-24,
+  S-26); Tools (S-27, S-29, S-31); You (S-34, S-35) ✓
+- The six required guardrail tests (schema guarantee, no-network, severity
+  containment, cooldown gate, safety routing, metric thresholds) ✓ — plus 65
+  runnable Vitest tests total, and a Jest/RNTL component harness.
+
+**Verified in this environment:** `npm run check:no-network`, the full Vitest
+suite (65 passing), a typecheck of the logic + data-model layer, and
+`drizzle-kit generate` (no schema drift).
+
+**Not run in this sandbox** (require the full Expo/React-Native toolchain, which
+CI installs): `tsc` over the React-Native screens, `eslint`, `jest` component
+tests, and launching the app. These run in CI (`.github/workflows/ci.yml`).
+
+**Deliberately left for you before release** (see §12): the S-02 safety-screen
+clinical thresholds (provisional, need sign-off), CSI-16 item wording/licensing,
+and the S-35 crisis hotline numbers (clearly-marked placeholders). These are the
+three places where a plausible guess would be a real harm.
