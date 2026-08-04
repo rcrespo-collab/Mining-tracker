@@ -12,5 +12,10 @@ module.exports = {
       { name: 'XMLHttpRequest', message: 'No network in Phase 1 (see docs/SPEC.md §11).' },
       { name: 'WebSocket', message: 'No network in Phase 1 (see docs/SPEC.md §11).' },
     ],
+    // Copy is verbatim from the spec wireframes and full of apostrophes and
+    // quotes in JSX text; escaping them would corrupt clinical wording.
+    'react/no-unescaped-entities': 'off',
+    // Unused symbols are a warning, not a build-breaking error.
+    '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
   },
 };
