@@ -240,7 +240,7 @@ export default function DeepLog() {
         <View style={{ gap: theme.spacing.xs }}>
           {topic ? <Text role="body">About: {surfaceTopicLabel[topic].toLowerCase()}</Text> : null}
           {hidden ? (
-            <Text role="body">Really about: {hiddenIssueLabel[hidden].split(' —')[0].toLowerCase()}</Text>
+            <Text role="body">Really about: {(hiddenIssueLabel[hidden].split(' —')[0] ?? '').toLowerCase()}</Text>
           ) : null}
           {ownRole ? <Text role="body" color="textMuted">{ownRoleLabel[ownRole]}</Text> : null}
           {primary ? (

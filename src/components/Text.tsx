@@ -10,7 +10,9 @@ import type { TypeRole } from '../design/tokens';
 
 type ColorRole = 'text' | 'textMuted' | 'textFaint' | 'accentText' | 'onAccent' | 'quickExit';
 
-export interface TextProps extends RNTextProps {
+// Omit React Native's ARIA `role` prop, which would collide with our
+// typographic `role` (display/title/body/…).
+export interface TextProps extends Omit<RNTextProps, 'role'> {
   role?: TypeRole;
   color?: ColorRole;
   center?: boolean;
