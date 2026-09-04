@@ -68,12 +68,33 @@ export const routes: RoutePair[] = [
 
 const LOCALES: Locale[] = ['en', 'pt'];
 
-/** Normalise a pathname: strip trailing slash except for roots. */
-export function normalizePath(path: string): string {
-  if (path === '/' || path === '/pt/' || path === '/pt') {
-    return path === '/pt' ? '/pt/' : path;
+// Deployment base path (Vite injects the `base` config, always trailing-slashed:
+// '/' at the root, or e.g. '/Mining-tracker/' on GitHub project pages).
+const RAW_BASE = import.meta.env.BASE_URL || '/';
+const BASE = RAW_BASE.replace(/\/$/, ''); // '' at root, '/Mining-tracker' otherwise
+
+/** Prefix a logical route/asset path (leading-slashed) with the deployment base. */
+export function withBase(p: string): string {
+  if (p === '/') return BASE + '/'; // '/' at root, '/Mining-tracker/' otherwise
+  return BASE + p;
+}
+
+/** Remove the deployment base from an incoming pathname, if present. */
+function stripBase(p: string): string {
+  if (BASE && p.startsWith(BASE)) {
+    const rest = p.slice(BASE.length);
+    return rest === '' ? '/' : rest;
   }
-  return path.replace(/\/+$/, '');
+  return p;
+}
+
+/** Normalise a pathname: strip the base, then the trailing slash except roots. */
+export function normalizePath(path: string): string {
+  const stripped = stripBase(path);
+  if (stripped === '/' || stripped === '/pt/' || stripped === '/pt') {
+    return stripped === '/pt' ? '/pt/' : stripped;
+  }
+  return stripped.replace(/\/+$/, '');
 }
 
 /** Detect the locale of a pathname. */
@@ -90,18 +111,18 @@ export function findRoute(path: string): RoutePair | undefined {
   );
 }
 
-/** Resolve the URL for a page key in a given locale. */
+/** Resolve the (base-prefixed) URL for a page key in a given locale. */
 export function routeFor(key: string, locale: Locale): string {
   const r = routes.find((route) => route.key === key);
-  return r ? r[locale] : locale === 'pt' ? '/pt/' : '/';
+  return withBase(r ? r[locale] : locale === 'pt' ? '/pt/' : '/');
 }
 
-/** Given a pathname, return the equivalent path in the target locale. */
+/** Given a pathname, return the equivalent (base-prefixed) path in the target locale. */
 export function alternatePath(path: string, target: Locale): string {
   const r = findRoute(path);
-  if (r) return r[target];
+  if (r) return withBase(r[target]);
   // Fallback: home of the target locale.
-  return target === 'pt' ? '/pt/' : '/';
+  return withBase(target === 'pt' ? '/pt/' : '/');
 }
 
 /** All locale alternates for a path, for hreflang generation. */

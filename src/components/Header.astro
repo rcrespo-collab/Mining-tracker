@@ -1,5 +1,5 @@
 ---
-import { routeFor, normalizePath, type Locale } from '../i18n/routes';
+import { routeFor, normalizePath, withBase, type Locale } from '../i18n/routes';
 import { ui } from '../i18n/ui';
 import LanguageSwitcher from './LanguageSwitcher.astro';
 
@@ -31,7 +31,7 @@ function isActive(href: string): boolean {
 <header class="site-header" data-header>
   <div class="container header-inner">
     <a href={homeHref} class="brand" aria-label="Nyawira Consulting — home">
-      <img src="/logos/nyawira-mark.svg" width="26" height="26" alt="" class="brand-mark" />
+      <img src={withBase('/logos/nyawira-mark.svg')} width="26" height="26" alt="" class="brand-mark" />
       <span class="brand-name">Nyawira</span>
     </a>
 
