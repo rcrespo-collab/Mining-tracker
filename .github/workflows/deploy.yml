@@ -30,6 +30,9 @@ jobs:
       - name: Configure Pages
         id: pages
         uses: actions/configure-pages@v5
+        with:
+          # Enable GitHub Pages automatically on first run (needs pages: write).
+          enablement: true
 
       - name: Setup Node
         uses: actions/setup-node@v4
