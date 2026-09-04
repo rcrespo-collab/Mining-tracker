@@ -67,9 +67,21 @@ is used.
 
 ## Deployment
 
-Static output in `./dist`. Config included for **Netlify** (`netlify.toml`) and
-**Vercel** (`vercel.json`). Any static host works — point it at the build command
-`npm run build` and the `dist` directory.
+Static output in `./dist`. Config included for **Netlify** (`netlify.toml`),
+**Vercel** (`vercel.json`), and **GitHub Pages** (`.github/workflows/deploy.yml`).
+Any static host works — point it at the build command `npm run build` and the
+`dist` directory.
+
+### GitHub Pages
+
+A workflow builds and publishes to Pages on every push to `main`. To enable it
+once: repo **Settings → Pages → Build and deployment → Source: GitHub Actions**.
+The site is served from a sub-path, so the workflow builds with `BASE_PATH` set
+to the repo's Pages base path (derived automatically via `actions/configure-pages`)
+and `PUBLIC_SITE_URL` set to the Pages origin. `BASE_PATH` is honoured
+conditionally by `astro.config.mjs` and the route/asset helpers, so root-domain
+hosts (Netlify/Vercel) and local dev are unaffected. Published URL:
+`https://<owner>.github.io/Mining-tracker/`.
 
 ## Notes
 

@@ -1,5 +1,6 @@
 ---
 import { teamLogos } from '../content/shared';
+import { withBase } from '../i18n/routes';
 
 interface Props {
   caption: string;
@@ -21,7 +22,7 @@ const slug = (name: string) =>
       teamLogos.map((name) => (
         <li>
           <img
-            src={`/logos/${slug(name)}.svg`}
+            src={withBase(`/logos/${slug(name)}.svg`)}
             alt={name}
             width="140"
             height="40"
