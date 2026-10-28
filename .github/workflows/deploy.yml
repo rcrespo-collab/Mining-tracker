@@ -1,9 +1,9 @@
 name: Deploy to GitHub Pages
 
 # Builds the Astro site and publishes it to GitHub Pages on every push to main.
-# The site is served from a sub-path (https://<owner>.github.io/Mining-tracker/),
-# so BASE_PATH is set for this build only — root-domain hosts (Netlify/Vercel)
-# and local dev are unaffected.
+# Served at the root of the custom domain www.nyawiraconsulting.com (see
+# public/CNAME), so the build runs at the root path with the production site URL
+# — no BASE_PATH. (BASE_PATH stays supported in astro.config for sub-path hosts.)
 
 on:
   push:
@@ -27,13 +27,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Configure Pages
-        id: pages
-        uses: actions/configure-pages@v5
-        with:
-          # Enable GitHub Pages automatically on first run (needs pages: write).
-          enablement: true
-
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
@@ -45,8 +38,8 @@ jobs:
 
       - name: Build
         env:
-          BASE_PATH: ${{ steps.pages.outputs.base_path }}
-          PUBLIC_SITE_URL: ${{ steps.pages.outputs.origin }}
+          # Root-served on the custom domain; canonical/sitemap/OG use this origin.
+          PUBLIC_SITE_URL: https://www.nyawiraconsulting.com
         run: npm run build
 
       - name: Upload artifact
