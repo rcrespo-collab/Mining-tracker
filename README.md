@@ -74,14 +74,21 @@ Any static host works — point it at the build command `npm run build` and the
 
 ### GitHub Pages
 
-A workflow builds and publishes to Pages on every push to `main`. To enable it
-once: repo **Settings → Pages → Build and deployment → Source: GitHub Actions**.
-The site is served from a sub-path, so the workflow builds with `BASE_PATH` set
-to the repo's Pages base path (derived automatically via `actions/configure-pages`)
-and `PUBLIC_SITE_URL` set to the Pages origin. `BASE_PATH` is honoured
-conditionally by `astro.config.mjs` and the route/asset helpers, so root-domain
-hosts (Netlify/Vercel) and local dev are unaffected. Published URL:
-`https://<owner>.github.io/Mining-tracker/`.
+A workflow builds and publishes to Pages on every push to `main`. The site is
+served at the root of the custom domain **www.nyawiraconsulting.com**
+(`public/CNAME`), so the Pages build runs at the root path with
+`PUBLIC_SITE_URL=https://www.nyawiraconsulting.com`.
+
+To go live:
+1. Repo **Settings → Pages → Build and deployment → Source: GitHub Actions**.
+2. DNS at the domain provider: `www` → `CNAME` → `<owner>.github.io`; apex
+   `nyawiraconsulting.com` → GitHub Pages `A` records
+   (185.199.108–111.153). Leave `MX`/email records untouched.
+3. After DNS resolves, tick **Enforce HTTPS** in Settings → Pages.
+
+`astro.config.mjs` still supports an optional `BASE_PATH` for sub-path hosting
+(e.g. a project page at `/<repo>/`); it's unset here because the custom domain
+serves at the root.
 
 ## Notes
 
