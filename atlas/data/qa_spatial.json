@@ -66,66 +66,6 @@
    "method": "Intersection of the no-data patches of the two independently masked slide-5 images (single-image edge artefacts discarded)",
    "result": "1 consistent gap(s): 27,202 km2 centred 19.2E 8.3S. The magnetic image shows data there, so the magnetic grid may merge a different survey – confirm with flight-line database.",
    "status": "completed"
-  },
-  {
-   "check": "Spatial join of every candidate",
-   "method": "Point-in-polygon against Natural Earth provinces, digitised domains, PLANAGEO regions, airborne gap; straight-line distance (Africa Albers) to approximate rail polylines and ports; digitised slide-9 symbols within 25 km",
-   "result": "19 candidates joined; access distances are proxies, not route lengths",
-   "status": "completed"
-  },
-  {
-   "check": "Stated vs computed province for each candidate",
-   "method": "Compare authored province text with point-in-polygon result",
-   "result": "all consistent",
-   "status": "completed"
-  },
-  {
-   "check": "Do the digitised Ni+Co+Cu+Cr occurrences fall in the 'Cunene Complex' domain (D3)?",
-   "method": "Point-in-polygon, 0.05° tolerance",
-   "result": "6 of 7 digitised Ni-Co-Cu-Cr symbol clusters inside D3 – supports G01 as a two-family coincidence (F-OCC on F-AIR)",
-   "status": "completed"
-  },
-  {
-   "check": "Occurrence support inside the 'Copper Belt' domain (D1)",
-   "method": "Count digitised slide-9 symbols inside D1",
-   "result": "8 symbol clusters, all within ~1.5° of the northern (Cazombo) edge or the Namibia border; none in the Kalahari-covered core – the core is interpretation only (G03 deferred)",
-   "status": "completed"
-  },
-  {
-   "check": "How much of D1 lies in the unfinished PLANAGEO Leste region",
-   "method": "Area intersection (Africa Albers)",
-   "result": "51% of Domain 1",
-   "status": "completed"
-  },
-  {
-   "check": "Spatial join of every candidate",
-   "method": "Point-in-polygon against Natural Earth provinces, digitised domains, PLANAGEO regions, airborne gap; straight-line distance (Africa Albers) to approximate rail polylines and ports; digitised slide-9 symbols within 25 km",
-   "result": "19 candidates joined; access distances are proxies, not route lengths",
-   "status": "completed"
-  },
-  {
-   "check": "Stated vs computed province for each candidate",
-   "method": "Compare authored province text with point-in-polygon result",
-   "result": "all consistent",
-   "status": "completed"
-  },
-  {
-   "check": "Do the digitised Ni+Co+Cu+Cr occurrences fall in the 'Cunene Complex' domain (D3)?",
-   "method": "Point-in-polygon, 0.05° tolerance",
-   "result": "6 of 7 digitised Ni-Co-Cu-Cr symbol clusters inside D3 – supports G01 as a two-family coincidence (F-OCC on F-AIR)",
-   "status": "completed"
-  },
-  {
-   "check": "Occurrence support inside the 'Copper Belt' domain (D1)",
-   "method": "Count digitised slide-9 symbols inside D1",
-   "result": "8 symbol clusters, all within ~1.5° of the northern (Cazombo) edge or the Namibia border; none in the Kalahari-covered core – the core is interpretation only (G03 deferred)",
-   "status": "completed"
-  },
-  {
-   "check": "How much of D1 lies in the unfinished PLANAGEO Leste region",
-   "method": "Area intersection (Africa Albers)",
-   "result": "51% of Domain 1",
-   "status": "completed"
   }
  ]
 }

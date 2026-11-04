@@ -310,6 +310,8 @@ REQUESTS = [
  dict(id="R10", pri=3, what="Mavoio-Tetelo, Kassinga and Kassala-Kitungo resource/feasibility documents and drill databases", whom="Shining Star Icarus; Tosyali; Capital Mining; MIREMPET", fmt="Reports", unlocks="Credibility of S1 production claims", decision="E08, E10, E11", for_=["E08","E10","E11"]),
  dict(id="R11", pri=3, what="Protected-area boundaries (official) and water-bore logs for SE Angola", whom="MINAMB / INBAC; water authority", fmt="Vector", unlocks="Accessibility axis in SE; cover depth", decision="G03", for_=["G03"]),
  dict(id="R12", pri=3, what="2024 administrative division (21 provinces) boundaries", whom="INE / Ministry of Territorial Administration", fmt="Vector", unlocks="Correct province search after the 2024 reform", decision="Search", for_=[]),
+ dict(id="R14", pri=3, what="Chiri drill-collar table with phases, depths and kimberlite intercepts (the slide-13 plan is too small to digitise)", whom="Rio Tinto / Endiama", fmt="CSV + report", unlocks="Diamond project diligence (out of critical-minerals scope)", decision="E12", for_=["E12"]),
+ dict(id="R15", pri=2, what="S2's own GeoPackage (Angola_Mineral_Zones_Projects.gpkg) and Excel workbook", whom="Author of the Portfolio study", fmt="GPKG + XLSX", unlocks="Replaces the layers re-extracted from S2 images with the original vectors", decision="All Namibe/Huíla and S2 project cards", for_=["E01","E06","G02","G07"]),
  dict(id="R13", pri=2, what="Alto Zambeze grab-sample chain of custody: who collected, where (GPS), lab submission forms", whom="Sofricangol", fmt="Field sheets", unlocks="Whether the 25–26% Cu grabs are site samples", decision="E05 field visit go/no-go", for_=["E05"]),
 ]
 
@@ -330,6 +332,8 @@ VERIFY = [
  dict(id="V13", conclusion="Titles are valid and held by the stated parties", test="Certified cadastral extracts (R05)", who="Angolan counsel", status="required", result=""),
  dict(id="V14", conclusion="Greenfield targets are not artefacts of interpretation", test="Withheld-control test: hide 20% of occurrence-register points, rebuild domain/prospectivity ranking from geophysics only, and check that withheld points fall in high-ranked cells more than chance (ROC / success-rate curve)", who="Independent data scientist with R01 + R02", status="required", result=""),
  dict(id="V15", conclusion="Metallurgy supports the proposed products (MREC, spodumene concentrate, Cu cathode, Nb product)", test="Bench-scale tests on representative composites", who="Accredited metallurgical lab", status="required", result=""),
+ dict(id="V17", conclusion="Interactive layers reproduce the source maps they replace", test="Every extraction was drawn back onto its source image and inspected (zone maps Z1–Z9, Chipindo, Map 1, slide 8, slide 18); counts compared with numbers printed in the sources (75 Namibe sites; 21 km² Longonjo licence; '>2,500' and '>300' occurrences)", who="This build", status="completed", result="See QA log: Namibe sites, Longonjo licence area and occurrence counts reconcile within the stated limits; grey/black legend classes and slide 7 not extracted"),
+ dict(id="V18", conclusion="Vector layers can replace the source rasters for decisions", test="Obtain the native vectors (IGEO occurrence register, PLANAGEO geology, S2 GeoPackage, title coordinates) and measure point offsets and polygon overlap against the extracted layers", who="Independent GIS analyst with R01, R03, R05", status="required", result=""),
  dict(id="V16", conclusion="Digitised domain outlines match the source", test="Second operator re-digitises slide 6 blind; compare areas (tolerance ±10%)", who="Independent GIS analyst", status="required", result=""),
 ]
 
@@ -415,3 +419,27 @@ PM = {
  "Namibe": "D D L D D L L L L _ L D D", "Uíge": "M D M D L D _ _ L _ _ _ L", "Zaire": "H D M _ _ M L L D _ L _ L",
 }
 PROVINCE_MATRIX = {k: dict(zip(PM_COLS, v.split())) for k, v in PM.items()}
+
+# Each source map -> the interactive layers that replace it (layer ids used by the page) and a view box [w, s, e, n].
+# Figures not listed here are photographs or schematics without coordinates.
+FIG_LAYER = {
+ "mir_p02": (["occ8"], [11.5, -18.2, 24.2, -4.3]),
+ "mir_p04": (["planageo"], [11.5, -18.2, 24.2, -4.3]),
+ "mir_p05_6": (["grid:mag"], [11.5, -18.2, 24.2, -4.3]),
+ "mir_p05_5": (["grid:dem"], [11.5, -18.2, 24.2, -4.3]),
+ "mir_p05_4": (["grid:rad"], [11.5, -18.2, 24.2, -4.3]),
+ "mir_p06": (["domains"], [11.5, -18.2, 24.2, -4.3]),
+ "mir_p08": (["occ8"], [11.5, -18.2, 24.2, -4.3]),
+ "mir_p09": (["occ9"], [11.5, -18.2, 24.2, -4.3]),
+ "mir_p11": (["infra"], [11.5, -18.2, 24.2, -4.3]),
+ "mir_p16_4": (["infra"], [11.9, -5.75, 12.9, -4.9]),
+ "mir_p17_7": (["inset:longonjo"], None),
+ "mir_p18_8": (["lithium"], [12.3, -15.32, 12.62, -15.08]),
+ "mir_p20_4": (["infra"], [11.95, -15.35, 12.6, -14.95]),
+ "s2_p26": (["grid:th_ute4", "s2areas"], [13.15, -15.05, 14.05, -13.3]),
+ "s2_p27": (["chipindo"], [15.48, -14.05, 15.85, -13.68]),
+ "s2_p17": (["geology", "s2areas", "namocc"], [12.36, -14.75, 12.58, -14.58]),
+ "s2_p18": (["geology", "s2areas", "namocc"], [12.30, -14.55, 12.6, -14.25]),
+ "s2_p22": (["geology", "s2areas", "namocc"], [12.1, -15.05, 12.75, -13.9]),
+ "s2_p23": (["geology", "s2areas", "namocc"], [12.4, -15.03, 12.57, -14.82]),
+}

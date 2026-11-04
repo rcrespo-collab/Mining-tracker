@@ -8,7 +8,9 @@ R03,2,"Metallogenic map of Angola 1:1,000,000 and the six-province definitions a
 R06,2,"Bonga: pilot-mining assays, any drill logs, Nb2O5/P2O5/REE analyses with method (fusion), mineralogy (pyrochlore?), licence",NioBonga; MIREMPET for licence,Assay tables + certificates,E03,Whether Bonga is a target or a project,E03
 R07,2,"Longonjo Ore Reserve/Resource report, JORC Table 1, metallurgical test-work, reconciliation of S1 production figures",Pensana plc / Ozango Minerals,Public reports + data room,E02,Transaction diligence,E02
 R13,2,"Alto Zambeze grab-sample chain of custody: who collected, where (GPS), lab submission forms",Sofricangol,Field sheets,E05 field visit go/no-go,Whether the 25–26% Cu grabs are site samples,E05
+R15,2,S2's own GeoPackage (Angola_Mineral_Zones_Projects.gpkg) and Excel workbook,Author of the Portfolio study,GPKG + XLSX,All Namibe/Huíla and S2 project cards,Replaces the layers re-extracted from S2 images with the original vectors,E01 E06 G02 G07
 R08,3,"Cácata resource statement, DFS, product specs (P2O5, Cd, U), permits; plant naming",Minbos Resources,ASX releases + data room,E09,E09 reconciliation,E09
 R10,3,"Mavoio-Tetelo, Kassinga and Kassala-Kitungo resource/feasibility documents and drill databases",Shining Star Icarus; Tosyali; Capital Mining; MIREMPET,Reports,"E08, E10, E11",Credibility of S1 production claims,E08 E10 E11
 R11,3,Protected-area boundaries (official) and water-bore logs for SE Angola,MINAMB / INBAC; water authority,Vector,G03,Accessibility axis in SE; cover depth,G03
 R12,3,2024 administrative division (21 provinces) boundaries,INE / Ministry of Territorial Administration,Vector,Search,Correct province search after the 2024 reform,
+R14,3,"Chiri drill-collar table with phases, depths and kimberlite intercepts (the slide-13 plan is too small to digitise)",Rio Tinto / Endiama,CSV + report,E12,Diamond project diligence (out of critical-minerals scope),E12

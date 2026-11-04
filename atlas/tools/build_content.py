@@ -82,19 +82,30 @@ QA['checks'].append({"check": "How much of D1 lies in the unfinished PLANAGEO Le
 
 json.dump({"type": "FeatureCollection", "features": feats}, open(os.path.join(DATA, 'candidates.geojson'), 'w'))
 
-# S2 areas & zones
+# S2 areas & zones: prefer geometry extracted from S2 Map 1 and the zone maps (vectorise.py); fall back to hand traces
 s2f = []
+ext = {f['properties']['id']: f for f in L('vec_s2_project_areas.geojson')['features']}
 for pid, nm, crs, pts, prec in C.S2_AREAS:
+    if pid in ext:
+        f = ext[pid]; f['properties'].update(name=f"{pid} {nm}", kind="S2 project area", src="S2"); s2f.append(f); continue
     if crs == 'utm': pts = [utm2ll.transform(*p) for p in pts]
-    s2f.append({"type": "Feature", "properties": {"id": pid, "name": nm, "kind": "S2 project area", "precision": prec, "src": "S2"}, "geometry": mapping(Polygon(pts))})
+    s2f.append({"type": "Feature", "properties": {"id": pid, "name": f"{pid} {nm}", "kind": "S2 project area", "precision": prec + " (hand trace – not extractable from Map 1)", "src": "S2"}, "geometry": mapping(Polygon(pts))})
+zext = {f['properties']['id']: f for f in L('vec_namibe_zones.geojson')['features']}
+ZC = {z[0]: z for z in C.S2_ZONES}
 for zid, nm, comm, geom in C.S2_ZONES:
+    if zid in zext:
+        f = zext[zid]; f['properties'].update(name=f"{zid} {nm}", kind="S2 zone", commodities=comm); s2f.append(f); continue
+    _, a_ = geom.split(':') if isinstance(geom, str) else (None, None)
     if isinstance(geom, str):
-        _, a = geom.split(':'); lo, la, r = map(float, a.split(','))
+        lo, la, r = map(float, a_.split(','))
         g = Polygon([(lo + r / 111 / math.cos(math.radians(la)) * math.cos(t / 36 * 2 * math.pi), la + r / 111 * math.sin(t / 36 * 2 * math.pi)) for t in range(36)])
     else:
         g = Polygon(geom)
-    s2f.append({"type": "Feature", "properties": {"id": zid, "name": f"{zid} {nm}", "kind": "S2 zone", "commodities": comm, "precision": "hand-traced from S2 zone maps ±1 km", "src": "S2"}, "geometry": mapping(g)})
+    s2f.append({"type": "Feature", "properties": {"id": zid, "name": f"{zid} {nm}", "kind": "S2 zone", "commodities": comm, "precision": "radius as stated in S2 (Z10 3.5 km; Z11 approximated)" if isinstance(geom, str) else "hand trace ±1 km", "src": "S2"}, "geometry": mapping(g)})
+if 'Z9' in zext:
+    f = zext['Z9']; f['properties'].update(name="Z9 Coastal strip (Salinas – Bentiaba – Mucuio)", kind="S2 zone", commodities=["salt", "Fe", "magnetite"]); s2f.append(f)
 json.dump({"type": "FeatureCollection", "features": s2f}, open(os.path.join(DATA, 's2_areas.geojson'), 'w'))
+QA['checks'].extend(L('qa_vectorise.json'))
 
 # figures
 s2doc = pymupdf.open(S2PDF)
@@ -113,9 +124,9 @@ for f in C.FIGS:
     else: im.convert('RGB').save(out, quality=86, optimize=True)
 
 atlas = dict(as_of=C.AS_OF, sources=C.SOURCES, families=C.FAMILIES, claims=C.CLAIMS, tax={k: list(v) for k, v in C.TAX.items()},
-             candidates=C.CANDIDATES, requests=C.REQUESTS, verify=C.VERIFY, figs=C.FIGS, qa=QA['checks'], overlays=L('overlays.json'), rails=RAIL, ports=PORTS, province_matrix=C.PROVINCE_MATRIX, pm_cols=C.PM_COLS)
+             candidates=C.CANDIDATES, requests=C.REQUESTS, verify=C.VERIFY, figs=C.FIGS, fig_layer=C.FIG_LAYER, insets=L('insets.json'), qa=QA['checks'], overlays=L('overlays.json'), rails=RAIL, ports=PORTS, province_matrix=C.PROVINCE_MATRIX, pm_cols=C.PM_COLS)
 json.dump(atlas, open(os.path.join(DATA, 'atlas.json'), 'w'), ensure_ascii=False, indent=0)
-json.dump(QA, open(os.path.join(DATA, 'qa_spatial.json'), 'w'), indent=1, ensure_ascii=False)
+json.dump(QA, open(os.path.join(DATA, 'qa_all.json'), 'w'), indent=1, ensure_ascii=False)
 
 # ---------------- registers (CSV + Markdown)
 os.makedirs(os.path.join(ROOT, 'registers'), exist_ok=True)

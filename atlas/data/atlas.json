@@ -2652,6 +2652,33 @@
 "for_": []
 },
 {
+"id": "R14",
+"pri": 3,
+"what": "Chiri drill-collar table with phases, depths and kimberlite intercepts (the slide-13 plan is too small to digitise)",
+"whom": "Rio Tinto / Endiama",
+"fmt": "CSV + report",
+"unlocks": "Diamond project diligence (out of critical-minerals scope)",
+"decision": "E12",
+"for_": [
+"E12"
+]
+},
+{
+"id": "R15",
+"pri": 2,
+"what": "S2's own GeoPackage (Angola_Mineral_Zones_Projects.gpkg) and Excel workbook",
+"whom": "Author of the Portfolio study",
+"fmt": "GPKG + XLSX",
+"unlocks": "Replaces the layers re-extracted from S2 images with the original vectors",
+"decision": "All Namibe/Huíla and S2 project cards",
+"for_": [
+"E01",
+"E06",
+"G02",
+"G07"
+]
+},
+{
 "id": "R13",
 "pri": 2,
 "what": "Alto Zambeze grab-sample chain of custody: who collected, where (GPS), lab submission forms",
@@ -2782,6 +2809,22 @@
 "conclusion": "Metallurgy supports the proposed products (MREC, spodumene concentrate, Cu cathode, Nb product)",
 "test": "Bench-scale tests on representative composites",
 "who": "Accredited metallurgical lab",
+"status": "required",
+"result": ""
+},
+{
+"id": "V17",
+"conclusion": "Interactive layers reproduce the source maps they replace",
+"test": "Every extraction was drawn back onto its source image and inspected (zone maps Z1–Z9, Chipindo, Map 1, slide 8, slide 18); counts compared with numbers printed in the sources (75 Namibe sites; 21 km² Longonjo licence; '>2,500' and '>300' occurrences)",
+"who": "This build",
+"status": "completed",
+"result": "See QA log: Namibe sites, Longonjo licence area and occurrence counts reconcile within the stated limits; grey/black legend classes and slide 7 not extracted"
+},
+{
+"id": "V18",
+"conclusion": "Vector layers can replace the source rasters for decisions",
+"test": "Obtain the native vectors (IGEO occurrence register, PLANAGEO geology, S2 GeoPackage, title coordinates) and measure point offsets and polygon overlap against the extracted layers",
+"who": "Independent GIS analyst with R01, R03, R05",
 "status": "required",
 "result": ""
 },
@@ -3052,6 +3095,578 @@
 "ev": "occurrence"
 }
 ],
+"fig_layer": {
+"mir_p02": [
+[
+"occ8"
+],
+[
+11.5,
+-18.2,
+24.2,
+-4.3
+]
+],
+"mir_p04": [
+[
+"planageo"
+],
+[
+11.5,
+-18.2,
+24.2,
+-4.3
+]
+],
+"mir_p05_6": [
+[
+"grid:mag"
+],
+[
+11.5,
+-18.2,
+24.2,
+-4.3
+]
+],
+"mir_p05_5": [
+[
+"grid:dem"
+],
+[
+11.5,
+-18.2,
+24.2,
+-4.3
+]
+],
+"mir_p05_4": [
+[
+"grid:rad"
+],
+[
+11.5,
+-18.2,
+24.2,
+-4.3
+]
+],
+"mir_p06": [
+[
+"domains"
+],
+[
+11.5,
+-18.2,
+24.2,
+-4.3
+]
+],
+"mir_p08": [
+[
+"occ8"
+],
+[
+11.5,
+-18.2,
+24.2,
+-4.3
+]
+],
+"mir_p09": [
+[
+"occ9"
+],
+[
+11.5,
+-18.2,
+24.2,
+-4.3
+]
+],
+"mir_p11": [
+[
+"infra"
+],
+[
+11.5,
+-18.2,
+24.2,
+-4.3
+]
+],
+"mir_p16_4": [
+[
+"infra"
+],
+[
+11.9,
+-5.75,
+12.9,
+-4.9
+]
+],
+"mir_p17_7": [
+[
+"inset:longonjo"
+],
+null
+],
+"mir_p18_8": [
+[
+"lithium"
+],
+[
+12.3,
+-15.32,
+12.62,
+-15.08
+]
+],
+"mir_p20_4": [
+[
+"infra"
+],
+[
+11.95,
+-15.35,
+12.6,
+-14.95
+]
+],
+"s2_p26": [
+[
+"grid:th_ute4",
+"s2areas"
+],
+[
+13.15,
+-15.05,
+14.05,
+-13.3
+]
+],
+"s2_p27": [
+[
+"chipindo"
+],
+[
+15.48,
+-14.05,
+15.85,
+-13.68
+]
+],
+"s2_p17": [
+[
+"geology",
+"s2areas",
+"namocc"
+],
+[
+12.36,
+-14.75,
+12.58,
+-14.58
+]
+],
+"s2_p18": [
+[
+"geology",
+"s2areas",
+"namocc"
+],
+[
+12.3,
+-14.55,
+12.6,
+-14.25
+]
+],
+"s2_p22": [
+[
+"geology",
+"s2areas",
+"namocc"
+],
+[
+12.1,
+-15.05,
+12.75,
+-13.9
+]
+],
+"s2_p23": [
+[
+"geology",
+"s2areas",
+"namocc"
+],
+[
+12.4,
+-15.03,
+12.57,
+-14.82
+]
+]
+},
+"insets": {
+"longonjo": {
+"title": "Longonjo site plan (MIREMPET slide 17)",
+"src": "S1",
+"page": 17,
+"units": "km, from the plan's 0–2 km scale bar (±0.1 km)",
+"note": "Not georeferenced: the plan has a scale bar and north arrow but no coordinates. Licence outline as digitised = 21.6 km² vs 21 km² printed – a consistency check on the scale.",
+"w": 10.34,
+"h": 7.46,
+"features": [
+{
+"name": "Mining licence (21 km² printed on plan)",
+"kind": "polygon",
+"cls": "licence",
+"xy": [
+[
+2.85,
+5.61
+],
+[
+5.25,
+5.61
+],
+[
+6.35,
+4.51
+],
+[
+6.4,
+3.51
+],
+[
+8.5,
+1.66
+],
+[
+8.1,
+1.11
+],
+[
+4.7,
+0.36
+],
+[
+3.3,
+1.16
+],
+[
+2.2,
+2.31
+],
+[
+2.45,
+4.81
+]
+]
+},
+{
+"name": "Carbonatite (outline)",
+"kind": "polygon",
+"cls": "carbonatite",
+"xy": [
+[
+3.0,
+4.76
+],
+[
+4.0,
+5.16
+],
+[
+5.4,
+4.86
+],
+[
+6.1,
+4.26
+],
+[
+6.2,
+3.46
+],
+[
+6.0,
+2.66
+],
+[
+5.2,
+2.36
+],
+[
+4.0,
+2.46
+],
+[
+3.2,
+3.16
+],
+[
+2.9,
+4.06
+]
+]
+},
+{
+"name": "Open pit (design outline)",
+"kind": "polygon",
+"cls": "pit",
+"xy": [
+[
+4.64,
+4.16
+],
+[
+5.0,
+4.16
+],
+[
+5.1,
+3.66
+],
+[
+5.44,
+3.26
+],
+[
+5.6,
+2.76
+],
+[
+5.2,
+2.56
+],
+[
+4.7,
+2.76
+],
+[
+4.7,
+3.26
+]
+]
+},
+{
+"name": "Process plant (building A)",
+"kind": "polygon",
+"cls": "plant",
+"xy": [
+[
+6.14,
+2.82
+],
+[
+6.5,
+3.22
+],
+[
+6.68,
+3.12
+],
+[
+6.32,
+2.62
+]
+]
+},
+{
+"name": "Process plant (building B)",
+"kind": "polygon",
+"cls": "plant",
+"xy": [
+[
+5.74,
+2.16
+],
+[
+5.9,
+2.52
+],
+[
+6.0,
+2.48
+],
+[
+5.84,
+1.96
+]
+]
+},
+{
+"name": "Process plant (building C)",
+"kind": "polygon",
+"cls": "plant",
+"xy": [
+[
+5.42,
+2.18
+],
+[
+5.6,
+2.18
+],
+[
+5.6,
+2.0
+],
+[
+5.42,
+2.0
+]
+]
+},
+{
+"name": "Tailings storage facility (TSF)",
+"kind": "polygon",
+"cls": "tsf",
+"xy": [
+[
+6.0,
+1.86
+],
+[
+6.6,
+2.36
+],
+[
+7.3,
+2.26
+],
+[
+7.34,
+1.46
+],
+[
+6.9,
+1.06
+],
+[
+6.2,
+1.16
+]
+]
+},
+{
+"name": "Unlabelled hatched feature (likely waste dump)",
+"kind": "polygon",
+"cls": "dump",
+"xy": [
+[
+4.0,
+2.26
+],
+[
+4.9,
+2.3
+],
+[
+4.96,
+1.96
+],
+[
+4.5,
+1.7
+],
+[
+4.1,
+1.76
+]
+]
+},
+{
+"name": "Solar hybrid power plant",
+"kind": "polygon",
+"cls": "solar",
+"xy": [
+[
+9.8,
+4.42
+],
+[
+10.14,
+4.26
+],
+[
+10.04,
+4.12
+],
+[
+9.7,
+4.26
+]
+]
+},
+{
+"name": "Benguela Railway Line",
+"kind": "line",
+"cls": "rail",
+"xy": [
+[
+0.2,
+6.06
+],
+[
+2.0,
+6.52
+],
+[
+3.5,
+7.12
+],
+[
+5.9,
+7.08
+],
+[
+6.5,
+6.62
+],
+[
+8.0,
+5.72
+],
+[
+9.3,
+4.76
+],
+[
+10.3,
+4.16
+]
+]
+},
+{
+"name": "Rail siding",
+"kind": "point",
+"cls": "siding",
+"xy": [
+[
+8.0,
+5.66
+]
+]
+},
+{
+"name": "Longonjo town (label)",
+"kind": "point",
+"cls": "town",
+"xy": [
+[
+7.5,
+5.12
+]
+]
+}
+]
+}
+},
 "qa": [
 {
 "check": "National outline includes Cabinda exclave",
@@ -3150,33 +3765,225 @@
 "status": "completed"
 },
 {
-"check": "Spatial join of every candidate",
-"method": "Point-in-polygon against Natural Earth provinces, digitised domains, PLANAGEO regions, airborne gap; straight-line distance (Africa Albers) to approximate rail polylines and ports; digitised slide-9 symbols within 25 km",
-"result": "19 candidates joined; access distances are proxies, not route lengths",
+"check": "Georeference S2 p.17 zone map Z4",
+"method": "Axis tick labels read by OCR (RapidOCR) or by eye, least-squares linear fit per axis",
+"result": "4+7 OCR-read ticks, RMS x 0.010 km, y 0.005 km, pixel 25 m",
 "status": "completed"
 },
 {
-"check": "Stated vs computed province for each candidate",
-"method": "Compare authored province text with point-in-polygon result",
-"result": "all consistent",
+"check": "Vectorise zone map Z4",
+"method": "Legend-colour segmentation, symbol-shape filters, connected components, GDAL polygonize; result drawn back on the source image and inspected (tools/vectorise.py)",
+"result": "1 boundary ring(s); 5 geology units; 8 occurrence symbols; legend colours read for 15 entries",
 "status": "completed"
 },
 {
-"check": "Do the digitised Ni+Co+Cu+Cr occurrences fall in the 'Cunene Complex' domain (D3)?",
-"method": "Point-in-polygon, 0.05° tolerance",
-"result": "6 of 7 digitised Ni-Co-Cu-Cr symbol clusters inside D3 – supports G01 as a two-family coincidence (F-OCC on F-AIR)",
+"check": "Georeference S2 p.18 zone map Z1",
+"method": "Axis tick labels read by OCR (RapidOCR) or by eye, least-squares linear fit per axis",
+"result": "5+5 OCR-read ticks, RMS x 0.004 km, y 0.014 km, pixel 33 m",
 "status": "completed"
 },
 {
-"check": "Occurrence support inside the 'Copper Belt' domain (D1)",
-"method": "Count digitised slide-9 symbols inside D1",
-"result": "8 symbol clusters, all within ~1.5° of the northern (Cazombo) edge or the Namibia border; none in the Kalahari-covered core – the core is interpretation only (G03 deferred)",
+"check": "Vectorise zone map Z1",
+"method": "Legend-colour segmentation, symbol-shape filters, connected components, GDAL polygonize; result drawn back on the source image and inspected (tools/vectorise.py)",
+"result": "1 boundary ring(s); 5 geology units; 11 occurrence symbols; legend colours read for 15 entries",
 "status": "completed"
 },
 {
-"check": "How much of D1 lies in the unfinished PLANAGEO Leste region",
-"method": "Area intersection (Africa Albers)",
-"result": "51% of Domain 1",
+"check": "Georeference S2 p.19 zone map Z7",
+"method": "Axis tick labels read by OCR (RapidOCR) or by eye, least-squares linear fit per axis",
+"result": "4+6 OCR-read ticks, RMS x 0.013 km, y 0.050 km, pixel 58 m",
+"status": "completed"
+},
+{
+"check": "Vectorise zone map Z7",
+"method": "Legend-colour segmentation, symbol-shape filters, connected components, GDAL polygonize; result drawn back on the source image and inspected (tools/vectorise.py)",
+"result": "1 boundary ring(s); 3 geology units; 12 occurrence symbols; legend colours read for 13 entries",
+"status": "completed"
+},
+{
+"check": "Georeference S2 p.20 zone map Z3",
+"method": "Axis tick labels read by OCR (RapidOCR) or by eye, least-squares linear fit per axis",
+"result": "8+8 OCR-read ticks, RMS x 0.007 km, y 0.007 km, pixel 18 m",
+"status": "completed"
+},
+{
+"check": "Vectorise zone map Z3",
+"method": "Legend-colour segmentation, symbol-shape filters, connected components, GDAL polygonize; result drawn back on the source image and inspected (tools/vectorise.py)",
+"result": "1 boundary ring(s); 5 geology units; 4 occurrence symbols; legend colours read for 15 entries",
+"status": "completed"
+},
+{
+"check": "Georeference S2 p.21 zone map Z8",
+"method": "Axis tick labels read by OCR (RapidOCR) or by eye, least-squares linear fit per axis",
+"result": "7+7 OCR-read ticks, RMS x 0.002 km, y 0.010 km, pixel 18 m",
+"status": "completed"
+},
+{
+"check": "Vectorise zone map Z8",
+"method": "Legend-colour segmentation, symbol-shape filters, connected components, GDAL polygonize; result drawn back on the source image and inspected (tools/vectorise.py)",
+"result": "1 boundary ring(s); 6 geology units; 2 occurrence symbols; legend colours read for 14 entries",
+"status": "completed"
+},
+{
+"check": "Georeference S2 p.22 zone map Z9",
+"method": "Axis tick labels read by OCR (RapidOCR) or by eye, least-squares linear fit per axis",
+"result": "8+6 OCR-read ticks, RMS x 0.047 km, y 0.060 km, pixel 134 m",
+"status": "completed"
+},
+{
+"check": "Vectorise zone map Z9",
+"method": "Legend-colour segmentation, symbol-shape filters, connected components, GDAL polygonize; result drawn back on the source image and inspected (tools/vectorise.py)",
+"result": "9 boundary ring(s); 6 geology units; 4 occurrence symbols; legend colours read for 22 entries",
+"status": "completed"
+},
+{
+"check": "Georeference S2 p.23 zone map Z5",
+"method": "Axis tick labels read by OCR (RapidOCR) or by eye, least-squares linear fit per axis",
+"result": "7+4 OCR-read ticks, RMS x 0.005 km, y 0.005 km, pixel 24 m",
+"status": "completed"
+},
+{
+"check": "Vectorise zone map Z5",
+"method": "Legend-colour segmentation, symbol-shape filters, connected components, GDAL polygonize; result drawn back on the source image and inspected (tools/vectorise.py)",
+"result": "1 boundary ring(s); 4 geology units; 7 occurrence symbols; legend colours read for 13 entries",
+"status": "completed"
+},
+{
+"check": "Georeference S2 p.24 zone map Z2",
+"method": "Axis tick labels read by OCR (RapidOCR) or by eye, least-squares linear fit per axis",
+"result": "8+6 OCR-read ticks, RMS x 0.008 km, y 0.004 km, pixel 18 m",
+"status": "completed"
+},
+{
+"check": "Vectorise zone map Z2",
+"method": "Legend-colour segmentation, symbol-shape filters, connected components, GDAL polygonize; result drawn back on the source image and inspected (tools/vectorise.py)",
+"result": "1 boundary ring(s); 5 geology units; 3 occurrence symbols; legend colours read for 14 entries",
+"status": "completed"
+},
+{
+"check": "Georeference S2 p.25 zone map Z6",
+"method": "Axis tick labels read by OCR (RapidOCR) or by eye, least-squares linear fit per axis",
+"result": "8+7 OCR-read ticks, RMS x 0.009 km, y 0.014 km, pixel 24 m",
+"status": "completed"
+},
+{
+"check": "Vectorise zone map Z6",
+"method": "Legend-colour segmentation, symbol-shape filters, connected components, GDAL polygonize; result drawn back on the source image and inspected (tools/vectorise.py)",
+"result": "1 boundary ring(s); 4 geology units; 3 occurrence symbols; legend colours read for 11 entries",
+"status": "completed"
+},
+{
+"check": "Zone areas: extracted vs stated in S2",
+"method": "Legend-colour segmentation, symbol-shape filters, connected components, GDAL polygonize; result drawn back on the source image and inspected (tools/vectorise.py)",
+"result": "Z4 141/139 km²; Z1 367/362 km²; Z7 314/399 km²; Z3 61/60 km²; Z8 33/32 km²; Z9 174/211 km²; Z5 148/146 km²; Z2 100/98 km²; Z6 132/129 km²",
+"status": "completed"
+},
+{
+"check": "Namibe/Huíla occurrences after de-duplication",
+"method": "Legend-colour segmentation, symbol-shape filters, connected components, GDAL polygonize; result drawn back on the source image and inspected (tools/vectorise.py)",
+"result": "54 symbols (Cu:30, quarry:12, qtz:1, gyp:5, mn:4, salt:2), 53 with OCR-read names; 25 field stations. S2 states 75 recorded sites – compare",
+"status": "completed"
+},
+{
+"check": "Georeference S2 p.27 Chipindo sample map (UTM 33S)",
+"method": "Axis tick labels read by OCR (RapidOCR) or by eye, least-squares linear fit per axis",
+"result": "7+8 OCR-read ticks, RMS x 0.015 km, y 0.012 km, pixel 29 m",
+"status": "completed"
+},
+{
+"check": "Extract Chipindo best-value symbols",
+"method": "Legend-colour segmentation, symbol-shape filters, connected components, GDAL polygonize; result drawn back on the source image and inspected (tools/vectorise.py)",
+"result": "Chip / channel (LAFECH): 79; Drill hole (best sample): 39; Trench (best sample): 20; Rock chip (IMA): 70; Alluvial pit(s): 17; Prospect name: 5. Shape classified from fill ratio and centroid offset; grade class from legend colour",
+"status": "completed"
+},
+{
+"check": "Georeference S2 p.26 UTE-4 thorium image",
+"method": "Axis tick labels read by OCR (RapidOCR) or by eye, least-squares linear fit per axis",
+"result": "4+6 OCR-read ticks, RMS x 0.020 km, y 0.020 km, pixel 183 m",
+"status": "completed"
+},
+{
+"check": "Convert S2 p.26 thorium image to a value grid",
+"method": "Legend-colour segmentation, symbol-shape filters, connected components, GDAL polygonize; result drawn back on the source image and inspected (tools/vectorise.py)",
+"result": "180×350 cells at 0.005° (~550 m); 58732 cells with data",
+"status": "completed"
+},
+{
+"check": "Georeference S2 p.2 Map 1 (national zones and projects)",
+"method": "Axis tick labels read by OCR (RapidOCR) or by eye, least-squares linear fit per axis",
+"result": "5+6 OCR-read ticks, RMS x 0.087 km, y 0.201 km, pixel 935 m",
+"status": "completed"
+},
+{
+"check": "Extract S2 project areas from Map 1",
+"method": "Legend-colour segmentation, symbol-shape filters, connected components, GDAL polygonize; result drawn back on the source image and inspected (tools/vectorise.py)",
+"result": "6 filled areas labelled P1, P10, P2, P3, P5, P9; ring-drawn P6/P8 and small P7 kept from hand trace",
+"status": "completed"
+},
+{
+"check": "Extract USGS sites from S2 Map 1",
+"method": "Legend-colour segmentation, symbol-shape filters, connected components, GDAL polygonize; result drawn back on the source image and inspected (tools/vectorise.py)",
+"result": "42 symbols coloured by mineral; U-number labels attached where legible (S2 lists 45 sites incl. 3 cement plants)",
+"status": "completed"
+},
+{
+"check": "MIREMPET slide 18 ticks",
+"method": "Legend-colour segmentation, symbol-shape filters, connected components, GDAL polygonize; result drawn back on the source image and inspected (tools/vectorise.py)",
+"result": "OCR could not read the small grid labels; manual tick read used",
+"status": "completed"
+},
+{
+"check": "Georeference MIREMPET slide 18 lithium title map (UTM 33S)",
+"method": "Axis tick labels read by OCR (RapidOCR) or by eye, least-squares linear fit per axis",
+"result": "5+3 manually read ticks, RMS x 0.015 km, y 0.029 km, pixel 61 m",
+"status": "completed"
+},
+{
+"check": "Vectorise MIREMPET slide 18 lithium map",
+"method": "Legend-colour segmentation, symbol-shape filters, connected components, GDAL polygonize; result drawn back on the source image and inspected (tools/vectorise.py)",
+"result": "title polygon extracted (210.9 km²); 6 assay points placed from labels/symbols",
+"status": "completed"
+},
+{
+"check": "Georeference MIREMPET slide 8 (frame ticks)",
+"method": "Axis tick labels read by OCR (RapidOCR) or by eye, least-squares linear fit per axis",
+"result": "5+5 manually read ticks, RMS x 0.644 km, y 0.322 km, pixel 2628 m",
+"status": "completed"
+},
+{
+"check": "Digitise MIREMPET slide 8 occurrence classes",
+"method": "Legend-colour segmentation, symbol-shape filters, connected components, GDAL polygonize; result drawn back on the source image and inspected (tools/vectorise.py)",
+"result": "13 legend classes resolved by colour + symbol shape, 396 symbols; grey/black classes not extracted. Stated total >2,500",
+"status": "completed"
+},
+{
+"check": "Convert slide-5 MAG image to a value grid",
+"method": "Legend-colour segmentation, symbol-shape filters, connected components, GDAL polygonize; result drawn back on the source image and inspected (tools/vectorise.py)",
+"result": "312×343 cells at 0.04°; 66192 with data",
+"status": "completed"
+},
+{
+"check": "Convert slide-5 DEM image to a value grid",
+"method": "Legend-colour segmentation, symbol-shape filters, connected components, GDAL polygonize; result drawn back on the source image and inspected (tools/vectorise.py)",
+"result": "312×343 cells at 0.04°; 63639 with data",
+"status": "completed"
+},
+{
+"check": "Convert slide-5 RAD image to a value grid",
+"method": "Legend-colour segmentation, symbol-shape filters, connected components, GDAL polygonize; result drawn back on the source image and inspected (tools/vectorise.py)",
+"result": "312×343 cells at 0.04°; 64315 with data",
+"status": "completed"
+},
+{
+"check": "Digitise Longonjo site plan",
+"method": "Legend-colour segmentation, symbol-shape filters, connected components, GDAL polygonize; result drawn back on the source image and inspected (tools/vectorise.py)",
+"result": "12 features in local km; licence 21.6 km² vs 21 km² printed",
+"status": "completed"
+},
+{
+"check": "Chiri drill plan (slide 13)",
+"method": "Legend-colour segmentation, symbol-shape filters, connected components, GDAL polygonize; result drawn back on the source image and inspected (tools/vectorise.py)",
+"result": "Not vectorised: the inset is 161×208 px and collar symbols are not legible. Request the collar table (R-Chiri) instead of guessing",
 "status": "completed"
 }
 ],

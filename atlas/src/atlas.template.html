@@ -58,11 +58,37 @@ main{padding-block:14px 40px}
 .paths button b{display:block;font-family:var(--f-display);font-size:16px}
 .paths button span{font-size:13px;color:var(--ink-2)}
 .paths button[aria-pressed="true"]{border-color:var(--accent);box-shadow:inset 3px 0 0 var(--accent)}
+#sheetA{scroll-margin-top:130px}
 .mapsheet{position:relative;background:var(--sheet);border:1px solid var(--rule);border-radius:3px;overflow:hidden}
 .mapsheet svg{display:block;width:100%;height:auto;aspect-ratio:1/1.02;touch-action:none;background:var(--water);cursor:grab}
 .mapsheet svg.drag{cursor:grabbing}
 .maptools{position:absolute;right:8px;top:8px;display:flex;flex-direction:column;gap:4px;z-index:3}
 .maptools button{width:32px;height:32px;border:1px solid var(--rule);background:var(--sheet);border-radius:3px;font-weight:700}
+.layers{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:4px 16px;padding:10px 12px;border-top:1px solid var(--rule);font-size:13px}
+.layers details{border-bottom:1px dotted var(--rule);padding-block:3px}
+.layers summary{display:flex;gap:6px;align-items:center;cursor:pointer;list-style:none}
+.layers summary::-webkit-details-marker{display:none}
+.layers summary .cnt{margin-left:auto;font:11px var(--f-data);color:var(--ink-2)}
+.layers .cls{display:flex;flex-wrap:wrap;gap:2px 10px;padding:4px 0 2px 22px}
+.layers .cls label{display:flex;gap:4px;align-items:center;font-size:12px}
+.layers .meta2{font:11px var(--f-data);color:var(--ink-2);padding-left:22px}
+.gridctl{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center;padding:8px 12px;border-top:1px solid var(--rule);font-size:13px}
+.gridctl select,.gridctl input[type=range]{max-width:100%}
+.gridctl select{border:1px solid var(--rule);background:var(--paper);border-radius:3px;padding:3px 6px}
+.ramp{height:10px;width:140px;border:1px solid var(--rule);border-radius:2px}
+.tip{position:fixed;z-index:50;pointer-events:none;background:var(--sheet);color:var(--ink);border:1px solid var(--rule);box-shadow:var(--shadow);border-radius:3px;padding:5px 8px;font-size:12.5px;max-width:300px;line-height:1.35}
+.tip b{font-family:var(--f-display);font-size:13.5px}
+.tip small{display:block;font:10.5px var(--f-data);color:var(--ink-2)}
+.probe{position:absolute;right:8px;bottom:8px;z-index:3;font:11px var(--f-data);background:var(--sheet);border:1px solid var(--rule);padding:3px 6px;border-radius:3px;max-width:60%}
+.inset svg{width:100%;height:auto;background:var(--land);border:1px solid var(--rule);border-radius:3px}
+.inset .row{display:flex;flex-wrap:wrap;gap:4px 10px;font-size:12px;margin-top:4px}
+.mapcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.mapcard{background:var(--sheet);border:1px solid var(--rule);border-radius:3px;padding:10px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.mapcard .src{display:flex;gap:8px;align-items:flex-start}
+.mapcard .src button{border:1px solid var(--rule);padding:0;background:var(--paper);width:72px;height:54px;flex:none;border-radius:2px;overflow:hidden}
+.mapcard .src img{width:100%;height:100%;object-fit:cover}
+.btn{border:1px solid var(--accent);background:var(--accent);color:var(--accent-ink);border-radius:3px;padding:5px 10px;font-family:var(--f-display);font-weight:600}
+.btn.ghost{background:transparent;color:var(--accent)}
 .legend{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:6px 14px;padding:10px 12px;border-top:1px solid var(--rule);font-size:13px}
 .legend label{display:flex;gap:6px;align-items:center}
 .legend .sw{width:14px;height:10px;border:1px solid var(--ink-2);flex:none}
@@ -163,7 +189,7 @@ dialog::backdrop{background:rgba(5,15,18,.6)}
       <button data-view="sources">Source register</button>
       <button data-view="requests">Data requests</button>
       <button data-view="verify">Verification</button>
-      <button data-view="figures">Figures</button>
+      <button data-view="figures">Source maps</button>
     </nav>
     <div class="search">
       <label class="lbl" for="q" hidden>Search</label>
@@ -185,12 +211,13 @@ dialog::backdrop{background:rgba(5,15,18,.6)}
         <div class="mapsheet" id="sheetA">
           <div class="maptools"><button id="zin" aria-label="Zoom in">+</button><button id="zout" aria-label="Zoom out">−</button><button id="zhome" aria-label="Show all Angola">⌂</button></div>
           <svg id="map" class="mapsvg" role="img" aria-label="Map of Angola with mineral zones, survey extents and candidates"></svg>
+          <div class="probe" id="probe" hidden></div>
           <div class="floaters" id="floaters"></div>
           <div class="floatnote" id="floatnote" hidden></div>
         </div>
         <div class="sheet" style="padding:0;margin-top:8px">
-          <div class="legend" id="legend"></div>
-          <div class="opac"><label for="ovsel">Slide overlay</label><select id="ovsel"></select><label for="ovop">opacity</label><input id="ovop" type="range" min="0" max="100" value="70"></div>
+          <div class="gridctl" id="gridctl"></div>
+          <div class="layers" id="layers"></div>
         </div>
         <div class="board" id="board"></div>
       </div>
@@ -203,8 +230,8 @@ dialog::backdrop{background:rgba(5,15,18,.6)}
     <div class="sheet"><h2>Side-by-side evidence maps</h2><p>Both sheets pan and zoom together. Pick what to show on each. When both sheets come from the same survey family, agreement between them is not corroboration.</p>
       <div id="cmpwarn" class="cmpwarn"></div></div>
     <div class="compare">
-      <div class="mapsheet"><div class="opac" style="padding-top:10px"><label for="cmpL">Left</label><select id="cmpL"></select></div><svg id="mapL" class="mapsvg" role="img" aria-label="Left evidence map"></svg></div>
-      <div class="mapsheet"><div class="opac" style="padding-top:10px"><label for="cmpR">Right</label><select id="cmpR"></select></div><svg id="mapR" class="mapsvg" role="img" aria-label="Right evidence map"></svg></div>
+      <div class="mapsheet"><div class="opac" style="padding-top:10px"><label for="cmpL">Left</label><select id="cmpL"></select></div><svg id="mapL" class="mapsvg" role="img" aria-label="Left evidence map"></svg><div class="probe" id="probeL" hidden></div></div>
+      <div class="mapsheet"><div class="opac" style="padding-top:10px"><label for="cmpR">Right</label><select id="cmpR"></select></div><svg id="mapR" class="mapsvg" role="img" aria-label="Right evidence map"></svg><div class="probe" id="probeR" hidden></div></div>
     </div>
   </section>
 
@@ -214,6 +241,8 @@ dialog::backdrop{background:rgba(5,15,18,.6)}
   <section id="v-figures" hidden></section>
   <p class="foot" id="foot"></p>
 </main>
+<div class="tip" id="tip" hidden></div>
+<dialog id="insetdlg"><form method="dialog" style="text-align:right"><button>Close</button></form><div id="insetbody" class="inset"></div></dialog>
 <dialog id="lb"><form method="dialog" style="text-align:right"><button>Close</button></form><img id="lbimg" alt=""><p id="lbcap" class="mono" style="font-size:12px"></p></dialog>
 
 <script>
@@ -248,22 +277,86 @@ const el = (n, a = {}, parent) => { const e = document.createElementNS(NS, n); f
 const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
 
 /* ---------- layer catalogue (shared by atlas and compare) ---------- */
-const OVL = Object.fromEntries(D.overlays.map(o => [o.id, o]));
-const FAM_OF = {p04:"F-AIR", p05mag:"F-AIR", p05dem:"F-AIR", p05rad:"F-AIR", p06:"F-AIR", p08:"F-OCC", p09:"F-OCC", domains:"F-AIR", occ:"F-OCC", s2:"F-OCC", planageo:"F-AIR", cands:"mixed"};
-const VEC = {
-  planageo:{title:"PLANAGEO survey regions (digitised from slide 4)"}, domains:{title:"Airborne-geophysics domains (digitised from slide 6)"},
-  occ:{title:"Critical-mineral symbols (digitised from slide 9)"}, s2:{title:"S2 project areas and Namibe/Huíla zones"}, cands:{title:"Candidates (this atlas)"}
+const GR = window.GRIDS;
+/* every source map is rebuilt as one of these interactive layers */
+const LAYER_DEF = [
+  {id:"prov", g:"gProv", title:"Province boundaries (Natural Earth, 18 provinces)", fam:"base", on:true, sw:"transparent"},
+  {id:"planageo", g:"gPlan", title:"PLANAGEO survey regions & airborne data gap", fam:"F-AIR", src:"S1 p.4–5", on:true, sw:"var(--ev-coverage)"},
+  {id:"domains", g:"gDom", title:"Airborne-geophysics domains D1–D9", fam:"F-AIR", src:"S1 p.6", on:false, sw:"#c9a24a"},
+  {id:"occ9", g:"gOcc", title:"Critical-mineral occurrences (slide 9)", fam:"F-OCC", src:"S1 p.9", on:true, sw:"#e8951a", feats:() => G.occ.features, cls:f => f.properties.label},
+  {id:"occ8", g:"gOcc8", title:"All mineral occurrences, coloured classes (slide 8)", fam:"F-OCC", src:"S1 p.8", on:false, sw:"#7fd3c0", feats:() => G.occ8.features, cls:f => f.properties.label},
+  {id:"usgs", g:"gUsgs", title:"USGS sites & IMA listed titles (Portfolio Map 1)", fam:"F-USGS", src:"S2 p.2", on:false, sw:"#24345e", feats:() => G.usgs.features, cls:f => f.properties.site_type.startsWith("IMA") ? "IMA listed title" : f.properties.cls},
+  {id:"s2areas", g:"gS2", title:"Portfolio project areas & zones", fam:"F-OCC", src:"S2 p.2, 15–26", on:true, sw:"var(--copper)"},
+  {id:"geology", g:"gGeol", title:"PLANAGEO geology 1:250k (Namibe/Huíla zone maps)", fam:"F-MAP", src:"S2 p.17–25", on:false, sw:"#f0c6c6", feats:() => G.geology.features, cls:f => f.properties.unit},
+  {id:"namocc", g:"gNamOcc", title:"Namibe/Huíla named occurrences & field stations", fam:"F-OCC", src:"S2 p.17–25", on:false, sw:"#e46a2c", feats:() => G.namocc.features, cls:f => f.properties.label},
+  {id:"chipindo", g:"gChip", title:"Chipindo best gold value per site", fam:"F-IMA", src:"S2 p.27", on:false, sw:"#b0102e", feats:() => G.chipindo.features, cls:f => f.properties.cls === "pit" ? "Alluvial pits" : f.properties.cls === "prospect" ? "Prospect names" : f.properties.grade},
+  {id:"lithium", g:"gLi", title:"Namibe lithium title & grab assays", fam:"F-OPR", src:"S1 p.18", on:true, sw:"#3b4bc8"},
+  {id:"infra", g:"gInfra", title:"Labs, plants, clusters, ports (slides 11, 16, 19, 20)", fam:"F-OPR", src:"S1", on:false, sw:"var(--ink)"},
+  {id:"rail", g:"gRail", title:"Railways (approximate) & ports", fam:"base", on:true, sw:"var(--ink)"},
+  {id:"cands", g:"gCand", title:"Candidates: ● project  ◆ greenfield", fam:"mixed", on:true, sw:"var(--accent)"},
+];
+const LDEF = Object.fromEntries(LAYER_DEF.map(l => [l.id, l]));
+const GRID_DEF = {
+  mag:{title:"Total magnetic intensity – relative index (slide 5)", fam:"F-AIR", bands:{index:0}, ramp:"rainbow", fmt:v => `TMI index ${v[0].toFixed(2)} ${v[0] > .75 ? "(high)" : v[0] < .25 ? "(low)" : ""}`},
+  dem:{title:"Elevation, metres (slide 5 DEM)", fam:"F-AIR", bands:{elevation:0}, ramp:"terrain", fmt:v => `≈ ${Math.round(v[0] * 1812).toLocaleString()} m a.s.l. (±150 m)`},
+  rad:{title:"Radiometrics K–Th–U (slide 5 ternary)", fam:"F-AIR", bands:{ternary:-1, K:0, Th:1, U:2}, ramp:"ternary", fmt:v => `K ${(v[0]*100).toFixed(0)}% · Th ${(v[1]*100).toFixed(0)}% · U ${(v[2]*100).toFixed(0)}% of ternary stretch`},
+  th_ute4:{title:"UTE-4 thorium – relative index (Portfolio p.26)", fam:"F-AIR", bands:{index:0}, ramp:"rainbow", fmt:v => `Th index ${v[0].toFixed(2)}`},
 };
+Object.entries(GR).forEach(([k, g]) => { g.arr = g.data.map(b => Uint8Array.from(atob(b), c => c.charCodeAt(0))); });
+function gridVal(id, lon, lat){ const g = GR[id]; if (!g) return null; const i = Math.floor((lon - g.west) / g.res), j = Math.floor((g.north - lat) / g.res);
+  if (i < 0 || j < 0 || i >= g.nx || j >= g.ny) return null; const k = j * g.nx + i; if (!g.arr[0][k]) return null; return g.arr.map(a => (a[k] - 1) / 254); }
+const RAMPS = {
+  rainbow:[[0,"#2b2fd6"],[.2,"#22c3e6"],[.4,"#2fbf4a"],[.6,"#f2e12b"],[.8,"#e23b2a"],[1,"#e04ad8"]],
+  terrain:[[0,"#2a5fa8"],[.12,"#5fb3c9"],[.3,"#6eb46a"],[.55,"#c9b56a"],[.8,"#a0703f"],[1,"#f3efe9"]],
+  heat:[[0,"#fff7d1"],[.5,"#f2a33a"],[1,"#8b1a1a"]],
+};
+const hex = h => [1,3,5].map(i => parseInt(h.slice(i, i + 2), 16));
+function rampCol(name, t){ const r = RAMPS[name]; for (let i = 1; i < r.length; i++) if (t <= r[i][0]) { const [a0, c0] = r[i-1], [a1, c1] = r[i]; const k = (t - a0) / (a1 - a0 || 1); const A = hex(c0), B = hex(c1); return A.map((v, j) => Math.round(v + (B[j] - v) * k)); } return hex(r[r.length-1][1]); }
+const rampCSS = name => `linear-gradient(90deg,${RAMPS[name].map(([t, c]) => c + " " + t * 100 + "%").join(",")})`;
+const CMP_FAM = {};
+LAYER_DEF.forEach(l => CMP_FAM[l.id] = l.fam); Object.entries(GRID_DEF).forEach(([k, g]) => CMP_FAM["grid:" + k] = g.fam);
 const DOMC = {D1:"#c0392b",D2:"#c9a24a",D3:"#333333",D4:"#a53aa0",D5:"#d9822b",D6:"#6aa84f",D7:"#c9c02a",D8:"#2f5fb3",D9:"#2aa39a"};
 const OCCC = {Ag:"#f2a7d8",Al:"#b5179e",AuAg:"#e6d21e",CuCoAuPbZn:"#e8951a",NiCoCuCr:"#0f9d7a",PbCuZn:"#9bd12f",V:"#1d6fd6",Zn:"#22c32a"};
 
+function tipHTML(title, lines, foot){ return JSON.stringify([title, (lines || []).filter(Boolean), foot || ""]); }
+const GEOLC = {"Granitoids":"#efc2c2","Gabbro, norite, dolerite":"#a9cba0","Proterozoic volcanics and metasediments":"#d7cfe8","Cretaceous basalts and volcanics":"#9db5cc","Gypsum-bearing formations (Bambata, Gaia)":"#bfe6d6","Namibe basin sediments":"#efe3c2","Quaternary sands and cover":"#f8f5e6","Gneiss-migmatite basement":"#d9cfc4","Namibe Group marble":"#b9b2ea"};
+const NAMC = {"Copper indication / occurrence":"#e46a2c","Marble / granite / basalt quarry":"#5a4fd1","Gypsum indication":"#1fa77a","Mn or barite indication":"#e07aa0","Salt works":"#f2a400","Quartz / bitumen–graphite":"#555555","Field-station evidence (2016–19)":"#111111"};
+const CHIPC = {au5:"#b0102e", au15gt:"#ea6a2a", au031gt:"#f0a500", au03gtornotassayed:"#9a9a9a", pit:"#1fa77a", prospect:"#17262b"};
+const OCC8C = {ferrous:"#23a17e", nonferrous:"#3ee5bb", gold:"#f1f23c", noble:"#e7bff6", nickel:"#c02aa8", rareearth:"#35e235", diama:"#3cd8b6", limestone:"#e617ae", dolomitic:"#e6ae34", talc:"#9f2220", mineralsalts:"#45cb42", clay:"#caa73f", guano:"#b19e7f", barite:"#d8ad49"};
+const USGSC = {diamond:"#24345e", copper:"#e46a2c", iron:"#b23a5a", "Nb / V":"#5a4fd1", "phosphate / potash":"#1fa77a", "cement / gypsum":"#8b6b2c"};
+function dot(parent, f, r0, fill, cls, tip, extra = {}){
+  const [x, y] = f.geometry.coordinates; const c = el("circle", Object.assign({cx: px(x), cy: py(y), r: r0, "data-r": r0, class: "occ", "data-cls": cls, fill, stroke: "var(--ink)", "stroke-width": .6, "vector-effect":"non-scaling-stroke"}, extra), parent);
+  c.setAttribute("data-tip", tip); return c; }
+function renderExtraLayers(st){
+  const L = st.layers;
+  G.geology.features.forEach(f => { const p = el("path", {d: pathD(f.geometry), fill: GEOLC[f.properties.unit] || "#ddd", "fill-opacity": .85, stroke: "rgba(60,60,60,.35)", "stroke-width": .4, "vector-effect":"non-scaling-stroke", "data-cls": f.properties.unit}, L.gGeol);
+    p.setAttribute("data-tip", tipHTML(f.properties.unit, [`zone map ${f.properties.zone_map}`], `PLANAGEO 1:250k via Portfolio p.${f.properties.page} · ${f.properties.precision}`)); });
+  G.usgs.features.forEach(f => { const P = f.properties; const ima = P.site_type.startsWith("IMA");
+    dot(L.gUsgs, f, ima ? 5 : 3.6, ima ? "var(--sheet)" : (USGSC[P.cls] || "#666"), ima ? "IMA listed title" : P.cls, tipHTML(ima ? "IMA listed title – " + P.cls : "USGS " + P.site_type.toLowerCase() + " – " + P.cls, [P.label && "label " + P.label], "Portfolio Map 1 · " + P.precision), ima ? {stroke: USGSC[P.cls] || "#666", "stroke-width": 2.2} : {}); });
+  G.occ8.features.forEach(f => { const P = f.properties; dot(L.gOcc8, f, 2.8 + Math.min(4, P.n_symbols_est - 1), OCC8C[P.cls] || "#888", P.label,
+    tipHTML(P.label, [`${P.n_symbols_est} symbol${P.n_symbols_est > 1 ? "s" : ""}`], "MIREMPET slide 8 · reported occurrence · " + P.precision)); });
+  G.namocc.features.forEach(f => { const P = f.properties; dot(L.gNamOcc, f, P.cls === "stn" ? 1.6 : 2.6, NAMC[P.label] || "#888", P.label,
+    tipHTML(P.name || P.label, [P.name ? P.label : "", P.zone_map && "zone map " + P.zone_map], `PLANAGEO via Portfolio p.${P.page} · reported occurrence · ${P.precision}`)); });
+  G.chipindo.features.forEach(f => { const P = f.properties; const cls = P.cls === "pit" ? "Alluvial pits" : P.cls === "prospect" ? "Prospect names" : P.grade;
+    if (P.cls === "prospect") { const [x, y] = f.geometry.coordinates; const t = el("text", {x: px(x), y: py(y), "font-size": 3.2, "font-weight": 700, fill: "var(--ink)", stroke: "var(--land)", "stroke-width": .6, "paint-order": "stroke", "data-cls": cls, "text-anchor": "middle"}, L.gChip); t.textContent = P.name; return; }
+    dot(L.gChip, f, P.cls === "pit" ? 1.6 : 1.9, CHIPC[P.cls] || "#888", cls, tipHTML(P.cls === "pit" ? "Alluvial gold pit cluster" : P.grade, [P.sample_type, P.sampler && "sampler " + P.sampler, P.n_est && `≈${P.n_est} pits`],
+      `Portfolio p.27 · ${P.evidence === "measured" ? "measured result" : "occurrence"} · ${P.precision}`)); });
+  G.lithium.features.forEach(f => { const P = f.properties;
+    if (f.geometry.type !== "Point") { const p = el("path", {d: pathD(f.geometry), fill: "#3b4bc8", "fill-opacity": .12, stroke: "#3b4bc8", "stroke-width": 1.6, "vector-effect":"non-scaling-stroke"}, L.gLi);
+      p.setAttribute("data-tip", tipHTML(P.name, [`≈${P.area_km2} km² as digitised`], "MIREMPET slide 18 · " + P.precision)); return; }
+    dot(L.gLi, f, 1.8, "#f2e12b", "assay", tipHTML(`${P.sample}: ${P.li2o_pct}% Li₂O`, [P.sample_type], "MIREMPET slide 18 · measured (operator, uncertified) · " + P.precision));
+    const [x, y] = f.geometry.coordinates; const t = el("text", {x: px(x) + 2.2, y: py(y) + 1, "font-size": 2.6, fill: "var(--ink)", stroke: "var(--land)", "stroke-width": .5, "paint-order": "stroke"}, L.gLi); t.textContent = `${P.sample} ${P.li2o_pct}%`; });
+  G.infra.features.forEach(f => { const P = f.properties; dot(L.gInfra, f, 3.4, P.cls === "lab" ? "var(--ev-measured)" : P.cls === "port" ? "var(--ink)" : "var(--ev-operator)", P.cls,
+    tipHTML(P.name, [P.cls], `MIREMPET slide ${P.page} · ${P.precision}`)); });
+}
 function buildMap(svg, opts){
   const st = {vb: HOME.slice(), svg, layers:{}};
   svg.setAttribute("viewBox", st.vb.join(" "));
   const root = el("g", {}, svg);
-  const gNe = el("g", {}, root), gLand = el("g", {}, root), gImg = el("g", {}, root), gProv = el("g", {}, root), gPlan = el("g", {}, root),
-        gDom = el("g", {}, root), gS2 = el("g", {}, root), gOcc = el("g", {}, root), gRail = el("g", {}, root), gCand = el("g", {}, root), gLab = el("g", {}, root);
-  Object.assign(st.layers, {gNe, gLand, gImg, gProv, gPlan, gDom, gS2, gOcc, gRail, gCand, gLab});
+  const gNe = el("g", {}, root), gLand = el("g", {}, root), gImg = el("g", {}, root), gGeol = el("g", {}, root), gProv = el("g", {}, root), gPlan = el("g", {}, root),
+        gDom = el("g", {}, root), gS2 = el("g", {}, root), gUsgs = el("g", {}, root), gOcc8 = el("g", {}, root), gOcc = el("g", {}, root), gNamOcc = el("g", {}, root), gChip = el("g", {}, root),
+        gLi = el("g", {}, root), gInfra = el("g", {}, root), gRail = el("g", {}, root), gCand = el("g", {}, root), gLab = el("g", {}, root);
+  Object.assign(st.layers, {gNe, gLand, gImg, gGeol, gProv, gPlan, gDom, gS2, gUsgs, gOcc8, gOcc, gNamOcc, gChip, gLi, gInfra, gRail, gCand, gLab});
   G.neighbours.features.forEach(f => el("path", {d: pathD(f.geometry), fill: "var(--land-2)", stroke: "var(--rule)", "stroke-width": .6, "vector-effect":"non-scaling-stroke"}, gNe));
   G.neighbours.features.forEach(f => { const c = centroid(f.geometry); const t = el("text", {x: px(c[0]), y: py(c[1]), "font-size": 20, fill: "var(--ink-2)", "text-anchor":"middle", opacity:.7}, gNe); t.textContent = f.properties.name; });
   G.angola.features.forEach(f => el("path", {d: pathD(f.geometry), fill: "var(--land)", stroke: "var(--ink)", "stroke-width": 1.4, "vector-effect":"non-scaling-stroke"}, gLand));
@@ -274,27 +367,32 @@ function buildMap(svg, opts){
   const pat = el("pattern", {id: svg.id + "-hatch", width: 8, height: 8, patternUnits: "userSpaceOnUse", patternTransform: "rotate(45)"}, defs);
   el("line", {x1:0, y1:0, x2:0, y2:8, stroke: "var(--ev-coverage)", "stroke-width": 2, opacity:.6}, pat);
   G.provinces.features.forEach(f => {
-    const p = el("path", {d: pathD(f.geometry), fill: "transparent", stroke: "var(--ink-2)", "stroke-width": .7, "stroke-dasharray": "3 2", "vector-effect":"non-scaling-stroke", "data-prov": f.properties.name, tabindex: opts.interactive ? 0 : -1, role: opts.interactive ? "button" : null, "aria-label": "Province " + f.properties.name}, gProv);
-    if (opts.interactive) { p.addEventListener("click", e => { if (!st.moved) select({kind:"prov", id:f.properties.name}); }); p.addEventListener("keydown", e => { if (e.key === "Enter") select({kind:"prov", id:f.properties.name}); }); }
+    const p = el("path", {d: pathD(f.geometry), fill: "transparent", stroke: "var(--ink-2)", "stroke-width": .7, "stroke-dasharray": "3 2", "vector-effect":"non-scaling-stroke", "data-prov": f.properties.name, tabindex: opts.interactive ? 0 : -1, "aria-label": "Province " + f.properties.name}, gProv);
+    if (opts.interactive) p.addEventListener("keydown", e => { if (e.key === "Enter") select({kind:"prov", id:f.properties.name}); });
     const c = centroid(f.geometry); const t = el("text", {x: px(c[0]), y: py(c[1]), "font-size": 13, fill: "var(--ink-2)", "text-anchor":"middle", "pointer-events":"none", class:"provlab"}, gLab); t.textContent = f.properties.name;
   });
   G.planageo.features.filter(f => f.geometry.type !== "Point").forEach(f => {
-    el("path", {d: pathD(f.geometry), fill: f.properties.name === "Região Leste" ? `url(#${svg.id}-hatch)` : "transparent", stroke: "var(--ev-coverage)", "stroke-width": f.properties.name === "Região Leste" ? 1.6 : 0, "vector-effect":"non-scaling-stroke"}, gPlan);
+    const pp = el("path", {d: pathD(f.geometry), fill: f.properties.name === "Região Leste" ? `url(#${svg.id}-hatch)` : "transparent", stroke: "var(--ev-coverage)", "stroke-width": f.properties.name === "Região Leste" ? 1.6 : 0, "vector-effect":"non-scaling-stroke", "pointer-events": f.properties.name === "Região Leste" ? "visiblePainted" : "none"}, gPlan);
+    pp.setAttribute("data-tip", tipHTML("PLANAGEO " + f.properties.name, [f.properties.status, `${f.properties.area_km2.toLocaleString()} km²`], "MIREMPET slide 4 · survey coverage · ±2 km"));
   });
-  G.coverage.features.slice(1).forEach(f => el("path", {d: pathD(f.geometry), fill: "var(--ev-coverage)", opacity:.25, stroke:"var(--ev-coverage)", "stroke-dasharray":"4 3", "vector-effect":"non-scaling-stroke"}, gPlan));
+  G.coverage.features.slice(1).forEach(f => { const pg = el("path", {d: pathD(f.geometry), fill: "var(--ev-coverage)", opacity:.25, stroke:"var(--ev-coverage)", "stroke-dasharray":"4 3", "vector-effect":"non-scaling-stroke"}, gPlan);
+    pg.setAttribute("data-tip", tipHTML("No radiometric / DEM data displayed", [`≈${f.properties.area_km2.toLocaleString()} km²`, "magnetics shown here"], "MIREMPET slide 5 · coverage check by this atlas")); });
   G.planageo.features.filter(f => f.geometry.type === "Point").forEach(f => { const [x,y] = f.geometry.coordinates; const t = el("text", {x: px(x), y: py(y), "font-size": 11, fill: "var(--ev-coverage)", "text-anchor":"middle", "font-weight":600}, gPlan); t.textContent = f.properties.label; });
   G.domains.features.forEach(f => {
     const id = f.properties.id;
     const p = el("path", {d: pathD(f.geometry), fill: DOMC[id], "fill-opacity": .14, stroke: DOMC[id], "stroke-width": 1.8, "vector-effect":"non-scaling-stroke", tabindex: opts.interactive ? 0 : -1, role: opts.interactive ? "button" : null, "aria-label": f.properties.name}, gDom);
     if (opts.interactive) { p.addEventListener("click", () => { if (!st.moved) select({kind:"dom", id}); }); p.addEventListener("keydown", e => { if (e.key === "Enter") select({kind:"dom", id}); }); }
+    p.setAttribute("data-tip", tipHTML(f.properties.name, [`${f.properties.area_km2.toLocaleString()} km²`], "MIREMPET slide 6 · interpretation · ±15 km"));
     const c = centroid(f.geometry); const t = el("text", {x: px(c[0]), y: py(c[1]), "font-size": 14, fill: DOMC[id], "text-anchor":"middle", "font-weight":700, "pointer-events":"none"}, gDom); t.textContent = id;
   });
   G.s2.features.forEach(f => {
     const p = el("path", {d: pathD(f.geometry), fill: "var(--copper)", "fill-opacity": .18, stroke: "var(--copper)", "stroke-width": 1.2, "vector-effect":"non-scaling-stroke", tabindex: opts.interactive ? 0 : -1, "aria-label": f.properties.name}, gS2);
     if (opts.interactive) p.addEventListener("click", () => { if (!st.moved) select({kind:"s2", id:f.properties.id}); });
-    el("title", {}, p).textContent = f.properties.name + " – " + f.properties.precision;
+    p.setAttribute("data-tip", tipHTML(f.properties.name, [f.properties.kind, (f.properties.commodities || []).map(k => (D.tax[k] || ["", k])[1]).join(", ")], `S2 · ${f.properties.precision}`));
   });
-  G.occ.features.forEach(f => { const [x,y] = f.geometry.coordinates; const r0 = 3.2 + Math.min(4, f.properties.n_symbols_est - 1); const c = el("circle", {cx: px(x), cy: py(y), r: r0, "data-r": r0, class: "occ", fill: OCCC[f.properties.cls], stroke: "var(--ink)", "stroke-width": .5, "vector-effect":"non-scaling-stroke"}, gOcc); el("title", {}, c).textContent = `${f.properties.label} (${f.properties.n_symbols_est} symbol${f.properties.n_symbols_est>1?"s":""}) – MIREMPET slide 9, ±6 km`; });
+  renderExtraLayers(st);
+  G.occ.features.forEach(f => { const [x,y] = f.geometry.coordinates; const r0 = 3.2 + Math.min(4, f.properties.n_symbols_est - 1); const c = el("circle", {cx: px(x), cy: py(y), r: r0, "data-r": r0, class: "occ", "data-cls": f.properties.label, fill: OCCC[f.properties.cls], stroke: "var(--ink)", "stroke-width": .5, "vector-effect":"non-scaling-stroke"}, gOcc);
+    c.setAttribute("data-tip", tipHTML(f.properties.label, [`${f.properties.n_symbols_est} symbol${f.properties.n_symbols_est>1?"s":""}`, f.properties.province, f.properties.domain && "domain " + f.properties.domain], "MIREMPET slide 9 · reported occurrence · ±6 km")); });
   Object.values(D.rails).forEach(line => el("polyline", {points: line.map(c => px(c[0]) + "," + py(c[1])).join(" "), fill:"none", stroke:"var(--ink)", "stroke-width": 1.6, "stroke-dasharray":"6 3", "vector-effect":"non-scaling-stroke"}, gRail));
   Object.entries(D.ports).forEach(([n, c]) => { el("rect", {x: px(c[0]) - 4, y: py(c[1]) - 4, width: 8, height: 8, fill: "var(--ink)", class: "port", "data-cx": px(c[0]), "data-cy": py(c[1])}, gRail); const t = el("text", {x: px(c[0]) - 7, y: py(c[1]) + 4, "font-size": 11, "text-anchor":"end", fill:"var(--ink)"}, gRail); t.textContent = n; });
   D.candidates.forEach(c => {
@@ -347,36 +445,92 @@ function fitBounds(st, b, pad = .25){ // b = [w,s,e,n]
 const bboxOf = geom => { let b = [180, 90, -180, -90]; const polys = geom.type === "Polygon" ? [geom.coordinates] : geom.type === "MultiPolygon" ? geom.coordinates : [[[geom.coordinates]]];
   polys.forEach(p => p.forEach(r => r.forEach(c => { b = [Math.min(b[0], c[0]), Math.min(b[1], c[1]), Math.max(b[2], c[0]), Math.max(b[3], c[1])]; }))); return b; };
 
-function setRaster(st, id, opacity){
-  st.layers.gImg.innerHTML = "";
-  if (!id || !OVL[id]) return;
-  const o = OVL[id]; const [w, s, e, n] = o.bounds;
-  const im = el("image", {href: o.file, x: px(w), y: py(n), width: px(e) - px(w), height: py(s) - py(n), preserveAspectRatio: "none", opacity: opacity ?? .7}, st.layers.gImg);
-  if (id.startsWith("p05")) im.setAttribute("clip-path", `url(#${st.svg.id}-clip)`);
+const gridCache = {};
+function gridImage(id, band, ramp, thr){
+  const key = [id, band, ramp, thr].join("|"); if (gridCache[key]) return gridCache[key];
+  const g = GR[id]; const cv = document.createElement("canvas"); cv.width = g.nx; cv.height = g.ny; const cx = cv.getContext("2d"); const im = cx.createImageData(g.nx, g.ny);
+  for (let k = 0; k < g.nx * g.ny; k++) {
+    if (!g.arr[0][k]) continue; let rgb, v;
+    if (band === -1) { const K = (g.arr[0][k]-1)/254, T = (g.arr[1][k]-1)/254, U = (g.arr[2][k]-1)/254; const m = Math.max(K, T, U) || 1; rgb = [K/m*255, T/m*255, U/m*255]; v = 1; }
+    else { v = (g.arr[band][k] - 1) / 254; if (v < thr) continue; rgb = rampCol(ramp, band === -1 ? 0 : (id === "rad" ? Math.min(1, v * 1.6) : v)); }
+    im.data.set([rgb[0], rgb[1], rgb[2], 255], k * 4);
+  }
+  cx.putImageData(im, 0, 0); return gridCache[key] = cv.toDataURL();
 }
-
+function setGrid(st, id, band = 0, ramp, thr = 0, opacity = .85){
+  st.layers.gImg.innerHTML = ""; st.grid = id ? {id, band} : null; if (!id) return;
+  const g = GR[id]; ramp = ramp || GRID_DEF[id].ramp; if (ramp === "ternary") ramp = "heat";
+  el("image", {href: gridImage(id, band, ramp, thr), x: px(g.west), y: py(g.north), width: px(g.west + g.nx * g.res) - px(g.west), height: py(g.north - g.ny * g.res) - py(g.north), preserveAspectRatio: "none", opacity, style: "image-rendering:pixelated"}, st.layers.gImg);
+}
 /* ---------- atlas map ---------- */
 const A = buildMap($("#map"), {interactive:true});
-const LAYERS = [
-  ["gProv","Province boundaries (Natural Earth, 18 provinces)", true, "transparent","var(--ink-2)"],
-  ["gPlan","PLANAGEO Região Leste – survey not concluded; DEM/radiometric gap", true, "var(--ev-coverage)",""],
-  ["gDom","Airborne-geophysics domains D1–D9 (interpretation)", false, "#c9a24a",""],
-  ["gOcc","Critical-mineral occurrence symbols (digitised, ±6 km)", true, "#e8951a",""],
-  ["gS2","Portfolio project areas & Namibe/Huíla zones", true, "var(--copper)",""],
-  ["gRail","Railways (approximate) & ports", true, "var(--ink)",""],
-  ["gCand","Candidates: ● project  ◆ greenfield", true, "var(--accent)",""],
-];
-const lg = $("#legend");
-LAYERS.forEach(([k, label, on, sw]) => {
-  const id = "lay-" + k; const l = document.createElement("label");
-  l.innerHTML = `<input type="checkbox" id="${id}" ${on ? "checked" : ""}><span class="sw" style="background:${sw}"></span>${esc(label)}`; lg.appendChild(l);
-  const apply = () => { A.layers[k].style.display = $("#" + id).checked ? "" : "none"; if (k === "gProv") A.layers.gLab.style.display = $("#" + id).checked ? "" : "none"; };
-  l.querySelector("input").addEventListener("change", apply); apply();
-});
-const ovsel = $("#ovsel");
-ovsel.innerHTML = `<option value="">None</option>` + D.overlays.map(o => `<option value="${o.id}">${esc(o.title)}${o.rms_km != null ? ` · RMS ${o.rms_km} km` : " · ±10 km"}</option>`).join("");
-const applyOv = () => setRaster(A, ovsel.value, $("#ovop").value / 100);
-ovsel.addEventListener("change", applyOv); $("#ovop").addEventListener("input", () => { const im = A.layers.gImg.querySelector("image"); if (im) im.setAttribute("opacity", $("#ovop").value / 100); });
+const VIS = {};
+function applyLayer(st, l, on){ const g = st.layers[l.g]; if (!g) return; g.style.display = on ? "" : "none"; if (l.id === "prov") st.layers.gLab.style.display = on ? "" : "none"; }
+function buildLayerPanel(){
+  const box = $("#layers"); box.innerHTML = "";
+  LAYER_DEF.forEach(l => {
+    VIS[l.id] = l.on; const d = document.createElement("details"); const feats = l.feats ? l.feats() : null;
+    const classes = {}; if (feats) feats.forEach(f => { const c = l.cls(f); classes[c] = (classes[c] || 0) + (f.properties.n_symbols_est || 1); });
+    d.innerHTML = `<summary><input type="checkbox" id="ly-${l.id}" ${l.on ? "checked" : ""} aria-label="Show ${esc(l.title)}"><span class="sw" style="background:${l.sw};width:14px;height:10px;border:1px solid var(--ink-2);display:inline-block"></span><span>${esc(l.title)}</span><span class="cnt">${feats ? feats.length : ""}</span></summary>
+      <div class="meta2">${l.src ? "Source " + esc(l.src) + " · " : ""}family ${esc(l.fam)}</div>
+      ${feats ? `<div class="cls">${Object.entries(classes).sort((a, b) => b[1] - a[1]).map(([c, n], i) => `<label><input type="checkbox" checked data-l="${l.id}" data-c="${esc(c)}">${esc(c)} <span class="mono" style="color:var(--ink-2)">${n}</span></label>`).join("")}</div>` : ""}`;
+    box.appendChild(d);
+    d.querySelector("summary input").addEventListener("click", e => e.stopPropagation());
+    d.querySelector("summary input").addEventListener("change", e => { VIS[l.id] = e.target.checked; applyLayer(A, l, e.target.checked); });
+    d.querySelectorAll(".cls input").forEach(cb => cb.addEventListener("change", () => {
+      const off = new Set([...d.querySelectorAll(".cls input")].filter(x => !x.checked).map(x => x.dataset.c));
+      A.layers[l.g].querySelectorAll("[data-cls]").forEach(n => n.style.display = off.has(n.dataset.cls) ? "none" : ""); }));
+    applyLayer(A, l, l.on);
+  });
+}
+function setLayerOn(id, on = true){ const l = LDEF[id]; if (!l) return; const cb = $("#ly-" + id); if (cb) cb.checked = on; VIS[id] = on; applyLayer(A, l, on); }
+function buildGridCtl(){
+  const c = $("#gridctl");
+  c.innerHTML = `<label for="gsel">Data grid</label><select id="gsel"><option value="">None</option>${Object.entries(GRID_DEF).map(([k, g]) => `<option value="${k}">${esc(g.title)}</option>`).join("")}</select>
+    <span id="gband"></span><span class="ramp" id="gramp"></span><label for="gthr">show values ≥</label><input id="gthr" type="range" min="0" max="95" value="0" step="5"><span class="mono" id="gthrv">0%</span>
+    <label for="gop">opacity</label><input id="gop" type="range" min="10" max="100" value="85">`;
+  const draw = () => { const id = $("#gsel").value; const bsel = $("#gbandsel"); const band = id && bsel ? +bsel.value : 0;
+    $("#gthrv").textContent = $("#gthr").value + "%"; $("#gramp").style.background = id ? (band === -1 ? "linear-gradient(90deg,#f00,#0f0,#00f)" : rampCSS(GRID_DEF[id].ramp === "ternary" ? "heat" : GRID_DEF[id].ramp)) : "transparent";
+    setGrid(A, id, band, null, $("#gthr").value / 100, $("#gop").value / 100); };
+  $("#gsel").onchange = () => { const id = $("#gsel").value; const b = id ? GRID_DEF[id].bands : {};
+    $("#gband").innerHTML = Object.keys(b).length > 1 ? `<select id="gbandsel" aria-label="Band">${Object.entries(b).map(([n, i]) => `<option value="${i}">${n}</option>`).join("")}</select>` : "";
+    if ($("#gbandsel")) $("#gbandsel").onchange = draw; draw(); };
+  $("#gthr").oninput = draw; $("#gop").oninput = () => { const im = A.layers.gImg.querySelector("image"); if (im) im.setAttribute("opacity", $("#gop").value / 100); };
+}
+function setGridUI(id, band){ $("#gsel").value = id; $("#gsel").onchange(); if (band != null && $("#gbandsel")) { $("#gbandsel").value = band; $("#gbandsel").onchange(); } }
+buildLayerPanel(); buildGridCtl();
+
+/* ---------- tooltips, probe and point query ---------- */
+const tip = $("#tip");
+function showTip(e, data){ const [t, lines, foot] = JSON.parse(data); tip.innerHTML = `<b>${esc(t)}</b>${lines.map(l => `<div>${esc(l)}</div>`).join("")}${foot ? `<small>${esc(foot)}</small>` : ""}`; tip.hidden = false;
+  const x = Math.min(innerWidth - 310, e.clientX + 14), y = Math.min(innerHeight - tip.offsetHeight - 8, e.clientY + 14); tip.style.left = x + "px"; tip.style.top = y + "px"; }
+function lonlatAt(st, e){ const r = st.svg.getBoundingClientRect(); const X = st.vb[0] + (e.clientX - r.left) / r.width * st.vb[2], Y = st.vb[1] + (e.clientY - r.top) / r.height * st.vb[3]; return [X / (K * CX) + 11, -Y / K - 3.8]; }
+function wireHover(st, probeEl){
+  st.svg.addEventListener("pointermove", e => {
+    const t = e.target.closest && e.target.closest("[data-tip]"); if (t && !st.moved) showTip(e, t.getAttribute("data-tip")); else tip.hidden = true;
+    if (probeEl) { const [lo, la] = lonlatAt(st, e); let txt = `${lo.toFixed(3)}°E ${(-la).toFixed(3)}°S`; if (st.grid) { const v = gridVal(st.grid.id, lo, la); txt += " · " + (v ? GRID_DEF[st.grid.id].fmt(v) : "no data"); } probeEl.textContent = txt; probeEl.hidden = false; } });
+  st.svg.addEventListener("pointerleave", () => { tip.hidden = true; if (probeEl) probeEl.hidden = true; });
+}
+wireHover(A, $("#probe"));
+function pointQuery(lo, la){
+  const P = [lo, la]; const inside = (geom) => { const polys = geom.type === "Polygon" ? [geom.coordinates] : geom.type === "MultiPolygon" ? geom.coordinates : [];
+    return polys.some(p => { const r = p[0]; let c = false; for (let i = 0, j = r.length - 1; i < r.length; j = i++) { if (((r[i][1] > la) !== (r[j][1] > la)) && (lo < (r[j][0] - r[i][0]) * (la - r[i][1]) / (r[j][1] - r[i][1]) + r[i][0])) c = !c; } return c; }); };
+  const prov = G.provinces.features.find(f => inside(f.geometry)); if (!prov) return;
+  const dom = G.domains.features.filter(f => inside(f.geometry)).map(f => f.properties.name);
+  const reg = G.planageo.features.find(f => f.geometry.type !== "Point" && inside(f.geometry));
+  const geol = G.geology.features.find(f => inside(f.geometry));
+  const kmTo = c => Math.hypot((c[0] - lo) * 111 * CX, (c[1] - la) * 111);
+  const near = [...G.occ.features.map(f => [f.properties.label, "slide 9", f]), ...G.occ8.features.map(f => [f.properties.label, "slide 8", f]), ...G.namocc.features.filter(f => f.properties.cls !== "stn").map(f => [f.properties.name || f.properties.label, "PLANAGEO", f]), ...G.usgs.features.map(f => ["USGS " + f.properties.cls, "Map 1", f])]
+    .map(([n, s, f]) => [n, s, kmTo(f.geometry.coordinates)]).filter(x => x[2] <= 30).sort((a, b) => a[2] - b[2]).slice(0, 8);
+  const grids = Object.entries(GRID_DEF).map(([k, g]) => { const v = gridVal(k, lo, la); return v ? `<dt>${esc(g.title.split(" (")[0].split(" –")[0])}</dt><dd>${esc(g.fmt(v))}</dd>` : ""; }).join("");
+  $("#card").innerHTML = `<div class="lbl">Point query · what every layer says here</div><h2 class="mono" style="font-size:18px">${lo.toFixed(3)}°E ${(-la).toFixed(3)}°S</h2>
+   <section><dl class="kv"><dt>Province</dt><dd><button data-prov="${esc(prov.properties.name)}" style="border:0;background:none;padding:0;color:var(--accent);text-decoration:underline">${esc(prov.properties.name)}</button></dd><dt>PLANAGEO region</dt><dd>${esc(reg ? reg.properties.name : "—")}</dd><dt>Airborne domain</dt><dd>${esc(dom.join("; ") || "none")}</dd>${geol ? `<dt>Geology (1:250k)</dt><dd>${esc(geol.properties.unit)}</dd>` : ""}${grids}</dl>
+   <p class="mono" style="font-size:11px;color:var(--ink-2)">Grid values are inverted from displayed colours (indices, not instrument units) – same survey family F-AIR.</p></section>
+   <section><h3>Occurrences within 30 km</h3>${near.length ? `<ul class="claims">${near.map(([n, s, d]) => `<li><span class="evb ev-occurrence">${d.toFixed(1)} km</span><span>${esc(n)}<small>${esc(s)}</small></span></li>`).join("")}</ul>` : "<p>None in the digitised layers.</p>"}</section>`;
+  clearFloat(); $$("#card [data-prov]").forEach(b => b.onclick = () => select({kind:"prov", id:b.dataset.prov}));
+}
+A.svg.addEventListener("click", e => { if (A.moved) return; if (e.target.closest(".cand,[role=button]")) return; const t = e.target.closest("[data-tip]");
+  const [lo, la] = lonlatAt(A, e); pointQuery(lo, la); });
 $("#zin").onclick = () => zoomAt(A, .6); $("#zout").onclick = () => zoomAt(A, 1.6); $("#zhome").onclick = () => { animateTo(A, HOME.slice()); clearFloat(); };
 
 /* ---------- path toggle ---------- */
@@ -449,8 +603,9 @@ const meter = (label, v, col, tip) => `<div class="axis" title="${esc(tip)}"><sp
 const evb = ev => `<span class="evb ev-${ev}">${EVN[ev]}</span>`;
 function claimLi(id){ const c = CLM[id]; if (!c) return ""; const s = SRC[c.src];
   return `<li>${evb(c.ev)}<span>${esc(c.text)}<small>${esc(s.short)}${c.page ? " p." + c.page : ""} · ${esc(c.date)} · scale ${esc(c.scale)} · location ${esc(c.prec)} · family ${esc(c.fam)}</small>${c.status ? `<small class="${/contradict|inconsisten|error|impossible|not credible|CONTRADICTED/i.test(c.status) ? "flag" : ""}">${esc(c.status)}</small>` : ""}</span></li>`; }
-const thumbs = ids => ids.length ? `<div class="thumbs">${ids.map(i => FIG[i] ? `<button data-fig="${i}" aria-label="Open figure: ${esc(FIG[i].cap)}"><img src="img/${FIG[i].file}" alt="${esc(FIG[i].cap)}" loading="lazy"></button>` : "").join("")}</div>` : "";
-function wireThumbs(root){ root.querySelectorAll("[data-fig]").forEach(b => b.onclick = () => openFig(b.dataset.fig)); }
+const thumbs = ids => ids.length ? `<div class="thumbs">${ids.map(i => FIG[i] ? `<button data-fig="${i}" aria-label="${D.fig_layer[i] ? "Show as interactive layer" : "Open photograph"}: ${esc(FIG[i].cap)}" title="${D.fig_layer[i] ? "Opens the interactive layer" : "Photograph / unmappable plan"}"><img src="img/${FIG[i].file}" alt="${esc(FIG[i].cap)}" loading="lazy"></button>` : "").join("")}</div>
+  <p class="mono" style="font-size:11px;color:var(--ink-2)">Map thumbnails open the interactive layer; photographs open as images.</p>` : "";
+function wireThumbs(root){ root.querySelectorAll("[data-fig]").forEach(b => b.onclick = () => (D.fig_layer[b.dataset.fig] && !root.closest("#v-figures") ? openLayer(b.dataset.fig) : openFig(b.dataset.fig))); }
 function openFig(id){ const f = FIG[id]; $("#lbimg").src = "img/" + f.file; $("#lbimg").alt = f.cap; $("#lbcap").textContent = `${f.cap} — ${SRC[f.src].short}, page ${f.page} · ${EVN[f.ev]}`; $("#lb").showModal(); }
 
 function candCard(c){
@@ -484,7 +639,8 @@ function candCard(c){
     <p class="mono" style="font-size:11px;color:var(--ink-2)">E element · M mineral species · G commodity group · P proposed product. Dot colour = evidence type.</p></section>
   <section><h3>Claims and their sources</h3><ul class="claims">${c.claims.map(claimLi).join("")}</ul>
     <p style="font-size:13px;margin-top:6px">Observation families: ${famNames.map(esc).join("; ")}. Independent (non-operator) families: <b>${indep}</b>${indep < 2 ? " – no independent corroboration yet" : ""}.</p></section>
-  ${c.figs.length ? `<section><h3>Figures</h3>${thumbs(c.figs)}</section>` : ""}
+  ${c.figs.includes("mir_p17_7") ? `<section class="inset"><h3>Site plan (interactive, local km)</h3>${insetSVG("longonjo")}</section>` : ""}
+  ${c.figs.length ? `<section><h3>Source maps and photographs</h3>${thumbs(c.figs)}</section>` : ""}
   <section><h3>Data to request</h3>${reqs.length ? `<ul class="claims">${reqs.map(r => `<li><span class="evb" style="background:var(--ink)">${r.id} P${r.pri}</span><span>${esc(r.what)}<small>From: ${esc(r.whom)} · unlocks: ${esc(r.decision)}</small></span></li>`).join("")}</ul>` : "<p>None beyond the cadastre check.</p>"}</section>`;
 }
 function provCard(name){
@@ -517,7 +673,9 @@ function select(s){
   A.svg.querySelectorAll(".cand").forEach(g => g.querySelector("circle,rect").setAttribute("stroke", g.dataset.id === s.id ? "var(--ink)" : "var(--sheet)"));
   if (s.kind === "cand"){
     const c = D.candidates.find(x => x.id === s.id); if (c.path !== PATH) { PATH = c.path; $("#p-project").setAttribute("aria-pressed", PATH === "project"); $("#p-greenfield").setAttribute("aria-pressed", PATH === "greenfield"); A.svg.querySelectorAll(".cand").forEach(g => g.style.opacity = g.dataset.path === PATH ? 1 : .28); renderBoard(); }
-    card.innerHTML = candCard(c); const d = .9; fitBounds(A, [c.lon - d, c.lat - d, c.lon + d, c.lat + d], .1);
+    ({E01:["chipindo"], E04:["lithium","geology"], E06:["namocc","geology"], G02:[], E03:[]}[c.id] || []).forEach(l => setLayerOn(l, true));
+    if (c.id === "G02" || c.id === "E03") setGridUI("th_ute4");
+    card.innerHTML = candCard(c); const d = c.id === "E01" ? .3 : c.id === "E04" ? .2 : .9; fitBounds(A, [c.lon - d, c.lat - d, c.lon + d, c.lat + d], .1);
     setTimeout(() => showFloat(itemsForCand(c), [c.lon, c.lat], `${c.id}: ${c.commodities.length} commodities reported for this area – labels give class and evidence type`), reduce ? 0 : 720);
   } else if (s.kind === "prov"){
     const f = G.provinces.features.find(x => x.properties.name === s.id); card.innerHTML = provCard(s.id); fitBounds(A, bboxOf(f.geometry), .08);
@@ -534,7 +692,7 @@ function select(s){
     const f = G.s2.features.find(x => x.properties.id === s.id); card.innerHTML = s2Card(s.id); fitBounds(A, bboxOf(f.geometry), .6);
     setTimeout(() => showFloat((f.properties.commodities || []).map(k => ({key:k, ev:"occurrence", src:"S2"})), centroid(f.geometry), `${s.id}: minerals recorded in the Portfolio zone`), reduce ? 0 : 720);
   }
-  card.querySelectorAll("[data-c]").forEach(b => b.onclick = () => select({kind:"cand", id:b.dataset.c})); wireThumbs(card);
+  card.querySelectorAll("[data-c]").forEach(b => b.onclick = () => select({kind:"cand", id:b.dataset.c})); wireThumbs(card); wireInset(card);
 }
 
 /* ---------- search ---------- */
@@ -555,19 +713,19 @@ document.addEventListener("click", e => { if (!e.target.closest(".search")) res.
 
 /* ---------- compare view ---------- */
 let L = null, R = null;
-const CMP_OPTS = [...D.overlays.map(o => [o.id, o.title]), ["domains", VEC.domains.title], ["occ", VEC.occ.title], ["planageo", VEC.planageo.title], ["s2", VEC.s2.title]];
+const CMP_OPTS = [...LAYER_DEF.filter(l => !["prov","rail","cands"].includes(l.id)).map(l => [l.id, l.title]), ...Object.entries(GRID_DEF).map(([k, g]) => ["grid:" + k, g.title])];
 function initCompare(){
   if (L) return; L = buildMap($("#mapL"), {interactive:false}); R = buildMap($("#mapR"), {interactive:false}); L.sync = R.sync = true; peers.push(L, R);
-  ["cmpL","cmpR"].forEach((id, i) => { $("#" + id).innerHTML = CMP_OPTS.map(([k, t]) => `<option value="${k}">${esc(t)}</option>`).join(""); $("#" + id).value = i ? "p09" : "p06"; $("#" + id).onchange = applyCompare; });
+  wireHover(L, $("#probeL")); wireHover(R, $("#probeR"));
+  ["cmpL","cmpR"].forEach((id, i) => { $("#" + id).innerHTML = CMP_OPTS.map(([k, t]) => `<option value="${k}">${esc(t)}</option>`).join(""); $("#" + id).value = i ? "occ9" : "grid:mag"; $("#" + id).onchange = applyCompare; });
   applyCompare();
 }
 function applyCompare(){
   [[L, $("#cmpL").value], [R, $("#cmpR").value]].forEach(([st, v]) => {
-    const show = {gDom: v === "domains", gOcc: v === "occ", gPlan: v === "planageo", gS2: v === "s2", gCand: true, gRail: false};
-    Object.entries(show).forEach(([k, on]) => st.layers[k].style.display = on ? "" : "none");
-    setRaster(st, OVL[v] ? v : "", .85);
+    LAYER_DEF.forEach(l => applyLayer(st, l, l.id === v || l.id === "prov" || l.id === "cands"));
+    if (v.startsWith("grid:")) { const id = v.slice(5); setGrid(st, id, GRID_DEF[id].bands.ternary != null ? -1 : 0); } else setGrid(st, null);
   });
-  const fl = FAM_OF[$("#cmpL").value], fr = FAM_OF[$("#cmpR").value]; const w = $("#cmpwarn");
+  const fl = CMP_FAM[$("#cmpL").value], fr = CMP_FAM[$("#cmpR").value]; const w = $("#cmpwarn");
   const fname = f => (D.families.find(x => x.id === f) || {name: f}).name;
   if (fl === fr) { w.className = "cmpwarn"; w.innerHTML = `<b>Same survey family:</b> both sheets derive from ${esc(fname(fl))}. Where they agree, count it once.`; }
   else { w.className = "cmpwarn okk"; w.innerHTML = `<b>Different families:</b> left ${esc(fname(fl))}; right ${esc(fname(fr))}. Coincidence between them is independent support, within the positional error of each layer.`; }
@@ -607,12 +765,34 @@ function renderVerify(){
     <tr><td>PLANAGEO sheets (S2)</td><td>WGS84</td><td>1:250,000 mapping; whole-rock geochemistry (method not stated)</td><td>D-33/M, 333, 334</td><td>Not reported</td></tr>
   </tbody></table></div></div>`;
 }
-function renderFigures(){
-  $("#v-figures").innerHTML = `<div class="sheet"><h2>Figures used</h2><p>Every map, inset, legend, project plan and assay figure from the MIREMPET keynote that bears on mineral evidence, plus the Portfolio study maps cited in the cards. Governance charts, equipment photographs and sustainability imagery are not evidence and are left out.</p>
-  <div class="gallery">${D.figs.map(f => `<figure><button data-fig="${f.id}" aria-label="Enlarge ${esc(f.cap)}"><img src="img/${f.file}" alt="${esc(f.cap)}" loading="lazy"></button><figcaption>${evb(f.ev)}<span>${esc(f.cap)}</span><span class="mono" style="font-size:11px;color:var(--ink-2)">${esc(SRC[f.src].short)} · page ${f.page}</span></figcaption></figure>`).join("")}</div></div>`;
-  wireThumbs($("#v-figures"));
+function insetSVG(id){
+  const I = D.insets[id]; if (!I) return ""; const W = 520, sc = W / I.w, H = I.h * sc;
+  const P = xy => xy.map(([x, y]) => `${(x * sc).toFixed(1)},${(H - y * sc).toFixed(1)}`).join(" ");
+  const C = {licence:"#c0392b", carbonatite:"#b97a57", pit:"#2f7fc1", plant:"#7cc242", tsf:"#555", dump:"#222", solar:"#e6c619", rail:"#111", siding:"#111", town:"#111"};
+  const body = I.features.map((f, i) => { const tipd = esc(tipHTML(f.name, [f.kind], `${I.title} · ${I.units}`));
+    if (f.kind === "polygon") return `<polygon points="${P(f.xy)}" fill="${C[f.cls]}" fill-opacity="${f.cls === "licence" ? .06 : .45}" stroke="${C[f.cls]}" stroke-width="${f.cls === "licence" ? 2.5 : 1.2}" data-tip="${tipd}"/>`;
+    if (f.kind === "line") return `<polyline points="${P(f.xy)}" fill="none" stroke="${C[f.cls]}" stroke-width="2.5" stroke-dasharray="8 3" data-tip="${tipd}"/>`;
+    const [x, y] = f.xy[0]; return `<circle cx="${x * sc}" cy="${H - y * sc}" r="5" fill="${C[f.cls]}" data-tip="${tipd}"/><text x="${x * sc + 7}" y="${H - y * sc + 4}" font-size="12" fill="var(--ink)">${esc(f.name.split(" (")[0])}</text>`; }).join("");
+  const bar = `<g transform="translate(${W - 130},${H - 14})"><rect width="${2 * sc}" height="5" fill="var(--ink)"/><text y="-4" font-size="11" fill="var(--ink)">0</text><text x="${2 * sc - 18}" y="-4" font-size="11" fill="var(--ink)">2 km</text></g>`;
+  return `<svg viewBox="0 0 ${W} ${H.toFixed(0)}" role="img" aria-label="${esc(I.title)}" class="insetsvg">${body}${bar}<text x="${W - 16}" y="20" font-size="14" font-weight="700" fill="var(--ink)">N↑</text></svg>
+    <p class="mono" style="font-size:11px;color:var(--ink-2)">${esc(I.note)} Units: ${esc(I.units)}. Hover a feature for its name.</p>`;
 }
-
+function wireInset(root){ root.querySelectorAll(".insetsvg [data-tip]").forEach(n => { n.addEventListener("pointermove", e => showTip(e, n.getAttribute("data-tip"))); n.addEventListener("pointerleave", () => tip.hidden = true); }); }
+function openLayer(fid){
+  const [layers, bb] = D.fig_layer[fid]; showView("atlas");
+  layers.forEach(l => { if (l.startsWith("grid:")) setGridUI(l.slice(5), GRID_DEF[l.slice(5)].bands.ternary != null ? -1 : null); else if (l.startsWith("inset:")) { $("#insetbody").innerHTML = insetSVG(l.slice(6)); wireInset($("#insetbody")); $("#insetdlg").showModal(); } else setLayerOn(l, true); });
+  if (bb) fitBounds(A, bb, .02); clearFloat(); $("#sheetA").scrollIntoView({block: "start", behavior: reduce ? "auto" : "smooth"});
+}
+function renderFigures(){
+  const maps = D.figs.filter(f => D.fig_layer[f.id]), other = D.figs.filter(f => !D.fig_layer[f.id]);
+  $("#v-figures").innerHTML = `<div class="sheet"><h2>Source maps, rebuilt as interactive layers</h2><p>Each map from the MIREMPET keynote and the Portfolio study has been digitised into vector features or value grids with hover details, class filters and point queries. Open one to see its layer on the atlas. The small thumbnail is the original, kept so anyone can audit the digitising.</p>
+  <div class="mapcards">${maps.map(f => { const [ls, bb] = D.fig_layer[f.id]; return `<div class="mapcard"><div class="src"><button data-fig="${f.id}" aria-label="Original: ${esc(f.cap)}"><img src="img/${f.file}" alt="" loading="lazy"></button><span style="font-size:13px">${esc(f.cap)}<br><span class="mono" style="font-size:11px;color:var(--ink-2)">${esc(SRC[f.src].short)} · p.${f.page}</span></span></div>
+    <div style="font-size:12.5px">Interactive as: ${ls.map(l => esc(l.startsWith("grid:") ? GRID_DEF[l.slice(5)].title : l.startsWith("inset:") ? "local-coordinate site plan" : LDEF[l].title)).join("; ")}</div>
+    <div><button class="btn" data-open="${f.id}">Open interactive</button></div></div>`; }).join("")}</div></div>
+  <div class="sheet"><h2>Photographs and plans that cannot be mapped</h2><p>These carry no coordinates or are too small to digitise (the Chiri drill plan is 161×208 pixels). They stay as images and are listed in the data requests where the underlying table is needed.</p>
+  <div class="gallery">${other.map(f => `<figure><button data-fig="${f.id}" aria-label="Enlarge ${esc(f.cap)}"><img src="img/${f.file}" alt="${esc(f.cap)}" loading="lazy"></button><figcaption>${evb(f.ev)}<span>${esc(f.cap)}</span><span class="mono" style="font-size:11px;color:var(--ink-2)">${esc(SRC[f.src].short)} · page ${f.page}</span></figcaption></figure>`).join("")}</div></div>`;
+  wireThumbs($("#v-figures")); $$("#v-figures [data-open]").forEach(b => b.onclick = () => openLayer(b.dataset.open));
+}
 /* ---------- views & hash routing ---------- */
 const VIEWS = ["atlas","compare","sources","requests","verify","figures"]; const drawn = {};
 function showView(v){ if (!VIEWS.includes(v)) v = "atlas";
