@@ -1,0 +1,630 @@
+<title>Angola Critical-Minerals Atlas</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: survey-sheet workbench – map sheet on the left with a legend rail, evidence card on the right; registers as further sheets. */
+:root{
+  --paper:#eef1ee; --sheet:#f8faf8; --ink:#17262b; --ink-2:#44555b; --rule:#c9d2cf; --water:#d8e6ec;
+  --land:#f3f2ea; --land-2:#e4e6dc; --accent:#0f6b72; --accent-ink:#ffffff; --copper:#b4532a;
+  --ev-measured:#1f4fa3; --ev-occurrence:#b7791f; --ev-operator:#9b3c86; --ev-interpretation:#5f6b70; --ev-coverage:#2f7d4f;
+  --ok:#2f7d4f; --warn:#b7791f; --bad:#b23a3a; --shadow:0 6px 24px rgba(15,40,45,.16);
+  --f-display:"Archivo Narrow","Arial Narrow",Arial,sans-serif; --f-body:"Source Serif 4",Georgia,serif; --f-data:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#0f1719; --sheet:#152024; --ink:#e3ebe8; --ink-2:#a5b4b3; --rule:#2c3b3f; --water:#142a33;
+  --land:#1d2a2c; --land-2:#253538; --accent:#4fb3b8; --accent-ink:#06191b; --copper:#e08b5e;
+  --ev-measured:#7aa5f0; --ev-occurrence:#e3b04d; --ev-operator:#d68ac4; --ev-interpretation:#a3b0b4; --ev-coverage:#6cc28f;
+  --ok:#6cc28f; --warn:#e3b04d; --bad:#ef7d7d; --shadow:0 6px 24px rgba(0,0,0,.45); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#0f1719; --sheet:#152024; --ink:#e3ebe8; --ink-2:#a5b4b3; --rule:#2c3b3f; --water:#142a33;
+  --land:#1d2a2c; --land-2:#253538; --accent:#4fb3b8; --accent-ink:#06191b; --copper:#e08b5e;
+  --ev-measured:#7aa5f0; --ev-occurrence:#e3b04d; --ev-operator:#d68ac4; --ev-interpretation:#a3b0b4; --ev-coverage:#6cc28f;
+  --ok:#6cc28f; --warn:#e3b04d; --bad:#ef7d7d; --shadow:0 6px 24px rgba(0,0,0,.45); color-scheme:dark}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.5 var(--f-body)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--sheet)}
+.wrap{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3,h4{font-family:var(--f-display);text-wrap:balance;margin:0;letter-spacing:.01em}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.mono{font-family:var(--f-data);font-variant-numeric:tabular-nums}
+.lbl{font-family:var(--f-display);font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-2)}
+
+/* header */
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var(--sheet);border-bottom:1px solid var(--rule)}
+.hbar{display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;padding-block:10px}
+.brand{display:flex;flex-direction:column;min-width:0}
+.brand h1{font-size:21px;line-height:1.1}
+.brand .sub{font:12px var(--f-data);color:var(--ink-2)}
+nav.views{display:flex;flex-wrap:wrap;gap:4px}
+nav.views button{border:1px solid var(--rule);background:transparent;border-radius:3px;padding:5px 10px;font-family:var(--f-display);font-weight:600;font-size:14px}
+nav.views button[aria-pressed="true"]{background:var(--ink);color:var(--sheet);border-color:var(--ink)}
+.search{position:relative;flex:1 1 240px;max-width:420px;min-width:0}
+.search input{width:100%;border:1px solid var(--rule);background:var(--paper);border-radius:3px;padding:7px 10px}
+.results{position:absolute;left:0;right:0;top:100%;margin-top:4px;background:var(--sheet);border:1px solid var(--rule);box-shadow:var(--shadow);max-height:360px;overflow:auto;z-index:20;border-radius:3px}
+.results button{display:flex;gap:8px;align-items:baseline;width:100%;text-align:left;border:0;background:transparent;padding:7px 10px;border-bottom:1px solid var(--rule)}
+.results button:hover,.results button:focus-visible{background:var(--land-2)}
+.results small{color:var(--ink-2);font-family:var(--f-data);font-size:11px}
+
+/* atlas view */
+main{padding-block:14px 40px}
+.atlas{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(320px,1fr);gap:14px;align-items:start}
+@media (max-width:980px){.atlas{grid-template-columns:minmax(0,1fr)}}
+.paths{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.paths button{flex:1 1 200px;text-align:left;border:1px solid var(--rule);background:var(--sheet);border-radius:3px;padding:8px 12px}
+.paths button b{display:block;font-family:var(--f-display);font-size:16px}
+.paths button span{font-size:13px;color:var(--ink-2)}
+.paths button[aria-pressed="true"]{border-color:var(--accent);box-shadow:inset 3px 0 0 var(--accent)}
+.mapsheet{position:relative;background:var(--sheet);border:1px solid var(--rule);border-radius:3px;overflow:hidden}
+.mapsheet svg{display:block;width:100%;height:auto;aspect-ratio:1/1.02;touch-action:none;background:var(--water);cursor:grab}
+.mapsheet svg.drag{cursor:grabbing}
+.maptools{position:absolute;right:8px;top:8px;display:flex;flex-direction:column;gap:4px;z-index:3}
+.maptools button{width:32px;height:32px;border:1px solid var(--rule);background:var(--sheet);border-radius:3px;font-weight:700}
+.legend{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:6px 14px;padding:10px 12px;border-top:1px solid var(--rule);font-size:13px}
+.legend label{display:flex;gap:6px;align-items:center}
+.legend .sw{width:14px;height:10px;border:1px solid var(--ink-2);flex:none}
+.opac{display:flex;gap:8px;align-items:center;padding:0 12px 10px;font-size:13px;flex-wrap:wrap}
+.opac select{max-width:100%;border:1px solid var(--rule);background:var(--paper);border-radius:3px;padding:3px 6px}
+.scalebar text,.mapsvg text{font-family:var(--f-data)}
+.board{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin-top:12px}
+.board .col{background:var(--sheet);border:1px solid var(--rule);border-radius:3px;padding:8px 10px;min-width:0}
+.board .col h4{font-size:14px;display:flex;justify-content:space-between;gap:6px}
+.board .col ul{list-style:none;margin:6px 0 0;padding:0;display:flex;flex-direction:column;gap:3px}
+.board .col li button{border:0;background:none;padding:0;text-align:left;color:var(--accent);font-size:13px;text-decoration:underline;text-underline-offset:2px}
+.board .empty{font-size:12.5px;color:var(--ink-2)}
+
+/* floating illustrations */
+.floaters{position:absolute;inset:0;pointer-events:none;z-index:2}
+.floater{position:absolute;pointer-events:auto;transform:translate(-50%,-50%);background:color-mix(in srgb,var(--sheet) 92%,transparent);border:1px solid var(--rule);border-radius:4px;box-shadow:var(--shadow);padding:3px 7px 3px 4px;display:flex;gap:5px;align-items:center;font-size:11px;line-height:1.15;white-space:nowrap;animation:bob 5s ease-in-out infinite}
+.floater svg{width:24px;height:24px;flex:none;aspect-ratio:auto;background:none;cursor:default}
+.floater b{font-family:var(--f-display);font-size:12.5px;display:block}
+.floater i{font-style:normal;font-family:var(--f-data);font-size:10px;color:var(--ink-2)}
+.floater .ev{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:3px;vertical-align:middle}
+@keyframes bob{0%,100%{translate:0 0}50%{translate:0 -4px}}
+@media (prefers-reduced-motion:reduce){.floater{animation:none}}
+.floaters.row{display:flex;flex-wrap:wrap;align-content:flex-start;gap:4px;padding:48px 46px 0 6px;pointer-events:none}
+.floaters.row .floater{position:static;transform:none;animation:none}
+.floatnote{position:absolute;left:8px;bottom:8px;z-index:3;font:11px var(--f-data);background:var(--sheet);border:1px solid var(--rule);padding:3px 6px;border-radius:3px;max-width:calc(100% - 16px)}
+
+/* card */
+.card{background:var(--sheet);border:1px solid var(--rule);border-radius:3px;padding:14px 16px;min-width:0}
+.card h2{font-size:22px;line-height:1.15}
+.card .meta{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 10px}
+.chip{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--rule);border-radius:999px;padding:1px 8px;font:12px var(--f-display);letter-spacing:.02em;background:var(--paper)}
+.chip.dec{background:var(--ink);color:var(--sheet);border-color:var(--ink)}
+.chip .dot{width:8px;height:8px;border-radius:50%}
+.axes{display:grid;grid-template-columns:1fr;gap:6px;margin:6px 0 12px}
+.axis{display:grid;grid-template-columns:150px minmax(0,1fr) 34px;gap:8px;align-items:center;font-size:13px}
+.axis .bar{height:10px;background:var(--land-2);border-radius:2px;position:relative;overflow:hidden}
+.axis .bar span{position:absolute;inset:0 auto 0 0;border-radius:2px}
+.card section{border-top:1px solid var(--rule);padding-top:8px;margin-top:10px}
+.card section h3{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-2);margin-bottom:3px}
+.card p{margin:0 0 4px}
+.gate{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 10px;font-size:14px}
+.gate b{font-family:var(--f-display)}
+.gate .adv{color:var(--ok)} .gate .def{color:var(--warn)} .gate .stop{color:var(--bad)}
+.kv{display:grid;grid-template-columns:130px minmax(0,1fr);gap:2px 10px;font-size:13.5px}
+.kv dt{color:var(--ink-2);font-family:var(--f-display)}
+.kv dd{margin:0}
+.claims{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:6px;font-size:13.5px}
+.claims li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px}
+.evb{font:10.5px var(--f-data);text-transform:uppercase;letter-spacing:.04em;padding:1px 5px;border-radius:2px;color:#fff;white-space:nowrap;height:fit-content}
+.ev-measured{background:var(--ev-measured)} .ev-occurrence{background:var(--ev-occurrence)} .ev-operator{background:var(--ev-operator)} .ev-interpretation{background:var(--ev-interpretation)} .ev-coverage{background:var(--ev-coverage)}
+:root[data-theme="dark"] .evb{color:#06191b}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .evb{color:#06191b}}
+.claims small{display:block;color:var(--ink-2);font-family:var(--f-data);font-size:11px}
+.flag{color:var(--bad)}
+.thumbs{display:flex;flex-wrap:wrap;gap:6px}
+.thumbs button{border:1px solid var(--rule);padding:0;background:var(--paper);width:92px;height:70px;overflow:hidden;border-radius:2px}
+.thumbs img{width:100%;height:100%;object-fit:cover}
+.pm{border-collapse:collapse;font-size:12px;width:100%}
+.pm td,.pm th{border:1px solid var(--rule);padding:2px 4px;text-align:center}
+.pm th{font-family:var(--f-display);font-weight:600;text-align:left}
+.pm .D{background:var(--ev-measured);color:var(--sheet)} .pm .H{background:var(--copper);color:var(--sheet)} .pm .M{background:color-mix(in srgb,var(--copper) 45%,var(--sheet))} .pm .L{background:color-mix(in srgb,var(--copper) 15%,var(--sheet))}
+
+/* compare */
+.compare{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+@media (max-width:760px){.compare{grid-template-columns:minmax(0,1fr)}}
+.cmpwarn{margin:10px 0;padding:8px 12px;border:1px solid var(--warn);border-left-width:4px;background:var(--sheet);font-size:14px}
+.cmpwarn.okk{border-color:var(--ok)}
+
+/* registers */
+.sheet{background:var(--sheet);border:1px solid var(--rule);border-radius:3px;padding:14px 16px;margin-bottom:14px;min-width:0}
+.sheet h2{font-size:20px;margin-bottom:6px}
+.sheet > p{max-width:75ch;margin:0 0 10px}
+.tbl{overflow-x:auto}
+table.reg{border-collapse:collapse;width:100%;font-size:13px;min-width:720px}
+table.reg th{font-family:var(--f-display);text-align:left;background:var(--land-2);position:sticky;top:0}
+table.reg td,table.reg th{border-bottom:1px solid var(--rule);padding:5px 7px;vertical-align:top}
+.filters{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
+.filters button{border:1px solid var(--rule);background:var(--paper);border-radius:999px;padding:2px 10px;font-size:13px}
+.filters button[aria-pressed="true"]{background:var(--ink);color:var(--sheet)}
+.st-completed{color:var(--ok);font-weight:600} .st-required{color:var(--warn);font-weight:600}
+.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+.gallery figure{margin:0;background:var(--sheet);border:1px solid var(--rule);border-radius:3px;overflow:hidden;display:flex;flex-direction:column}
+.gallery button{border:0;padding:0;background:var(--paper);height:170px}
+.gallery img{width:100%;height:100%;object-fit:contain}
+.gallery figcaption{padding:7px 9px;font-size:13px;display:flex;flex-direction:column;gap:4px}
+dialog{border:1px solid var(--rule);background:var(--sheet);color:var(--ink);max-width:min(1100px,94vw);padding:10px;border-radius:4px}
+dialog img{max-height:78vh;display:block;margin:auto}
+dialog::backdrop{background:rgba(5,15,18,.6)}
+.foot{font-size:12.5px;color:var(--ink-2);margin-top:18px;max-width:90ch}
+</style>
+
+<header class="wrap">
+  <div class="hbar">
+    <div class="brand"><h1>Angola Critical-Minerals Atlas</h1><span class="sub" id="asof"></span></div>
+    <nav class="views" aria-label="Views">
+      <button data-view="atlas" aria-pressed="true">Atlas</button>
+      <button data-view="compare">Side-by-side</button>
+      <button data-view="sources">Source register</button>
+      <button data-view="requests">Data requests</button>
+      <button data-view="verify">Verification</button>
+      <button data-view="figures">Figures</button>
+    </nav>
+    <div class="search">
+      <label class="lbl" for="q" hidden>Search</label>
+      <input id="q" type="search" placeholder="Search a commodity, element, mineral or province…" autocomplete="off">
+      <div class="results" id="results" hidden></div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <!-- ATLAS -->
+  <section id="v-atlas">
+    <div class="paths" role="group" aria-label="Investment path">
+      <button id="p-project" aria-pressed="true"><b>Evaluate existing projects</b><span>Titles and operators with reported work – test what is claimed</span></button>
+      <button id="p-greenfield" aria-pressed="false"><b>Originate greenfield targets</b><span>Untitled areas where independent survey families coincide</span></button>
+    </div>
+    <div class="atlas">
+      <div style="min-width:0">
+        <div class="mapsheet" id="sheetA">
+          <div class="maptools"><button id="zin" aria-label="Zoom in">+</button><button id="zout" aria-label="Zoom out">−</button><button id="zhome" aria-label="Show all Angola">⌂</button></div>
+          <svg id="map" class="mapsvg" role="img" aria-label="Map of Angola with mineral zones, survey extents and candidates"></svg>
+          <div class="floaters" id="floaters"></div>
+          <div class="floatnote" id="floatnote" hidden></div>
+        </div>
+        <div class="sheet" style="padding:0;margin-top:8px">
+          <div class="legend" id="legend"></div>
+          <div class="opac"><label for="ovsel">Slide overlay</label><select id="ovsel"></select><label for="ovop">opacity</label><input id="ovop" type="range" min="0" max="100" value="70"></div>
+        </div>
+        <div class="board" id="board"></div>
+      </div>
+      <div id="card" class="card" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <!-- COMPARE -->
+  <section id="v-compare" hidden>
+    <div class="sheet"><h2>Side-by-side evidence maps</h2><p>Both sheets pan and zoom together. Pick what to show on each. When both sheets come from the same survey family, agreement between them is not corroboration.</p>
+      <div id="cmpwarn" class="cmpwarn"></div></div>
+    <div class="compare">
+      <div class="mapsheet"><div class="opac" style="padding-top:10px"><label for="cmpL">Left</label><select id="cmpL"></select></div><svg id="mapL" class="mapsvg" role="img" aria-label="Left evidence map"></svg></div>
+      <div class="mapsheet"><div class="opac" style="padding-top:10px"><label for="cmpR">Right</label><select id="cmpR"></select></div><svg id="mapR" class="mapsvg" role="img" aria-label="Right evidence map"></svg></div>
+    </div>
+  </section>
+
+  <section id="v-sources" hidden></section>
+  <section id="v-requests" hidden></section>
+  <section id="v-verify" hidden></section>
+  <section id="v-figures" hidden></section>
+  <p class="foot" id="foot"></p>
+</main>
+<dialog id="lb"><form method="dialog" style="text-align:right"><button>Close</button></form><img id="lbimg" alt=""><p id="lbcap" class="mono" style="font-size:12px"></p></dialog>
+
+<script>
+/*__DATA__*/
+(function(){
+"use strict";
+const D = window.ATLAS, G = window.GEO;
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const EVN = {measured:"Measured result", occurrence:"Reported occurrence", operator:"Operator claim", interpretation:"Geological interpretation", coverage:"Survey coverage"};
+const CLS = {E:"Element", M:"Mineral species", G:"Commodity group", P:"Proposed product"};
+const SRC = Object.fromEntries(D.sources.map(s => [s.id, s]));
+const CLM = Object.fromEntries(D.claims.map(c => [c.id, c]));
+const FIG = Object.fromEntries(D.figs.map(f => [f.id, f]));
+const REQ = D.requests;
+$("#asof").textContent = `Evidence status ${D.as_of} · sources: MIREMPET keynote (Oct 2026), Mineral Zones & Project Portfolio (3 Nov 2026), operator disclosures`;
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/* ---------- projection: plate carrée with cos(12°S) aspect – keeps EPSG:4326 overlays exactly aligned ---------- */
+const K = 100, CX = Math.cos(12 * Math.PI / 180);
+const px = lon => (lon - 11) * K * CX, py = lat => -(lat + 3.8) * K;
+const HOME = [px(11.2), py(-4.0), px(24.4) - px(11.2), py(-18.4) - py(-4.0)];
+function pathD(geom){
+  const polys = geom.type === "Polygon" ? [geom.coordinates] : geom.type === "MultiPolygon" ? geom.coordinates : [];
+  return polys.map(p => p.map(r => "M" + r.map(c => px(c[0]).toFixed(1) + "," + py(c[1]).toFixed(1)).join("L") + "Z").join("")).join("");
+}
+const centroid = geom => { let sx=0, sy=0, n=0; const polys = geom.type === "Polygon" ? [geom.coordinates] : geom.coordinates;
+  let best = polys[0]; polys.forEach(p => { if (p[0].length > best[0].length) best = p; });
+  best[0].forEach(c => { sx += c[0]; sy += c[1]; n++; }); return [sx/n, sy/n]; };
+const NS = "http://www.w3.org/2000/svg";
+const el = (n, a = {}, parent) => { const e = document.createElementNS(NS, n); for (const k in a) if (a[k] != null) e.setAttribute(k, a[k]); if (n === "text" && a["font-size"] && !(parent && parent.classList && parent.classList.contains("cand"))) e.setAttribute("data-fs", a["font-size"]); if (parent) parent.appendChild(e); return e; };
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+
+/* ---------- layer catalogue (shared by atlas and compare) ---------- */
+const OVL = Object.fromEntries(D.overlays.map(o => [o.id, o]));
+const FAM_OF = {p04:"F-AIR", p05mag:"F-AIR", p05dem:"F-AIR", p05rad:"F-AIR", p06:"F-AIR", p08:"F-OCC", p09:"F-OCC", domains:"F-AIR", occ:"F-OCC", s2:"F-OCC", planageo:"F-AIR", cands:"mixed"};
+const VEC = {
+  planageo:{title:"PLANAGEO survey regions (digitised from slide 4)"}, domains:{title:"Airborne-geophysics domains (digitised from slide 6)"},
+  occ:{title:"Critical-mineral symbols (digitised from slide 9)"}, s2:{title:"S2 project areas and Namibe/Huíla zones"}, cands:{title:"Candidates (this atlas)"}
+};
+const DOMC = {D1:"#c0392b",D2:"#c9a24a",D3:"#333333",D4:"#a53aa0",D5:"#d9822b",D6:"#6aa84f",D7:"#c9c02a",D8:"#2f5fb3",D9:"#2aa39a"};
+const OCCC = {Ag:"#f2a7d8",Al:"#b5179e",AuAg:"#e6d21e",CuCoAuPbZn:"#e8951a",NiCoCuCr:"#0f9d7a",PbCuZn:"#9bd12f",V:"#1d6fd6",Zn:"#22c32a"};
+
+function buildMap(svg, opts){
+  const st = {vb: HOME.slice(), svg, layers:{}};
+  svg.setAttribute("viewBox", st.vb.join(" "));
+  const root = el("g", {}, svg);
+  const gNe = el("g", {}, root), gLand = el("g", {}, root), gImg = el("g", {}, root), gProv = el("g", {}, root), gPlan = el("g", {}, root),
+        gDom = el("g", {}, root), gS2 = el("g", {}, root), gOcc = el("g", {}, root), gRail = el("g", {}, root), gCand = el("g", {}, root), gLab = el("g", {}, root);
+  Object.assign(st.layers, {gNe, gLand, gImg, gProv, gPlan, gDom, gS2, gOcc, gRail, gCand, gLab});
+  G.neighbours.features.forEach(f => el("path", {d: pathD(f.geometry), fill: "var(--land-2)", stroke: "var(--rule)", "stroke-width": .6, "vector-effect":"non-scaling-stroke"}, gNe));
+  G.neighbours.features.forEach(f => { const c = centroid(f.geometry); const t = el("text", {x: px(c[0]), y: py(c[1]), "font-size": 20, fill: "var(--ink-2)", "text-anchor":"middle", opacity:.7}, gNe); t.textContent = f.properties.name; });
+  G.angola.features.forEach(f => el("path", {d: pathD(f.geometry), fill: "var(--land)", stroke: "var(--ink)", "stroke-width": 1.4, "vector-effect":"non-scaling-stroke"}, gLand));
+  // clip for slide-5 rasters
+  const defs = el("defs", {}, svg); const cp = el("clipPath", {id: svg.id + "-clip"}, defs);
+  G.angola.features.forEach(f => el("path", {d: pathD(f.geometry)}, cp));
+  // hatch for pending survey region
+  const pat = el("pattern", {id: svg.id + "-hatch", width: 8, height: 8, patternUnits: "userSpaceOnUse", patternTransform: "rotate(45)"}, defs);
+  el("line", {x1:0, y1:0, x2:0, y2:8, stroke: "var(--ev-coverage)", "stroke-width": 2, opacity:.6}, pat);
+  G.provinces.features.forEach(f => {
+    const p = el("path", {d: pathD(f.geometry), fill: "transparent", stroke: "var(--ink-2)", "stroke-width": .7, "stroke-dasharray": "3 2", "vector-effect":"non-scaling-stroke", "data-prov": f.properties.name, tabindex: opts.interactive ? 0 : -1, role: opts.interactive ? "button" : null, "aria-label": "Province " + f.properties.name}, gProv);
+    if (opts.interactive) { p.addEventListener("click", e => { if (!st.moved) select({kind:"prov", id:f.properties.name}); }); p.addEventListener("keydown", e => { if (e.key === "Enter") select({kind:"prov", id:f.properties.name}); }); }
+    const c = centroid(f.geometry); const t = el("text", {x: px(c[0]), y: py(c[1]), "font-size": 13, fill: "var(--ink-2)", "text-anchor":"middle", "pointer-events":"none", class:"provlab"}, gLab); t.textContent = f.properties.name;
+  });
+  G.planageo.features.filter(f => f.geometry.type !== "Point").forEach(f => {
+    el("path", {d: pathD(f.geometry), fill: f.properties.name === "Região Leste" ? `url(#${svg.id}-hatch)` : "transparent", stroke: "var(--ev-coverage)", "stroke-width": f.properties.name === "Região Leste" ? 1.6 : 0, "vector-effect":"non-scaling-stroke"}, gPlan);
+  });
+  G.coverage.features.slice(1).forEach(f => el("path", {d: pathD(f.geometry), fill: "var(--ev-coverage)", opacity:.25, stroke:"var(--ev-coverage)", "stroke-dasharray":"4 3", "vector-effect":"non-scaling-stroke"}, gPlan));
+  G.planageo.features.filter(f => f.geometry.type === "Point").forEach(f => { const [x,y] = f.geometry.coordinates; const t = el("text", {x: px(x), y: py(y), "font-size": 11, fill: "var(--ev-coverage)", "text-anchor":"middle", "font-weight":600}, gPlan); t.textContent = f.properties.label; });
+  G.domains.features.forEach(f => {
+    const id = f.properties.id;
+    const p = el("path", {d: pathD(f.geometry), fill: DOMC[id], "fill-opacity": .14, stroke: DOMC[id], "stroke-width": 1.8, "vector-effect":"non-scaling-stroke", tabindex: opts.interactive ? 0 : -1, role: opts.interactive ? "button" : null, "aria-label": f.properties.name}, gDom);
+    if (opts.interactive) { p.addEventListener("click", () => { if (!st.moved) select({kind:"dom", id}); }); p.addEventListener("keydown", e => { if (e.key === "Enter") select({kind:"dom", id}); }); }
+    const c = centroid(f.geometry); const t = el("text", {x: px(c[0]), y: py(c[1]), "font-size": 14, fill: DOMC[id], "text-anchor":"middle", "font-weight":700, "pointer-events":"none"}, gDom); t.textContent = id;
+  });
+  G.s2.features.forEach(f => {
+    const p = el("path", {d: pathD(f.geometry), fill: "var(--copper)", "fill-opacity": .18, stroke: "var(--copper)", "stroke-width": 1.2, "vector-effect":"non-scaling-stroke", tabindex: opts.interactive ? 0 : -1, "aria-label": f.properties.name}, gS2);
+    if (opts.interactive) p.addEventListener("click", () => { if (!st.moved) select({kind:"s2", id:f.properties.id}); });
+    el("title", {}, p).textContent = f.properties.name + " – " + f.properties.precision;
+  });
+  G.occ.features.forEach(f => { const [x,y] = f.geometry.coordinates; const r0 = 3.2 + Math.min(4, f.properties.n_symbols_est - 1); const c = el("circle", {cx: px(x), cy: py(y), r: r0, "data-r": r0, class: "occ", fill: OCCC[f.properties.cls], stroke: "var(--ink)", "stroke-width": .5, "vector-effect":"non-scaling-stroke"}, gOcc); el("title", {}, c).textContent = `${f.properties.label} (${f.properties.n_symbols_est} symbol${f.properties.n_symbols_est>1?"s":""}) – MIREMPET slide 9, ±6 km`; });
+  Object.values(D.rails).forEach(line => el("polyline", {points: line.map(c => px(c[0]) + "," + py(c[1])).join(" "), fill:"none", stroke:"var(--ink)", "stroke-width": 1.6, "stroke-dasharray":"6 3", "vector-effect":"non-scaling-stroke"}, gRail));
+  Object.entries(D.ports).forEach(([n, c]) => { el("rect", {x: px(c[0]) - 4, y: py(c[1]) - 4, width: 8, height: 8, fill: "var(--ink)", class: "port", "data-cx": px(c[0]), "data-cy": py(c[1])}, gRail); const t = el("text", {x: px(c[0]) - 7, y: py(c[1]) + 4, "font-size": 11, "text-anchor":"end", fill:"var(--ink)"}, gRail); t.textContent = n; });
+  D.candidates.forEach(c => {
+    const g = el("g", {transform: `translate(${px(c.lon)},${py(c.lat)})`, class: "cand", "data-id": c.id, "data-path": c.path, tabindex: opts.interactive ? 0 : -1, role: opts.interactive ? "button" : null, "aria-label": c.name}, gCand);
+    const fill = c.path === "project" ? "var(--accent)" : "var(--copper)";
+    el(c.path === "project" ? "circle" : "rect", c.path === "project" ? {r: 8, fill, stroke: "var(--sheet)", "stroke-width": 2} : {x:-7, y:-7, width:14, height:14, transform:"rotate(45)", fill, stroke: "var(--sheet)", "stroke-width": 2}, g);
+    const t = el("text", {x: 11, y: 4, "font-size": 12, "font-weight": 700, fill: "var(--ink)", stroke: "var(--land)", "stroke-width": 3, "paint-order": "stroke"}, g); t.textContent = c.id;
+    el("title", {}, g).textContent = c.name;
+    if (opts.interactive) { g.addEventListener("click", e => { e.stopPropagation(); if (!st.moved) select({kind:"cand", id:c.id}); }); g.addEventListener("keydown", e => { if (e.key === "Enter") select({kind:"cand", id:c.id}); }); }
+  });
+  // pan / zoom
+  let drag = null;
+  svg.addEventListener("pointerdown", e => { drag = {x:e.clientX, y:e.clientY, vb: st.vb.slice()}; st.moved = false; svg.setPointerCapture(e.pointerId); svg.classList.add("drag"); });
+  svg.addEventListener("pointermove", e => { if (!drag) return; const r = svg.getBoundingClientRect(); const s = st.vb[2] / r.width;
+    const dx = (e.clientX - drag.x) * s, dy = (e.clientY - drag.y) * s; if (Math.abs(dx) + Math.abs(dy) > 3 * s) st.moved = true;
+    setVB(st, [drag.vb[0] - dx, drag.vb[1] - dy, drag.vb[2], drag.vb[3]]); });
+  const end = () => { drag = null; svg.classList.remove("drag"); setTimeout(() => st.moved = false, 0); };
+  svg.addEventListener("pointerup", end); svg.addEventListener("pointercancel", end);
+  svg.addEventListener("wheel", e => { e.preventDefault(); const r = svg.getBoundingClientRect(); const fx = (e.clientX - r.left) / r.width, fy = (e.clientY - r.top) / r.height; zoomAt(st, e.deltaY < 0 ? 0.8 : 1.25, fx, fy, false); }, {passive:false});
+  return st;
+}
+const peers = [];
+function setVB(st, vb, fromPeer){
+  st.vb = vb; st.svg.setAttribute("viewBox", vb.map(v => v.toFixed(1)).join(" "));
+  const z = HOME[2] / vb[2];
+  st.svg.querySelectorAll("text[data-fs]").forEach(t => t.setAttribute("font-size", (t.dataset.fs / Math.pow(z, .8)).toFixed(2)));
+  st.svg.querySelectorAll(".cand").forEach(g => { const tr = g.getAttribute("transform").replace(/ scale\([^)]*\)/, ""); g.setAttribute("transform", tr + ` scale(${(1/Math.pow(z,.85)).toFixed(3)})`); });
+  const sc = 1 / Math.pow(z, .8); st.svg.querySelectorAll("circle.occ").forEach(c => c.setAttribute("r", (c.dataset.r * sc).toFixed(2)));
+  st.svg.querySelectorAll("rect.port").forEach(r => { const h = 4 * sc; r.setAttribute("x", r.dataset.cx - h); r.setAttribute("y", r.dataset.cy - h); r.setAttribute("width", 2 * h); r.setAttribute("height", 2 * h); });
+  if (st.onview) st.onview();
+  if (st.sync && !fromPeer) peers.filter(p => p !== st).forEach(p => setVB(p, vb.slice(), true));
+}
+function zoomAt(st, f, fx = .5, fy = .5, anim = true){
+  const [x, y, w, h] = st.vb; const nw = Math.min(HOME[2] * 1.2, Math.max(HOME[2] / 60, w * f)), nh = nw * h / w;
+  const nv = [x + (w - nw) * fx, y + (h - nh) * fy, nw, nh]; anim ? animateTo(st, nv) : setVB(st, nv);
+}
+function animateTo(st, target, ms = 700){
+  if (reduce) return setVB(st, target);
+  const from = st.vb.slice(), t0 = performance.now();
+  const step = t => { const k = Math.min(1, (t - t0) / ms), e = k < .5 ? 4*k*k*k : 1 - Math.pow(-2*k + 2, 3) / 2;
+    setVB(st, from.map((v, i) => v + (target[i] - v) * e)); if (k < 1) requestAnimationFrame(step); };
+  requestAnimationFrame(step);
+}
+function fitBounds(st, b, pad = .25){ // b = [w,s,e,n]
+  const x0 = px(b[0]), x1 = px(b[2]), y0 = py(b[3]), y1 = py(b[1]);
+  let w = Math.max(x1 - x0, 60), h = Math.max(y1 - y0, 60); const ar = HOME[3] / HOME[2];
+  if (h / w > ar) w = h / ar; else h = w * ar; w *= 1 + pad * 2; h *= 1 + pad * 2;
+  animateTo(st, [(x0 + x1) / 2 - w / 2, (y0 + y1) / 2 - h / 2, w, h]);
+}
+const bboxOf = geom => { let b = [180, 90, -180, -90]; const polys = geom.type === "Polygon" ? [geom.coordinates] : geom.type === "MultiPolygon" ? geom.coordinates : [[[geom.coordinates]]];
+  polys.forEach(p => p.forEach(r => r.forEach(c => { b = [Math.min(b[0], c[0]), Math.min(b[1], c[1]), Math.max(b[2], c[0]), Math.max(b[3], c[1])]; }))); return b; };
+
+function setRaster(st, id, opacity){
+  st.layers.gImg.innerHTML = "";
+  if (!id || !OVL[id]) return;
+  const o = OVL[id]; const [w, s, e, n] = o.bounds;
+  const im = el("image", {href: o.file, x: px(w), y: py(n), width: px(e) - px(w), height: py(s) - py(n), preserveAspectRatio: "none", opacity: opacity ?? .7}, st.layers.gImg);
+  if (id.startsWith("p05")) im.setAttribute("clip-path", `url(#${st.svg.id}-clip)`);
+}
+
+/* ---------- atlas map ---------- */
+const A = buildMap($("#map"), {interactive:true});
+const LAYERS = [
+  ["gProv","Province boundaries (Natural Earth, 18 provinces)", true, "transparent","var(--ink-2)"],
+  ["gPlan","PLANAGEO Região Leste – survey not concluded; DEM/radiometric gap", true, "var(--ev-coverage)",""],
+  ["gDom","Airborne-geophysics domains D1–D9 (interpretation)", false, "#c9a24a",""],
+  ["gOcc","Critical-mineral occurrence symbols (digitised, ±6 km)", true, "#e8951a",""],
+  ["gS2","Portfolio project areas & Namibe/Huíla zones", true, "var(--copper)",""],
+  ["gRail","Railways (approximate) & ports", true, "var(--ink)",""],
+  ["gCand","Candidates: ● project  ◆ greenfield", true, "var(--accent)",""],
+];
+const lg = $("#legend");
+LAYERS.forEach(([k, label, on, sw]) => {
+  const id = "lay-" + k; const l = document.createElement("label");
+  l.innerHTML = `<input type="checkbox" id="${id}" ${on ? "checked" : ""}><span class="sw" style="background:${sw}"></span>${esc(label)}`; lg.appendChild(l);
+  const apply = () => { A.layers[k].style.display = $("#" + id).checked ? "" : "none"; if (k === "gProv") A.layers.gLab.style.display = $("#" + id).checked ? "" : "none"; };
+  l.querySelector("input").addEventListener("change", apply); apply();
+});
+const ovsel = $("#ovsel");
+ovsel.innerHTML = `<option value="">None</option>` + D.overlays.map(o => `<option value="${o.id}">${esc(o.title)}${o.rms_km != null ? ` · RMS ${o.rms_km} km` : " · ±10 km"}</option>`).join("");
+const applyOv = () => setRaster(A, ovsel.value, $("#ovop").value / 100);
+ovsel.addEventListener("change", applyOv); $("#ovop").addEventListener("input", () => { const im = A.layers.gImg.querySelector("image"); if (im) im.setAttribute("opacity", $("#ovop").value / 100); });
+$("#zin").onclick = () => zoomAt(A, .6); $("#zout").onclick = () => zoomAt(A, 1.6); $("#zhome").onclick = () => { animateTo(A, HOME.slice()); clearFloat(); };
+
+/* ---------- path toggle ---------- */
+let PATH = "project";
+function setPath(p){ PATH = p; $("#p-project").setAttribute("aria-pressed", p === "project"); $("#p-greenfield").setAttribute("aria-pressed", p === "greenfield");
+  A.svg.querySelectorAll(".cand").forEach(g => g.style.opacity = g.dataset.path === p ? 1 : .28); renderBoard();
+  const first = D.candidates.find(c => c.path === p); if (!SEL || (SEL.kind === "cand" && D.candidates.find(c => c.id === SEL.id).path !== p)) select({kind:"cand", id:first.id}); }
+$("#p-project").onclick = () => setPath("project"); $("#p-greenfield").onclick = () => setPath("greenfield");
+
+/* ---------- ranking only within comparable cohorts ---------- */
+const RANK = {};
+(function(){ const by = {}; D.candidates.forEach(c => (by[c.cohort] = by[c.cohort] || []).push(c));
+  Object.entries(by).forEach(([k, list]) => {
+    const cs = list.map(c => c.C); const comparable = list.length >= 2 && Math.max(...cs) - Math.min(...cs) <= 1 && !list.some(c => c.decision === "out of scope");
+    if (!comparable) { list.forEach(c => RANK[c.id] = list.length < 2 ? "Not ranked – no comparable candidate in this commodity cohort" : "Not ranked – evidence quality differs too much for a fair comparison"); return; }
+    const s = list.slice().sort((a, b) => b.G - a.G || b.C - a.C || b.A - a.A);
+    s.forEach((c, i) => RANK[c.id] = `Rank ${i + 1} of ${s.length} in ${k} cohort (${s.map(x => x.id).join(" > ")}); evidence confidence within one step`); });
+})();
+
+/* ---------- decision board ---------- */
+const DEC = [["data request","Data request"],["field visit","Field visit"],["first exploration budget","First exploration budget"],["defer","Defer"],["out of scope","Out of scope"]];
+function renderBoard(){
+  $("#board").innerHTML = DEC.map(([k, t]) => { const list = D.candidates.filter(c => c.decision === k && c.path === PATH);
+    return `<div class="col"><h4><span>${t}</span><span class="mono">${list.length}</span></h4>${list.length ? `<ul>${list.map(c => `<li><button data-c="${c.id}">${c.id} ${esc(c.name.split(" (")[0])}</button></li>`).join("")}</ul>` :
+      `<p class="empty">${k === "first exploration budget" ? "None yet. Chipindo (E01) qualifies only if the umpire re-assay and QA/QC review (V08) pass." : "—"}</p>`}</div>`; }).join("");
+  $$("#board [data-c]").forEach(b => b.onclick = () => select({kind:"cand", id:b.dataset.c}));
+}
+
+/* ---------- floating commodity illustrations ---------- */
+const MINCOL = {malachite:"#2e9e5b", chrysocolla:"#2bb3b1", azurite:"#2346a8", cuprite:"#9e2b25", chalcopyrite:"#c9a227", chalcocite:"#3b3f46", "native copper":"#c46a2c", hematite:"#8e2b2b", pyrolusite:"#2f2f2f", spodumene:"#c7b6d9", monazite:"#d48a3a", xenotime:"#c9a35a", pyrite:"#c8b25a", arsenopyrite:"#9aa0a6", sphalerite:"#7a4b1f", magnetite:"#262626", barite:"#d9d4c7", celestite:"#9cc3e6", gypsum:"#eae7df", graphite:"#4a4a4a", "visible gold":"#d4a017", diamond:"#bfe3f2"};
+function glyph(key, cls){
+  const t = D.tax[key] || [cls || "G", key]; const c = t[0];
+  if (c === "E") { const sym = key.length <= 3 ? key : key.slice(0, 2); return `<svg viewBox="0 0 30 30"><rect x="1" y="1" width="28" height="28" rx="2" fill="var(--paper)" stroke="var(--ink)"/><text x="15" y="20" text-anchor="middle" font-family="Archivo Narrow,Arial" font-weight="700" font-size="${sym.length > 2 ? 10 : 14}" fill="var(--ink)">${esc(sym)}</text></svg>`; }
+  if (c === "M") { const col = MINCOL[key] || "#8a8f99"; return `<svg viewBox="0 0 30 30"><polygon points="15,2 26,9 26,21 15,28 4,21 4,9" fill="${col}" stroke="var(--ink)" stroke-width="1"/><polyline points="4,9 15,15 26,9" fill="none" stroke="rgba(255,255,255,.55)"/><line x1="15" y1="15" x2="15" y2="28" stroke="rgba(255,255,255,.55)"/></svg>`; }
+  if (c === "P") return `<svg viewBox="0 0 30 30"><rect x="5" y="8" width="20" height="18" rx="2" fill="var(--accent)"/><rect x="9" y="4" width="12" height="5" rx="1" fill="var(--accent)" opacity=".6"/><line x1="9" y1="15" x2="21" y2="15" stroke="var(--sheet)" stroke-width="2"/><line x1="9" y1="20" x2="18" y2="20" stroke="var(--sheet)" stroke-width="2"/></svg>`;
+  return `<svg viewBox="0 0 30 30"><path d="M3 20 L15 25 L27 20 L15 15Z" fill="var(--copper)" opacity=".45"/><path d="M3 15 L15 20 L27 15 L15 10Z" fill="var(--copper)" opacity=".7"/><path d="M3 10 L15 15 L27 10 L15 5Z" fill="var(--copper)"/></svg>`;
+}
+let FLOAT = null;
+function clearFloat(){ FLOAT = null; $("#floaters").innerHTML = ""; $("#floatnote").hidden = true; }
+function showFloat(items, lonlat, note){
+  // items: [{key, ev, src}] – one floater per commodity explicitly reported for the selected area
+  const seen = new Set(); items = items.filter(i => { const k = i.key + "|" + i.ev; if (seen.has(i.key)) return false; seen.add(i.key); return true; });
+  FLOAT = {items, lonlat}; $("#floatnote").hidden = false; $("#floatnote").textContent = note; placeFloat();
+}
+function placeFloat(){
+  const box = $("#floaters"); box.innerHTML = ""; if (!FLOAT) return;
+  const r = A.svg.getBoundingClientRect(); if (!r.width) return; const vb = A.vb;
+  const cx = (px(FLOAT.lonlat[0]) - vb[0]) / vb[2] * r.width, cy = (py(FLOAT.lonlat[1]) - vb[1]) / vb[3] * r.height;
+  const narrow = r.width < 600; box.classList.toggle("row", narrow);
+  if (narrow) { const max = 6; FLOAT.items.slice(0, max).forEach(it => box.appendChild(floaterEl(it))); if (FLOAT.items.length > max) { const m = document.createElement("div"); m.className = "floater"; m.innerHTML = `<span><b>+${FLOAT.items.length - max} more</b><i>listed in the card</i></span>`; box.appendChild(m); } return; }
+  const n = FLOAT.items.length, rad = Math.min(r.width, r.height) * (n > 8 ? .38 : .3);
+  FLOAT.items.forEach((it, i) => {
+    const a = -Math.PI / 2 + i * 2 * Math.PI / n; let x = cx + rad * Math.cos(a) * 1.15, y = cy + rad * Math.sin(a);
+    x = Math.max(85, Math.min(r.width - 85, x)); y = Math.max(22, Math.min(r.height - 46, y));
+    const d = floaterEl(it); d.style.left = x + "px"; d.style.top = y + "px"; d.style.animationDelay = (i * .37) + "s";
+    box.appendChild(d);
+  });
+}
+function floaterEl(it){
+    const t = D.tax[it.key] || ["G", it.key]; const d = document.createElement("div"); d.className = "floater";
+    d.innerHTML = glyph(it.key) + `<span><b>${esc(t[1])}</b><i><span class="ev" style="background:var(--ev-${it.ev})"></span>${CLS[t[0]]} · ${EVN[it.ev]}${it.src ? " · " + esc(it.src) : ""}</i></span>`;
+    d.title = `${t[1]} – ${CLS[t[0]]}; ${EVN[it.ev]}${it.src ? "; source " + it.src : ""}`;
+    return d;
+}
+A.onview = () => placeFloat(); addEventListener("resize", placeFloat);
+
+/* ---------- selection & cards ---------- */
+let SEL = null;
+const meter = (label, v, col, tip) => `<div class="axis" title="${esc(tip)}"><span class="lbl">${label}</span><span class="bar"><span style="width:${v * 20}%;background:${col}"></span></span><span class="mono">${v}/5</span></div>`;
+const evb = ev => `<span class="evb ev-${ev}">${EVN[ev]}</span>`;
+function claimLi(id){ const c = CLM[id]; if (!c) return ""; const s = SRC[c.src];
+  return `<li>${evb(c.ev)}<span>${esc(c.text)}<small>${esc(s.short)}${c.page ? " p." + c.page : ""} · ${esc(c.date)} · scale ${esc(c.scale)} · location ${esc(c.prec)} · family ${esc(c.fam)}</small>${c.status ? `<small class="${/contradict|inconsisten|error|impossible|not credible|CONTRADICTED/i.test(c.status) ? "flag" : ""}">${esc(c.status)}</small>` : ""}</span></li>`; }
+const thumbs = ids => ids.length ? `<div class="thumbs">${ids.map(i => FIG[i] ? `<button data-fig="${i}" aria-label="Open figure: ${esc(FIG[i].cap)}"><img src="img/${FIG[i].file}" alt="${esc(FIG[i].cap)}" loading="lazy"></button>` : "").join("")}</div>` : "";
+function wireThumbs(root){ root.querySelectorAll("[data-fig]").forEach(b => b.onclick = () => openFig(b.dataset.fig)); }
+function openFig(id){ const f = FIG[id]; $("#lbimg").src = "img/" + f.file; $("#lbimg").alt = f.cap; $("#lbcap").textContent = `${f.cap} — ${SRC[f.src].short}, page ${f.page} · ${EVN[f.ev]}`; $("#lb").showModal(); }
+
+function candCard(c){
+  const s = c.spatial; const reqs = REQ.filter(r => r.for_.includes(c.id));
+  const famNames = c.families.map(f => (D.families.find(x => x.id === f) || {name:f}).name);
+  const indep = new Set(c.families.filter(f => !["F-OPR","F-PUB"].includes(f))).size;
+  return `<div class="lbl">${c.path === "project" ? "Existing project" : "Greenfield target"} · ${c.id}</div>
+  <h2>${esc(c.name)}</h2>
+  <div class="meta"><span class="chip dec">Next: ${esc(c.decision)}</span><span class="chip">${esc(c.province)}</span><span class="chip">${esc(RANK[c.id])}</span></div>
+  <div class="axes">
+    ${meter("Geological potential", c.G, "var(--copper)", "Fit and scale of the deposit model, judged apart from how well it is evidenced")}
+    ${meter("Evidence confidence", c.C, "var(--ev-measured)", "1 interpretation only · 2 occurrence or operator figure · 3 measured, single campaign, no QA/QC · 4 measured with independent corroboration · 5 code-compliant estimate")}
+    ${meter("Commercial accessibility", c.A, "var(--ok)", "Tenure clarity, holder, infrastructure distance, protected areas")}
+  </div>
+  <section><h3>Deposit hypothesis</h3><p>${esc(c.hypothesis)}</p></section>
+  <section><h3>Strongest supporting observation</h3><p>${esc(c.strongest)}</p></section>
+  <section><h3>Competing explanation</h3><p>${esc(c.competing)}</p></section>
+  <section><h3>Evidence gap</h3><p>${esc(c.gap)}</p></section>
+  <section><h3>Tenure and access</h3><dl class="kv">
+    <dt>Holder</dt><dd>${esc(c.holder)}</dd><dt>Tenure</dt><dd>${esc(c.tenure)}</dd>
+    <dt>Computed position</dt><dd class="mono" style="font-size:12px">${c.lon.toFixed(3)}E ${(-c.lat).toFixed(3)}S · ${esc(c.prec)}</dd>
+    <dt>Province (NE)</dt><dd>${esc(s.province_ne || "offshore/coast edge")}</dd>
+    <dt>PLANAGEO region</dt><dd>${esc(s.planageo || "—")}${s.planageo === "Região Leste" ? " – survey not concluded" : ""}</dd>
+    <dt>Airborne domain</dt><dd>${esc(s.domains.join("; ") || "none (outside D1–D9)")}</dd>
+    <dt>Rail / port</dt><dd>${s.rail.km} km to ${esc(s.rail.name)} · ${s.port.km} km to ${esc(s.port.name)} <small class="mono">(straight line, approximate track)</small></dd>
+    <dt>Slide-9 symbols ≤25 km</dt><dd>${Object.keys(s.occ25).length ? Object.entries(s.occ25).map(([k, v]) => `${v}× ${esc(k)}`).join("; ") : "none"}</dd>
+  </dl></section>
+  <section><h3>Cheapest decisive next test</h3><p>${esc(c.test)}</p></section>
+  <section><h3>What the result means for spending</h3><div class="gate"><b class="adv">Advance</b><span>${esc(c.advance)}</span><b class="def">Defer</b><span>${esc(c.defer)}</span><b class="stop">Stop</b><span>${esc(c.stop)}</span></div></section>
+  <section><h3>Commodities reported here</h3><div class="meta">${c.commodities.map(([k, ev]) => { const t = D.tax[k] || ["G", k]; return `<span class="chip" title="${CLS[t[0]]} · ${EVN[ev]}"><span class="dot" style="background:var(--ev-${ev})"></span>${esc(t[1])} <small class="mono">${t[0]}</small></span>`; }).join("")}</div>
+    <p class="mono" style="font-size:11px;color:var(--ink-2)">E element · M mineral species · G commodity group · P proposed product. Dot colour = evidence type.</p></section>
+  <section><h3>Claims and their sources</h3><ul class="claims">${c.claims.map(claimLi).join("")}</ul>
+    <p style="font-size:13px;margin-top:6px">Observation families: ${famNames.map(esc).join("; ")}. Independent (non-operator) families: <b>${indep}</b>${indep < 2 ? " – no independent corroboration yet" : ""}.</p></section>
+  ${c.figs.length ? `<section><h3>Figures</h3>${thumbs(c.figs)}</section>` : ""}
+  <section><h3>Data to request</h3>${reqs.length ? `<ul class="claims">${reqs.map(r => `<li><span class="evb" style="background:var(--ink)">${r.id} P${r.pri}</span><span>${esc(r.what)}<small>From: ${esc(r.whom)} · unlocks: ${esc(r.decision)}</small></span></li>`).join("")}</ul>` : "<p>None beyond the cadastre check.</p>"}</section>`;
+}
+function provCard(name){
+  const m = D.province_matrix[name] || {}; const cands = D.candidates.filter(c => c.spatial.province_ne === name);
+  const occ = G.occ.features.filter(f => f.properties.province === name); const cnt = {}; occ.forEach(f => cnt[f.properties.label] = (cnt[f.properties.label] || 0) + f.properties.n_symbols_est);
+  return `<div class="lbl">Province</div><h2>${esc(name)}</h2>
+  <p style="font-size:13.5px">Natural Earth 18-province division. The 2024 reform created 21 provinces; request R12 for the new boundaries.</p>
+  <section><h3>Detected and probable minerals (Portfolio study, p.7)</h3><div class="tbl"><table class="pm"><tr>${D.pm_cols.map(c => `<th style="writing-mode:vertical-rl;transform:rotate(180deg);font-size:11px">${esc(c)}</th>`).join("")}</tr><tr>${D.pm_cols.map(c => `<td class="${m[c] && m[c] !== "_" ? m[c] : ""}">${m[c] && m[c] !== "_" ? m[c] : ""}</td>`).join("")}</tr></table></div>
+  <p class="mono" style="font-size:11px">D detected (reported occurrence) · H / M / L probable (geological interpretation, not a discovery)</p></section>
+  <section><h3>Critical-mineral symbols on MIREMPET slide 9</h3><p>${Object.keys(cnt).length ? Object.entries(cnt).map(([k, v]) => `${v}× ${esc(k)}`).join("; ") : "none digitised"} <small class="mono">(same occurrence family as the D ratings – not independent)</small></p></section>
+  <section><h3>Candidates in this province</h3>${cands.length ? `<ul class="claims">${cands.map(c => `<li><span class="evb" style="background:${c.path === "project" ? "var(--accent)" : "var(--copper)"}">${c.id}</span><span><button class="linkish" data-c="${c.id}" style="border:0;background:none;padding:0;color:var(--accent);text-decoration:underline;text-align:left">${esc(c.name)}</button></span></li>`).join("")}</ul>` : "<p>None yet.</p>"}</section>`;
+}
+function domCard(id){ const f = G.domains.features.find(x => x.properties.id === id); const p = f.properties;
+  const occ = G.occ.features.filter(o => o.properties.domain === id); const cnt = {}; occ.forEach(o => cnt[o.properties.label] = (cnt[o.properties.label] || 0) + o.properties.n_symbols_est);
+  const cands = D.candidates.filter(c => c.spatial.domains.includes(p.name));
+  return `<div class="lbl">Airborne-geophysics domain · geological interpretation</div><h2>${esc(p.name)}</h2>
+  <div class="meta"><span class="chip">${p.area_km2.toLocaleString()} km² inside Angola</span><span class="chip">${esc(p.precision)}</span><span class="chip">MIREMPET slide 6 · IGEO 20/04/2022</span></div>
+  <p>The domain label is an interpretation built on the PLANAGEO airborne survey. Agreement between this label and the magnetic or radiometric images is not corroboration – they are one survey family.</p>
+  <section><h3>Independent support (occurrence family)</h3><p>${Object.keys(cnt).length ? Object.entries(cnt).map(([k, v]) => `${v}× ${esc(k)}`).join("; ") : "No critical-mineral symbols digitised inside this domain."}</p></section>
+  <section><h3>Candidates</h3><p>${cands.map(c => `<button data-c="${c.id}" style="border:0;background:none;padding:0;color:var(--accent);text-decoration:underline">${c.id}</button>`).join(", ") || "none"}</p></section>
+  <section><h3>Figures</h3>${thumbs(["mir_p06","mir_p05_6","mir_p05_4"])}</section>`; }
+function s2Card(id){ const f = G.s2.features.find(x => x.properties.id === id); const p = f.properties;
+  return `<div class="lbl">${esc(p.kind)} · Portfolio study (S2)</div><h2>${esc(p.name)}</h2><div class="meta"><span class="chip">${esc(p.precision)}</span></div>
+  ${p.commodities ? `<section><h3>Reported here</h3><div class="meta">${p.commodities.map(k => { const t = D.tax[k] || ["G", k]; return `<span class="chip">${esc(t[1])} <small class="mono">${t[0]}</small></span>`; }).join("")}</div></section>` : ""}
+  <p>Open the related candidate for the evidence card: ${D.candidates.filter(c => c.name.includes(id) || (id.startsWith("P1") && c.id === "E01")).map(c => `<button data-c="${c.id}" style="border:0;background:none;padding:0;color:var(--accent);text-decoration:underline">${c.id}</button>`).join(", ") || "none – listed for completeness"}.</p>`; }
+
+function itemsForCand(c){ return c.commodities.map(([k, ev]) => ({key:k, ev, src: (c.claims.map(i => CLM[i]).find(cl => cl && cl.ev === ev) || {}).src || ""})); }
+function select(s){
+  SEL = s; const card = $("#card");
+  A.svg.querySelectorAll(".cand").forEach(g => g.querySelector("circle,rect").setAttribute("stroke", g.dataset.id === s.id ? "var(--ink)" : "var(--sheet)"));
+  if (s.kind === "cand"){
+    const c = D.candidates.find(x => x.id === s.id); if (c.path !== PATH) { PATH = c.path; $("#p-project").setAttribute("aria-pressed", PATH === "project"); $("#p-greenfield").setAttribute("aria-pressed", PATH === "greenfield"); A.svg.querySelectorAll(".cand").forEach(g => g.style.opacity = g.dataset.path === PATH ? 1 : .28); renderBoard(); }
+    card.innerHTML = candCard(c); const d = .9; fitBounds(A, [c.lon - d, c.lat - d, c.lon + d, c.lat + d], .1);
+    setTimeout(() => showFloat(itemsForCand(c), [c.lon, c.lat], `${c.id}: ${c.commodities.length} commodities reported for this area – labels give class and evidence type`), reduce ? 0 : 720);
+  } else if (s.kind === "prov"){
+    const f = G.provinces.features.find(x => x.properties.name === s.id); card.innerHTML = provCard(s.id); fitBounds(A, bboxOf(f.geometry), .08);
+    const m = D.province_matrix[s.id] || {}; const map = {"Au":"Au","Cu":"Cu","Co-Ni":"Co","Fe-Ti-V":"Fe","Mn":"Mn","Pb-Zn-Ag":"Pb","REE":"REE","Nb-Ta":"Nb","Pegmatite (Li,Be,Sn,W)":"Li","Diamonds":"diamond","Phosphate":"phosphate rock","Evaporites":"gypsum","Industrial minerals & stone":"marble"};
+    const items = Object.entries(m).filter(([, v]) => v === "D").map(([k]) => ({key: map[k], ev:"occurrence", src:"S2 p.7"}));
+    D.candidates.filter(c => c.spatial.province_ne === s.id).forEach(c => c.commodities.forEach(([k, ev]) => { if (ev !== "interpretation") items.push({key:k, ev, src:c.id}); }));
+    const cc = centroid(f.geometry); setTimeout(() => showFloat(items, cc, `${s.id}: commodities explicitly reported (S2 'D' ratings and candidate records). Probable ratings are in the card, not floated.`), reduce ? 0 : 720);
+  } else if (s.kind === "dom"){
+    const f = G.domains.features.find(x => x.properties.id === s.id); card.innerHTML = domCard(s.id); fitBounds(A, bboxOf(f.geometry), .05);
+    const items = f.properties.commodities_as_labelled.map(k => ({key:k, ev:"interpretation", src:"S1 p.6"}));
+    G.occ.features.filter(o => o.properties.domain === s.id).forEach(o => o.properties.elements.forEach(e => items.push({key:e, ev:"occurrence", src:"S1 p.9"})));
+    setTimeout(() => showFloat(items, centroid(f.geometry), `${s.id}: domain label (interpretation) plus digitised occurrence symbols inside it`), reduce ? 0 : 720);
+  } else if (s.kind === "s2"){
+    const f = G.s2.features.find(x => x.properties.id === s.id); card.innerHTML = s2Card(s.id); fitBounds(A, bboxOf(f.geometry), .6);
+    setTimeout(() => showFloat((f.properties.commodities || []).map(k => ({key:k, ev:"occurrence", src:"S2"})), centroid(f.geometry), `${s.id}: minerals recorded in the Portfolio zone`), reduce ? 0 : 720);
+  }
+  card.querySelectorAll("[data-c]").forEach(b => b.onclick = () => select({kind:"cand", id:b.dataset.c})); wireThumbs(card);
+}
+
+/* ---------- search ---------- */
+const INDEX = [];
+D.candidates.forEach(c => INDEX.push({t: c.name, sub: `${c.id} · ${c.path === "project" ? "existing project" : "greenfield"} · ${c.province}`, terms: [c.name, c.province, c.id, ...c.commodities.map(([k]) => k + " " + (D.tax[k] || ["", k])[1])].join(" ").toLowerCase(), go: () => select({kind:"cand", id:c.id})}));
+G.provinces.features.forEach(f => INDEX.push({t: f.properties.name, sub: "province", terms: f.properties.name.toLowerCase(), go: () => select({kind:"prov", id:f.properties.name})}));
+G.domains.features.forEach(f => INDEX.push({t: f.properties.name, sub: "airborne domain (interpretation)", terms: (f.properties.name + " " + f.properties.commodities_as_labelled.join(" ")).toLowerCase(), go: () => select({kind:"dom", id:f.properties.id})}));
+G.s2.features.forEach(f => INDEX.push({t: f.properties.name, sub: "Portfolio area / zone", terms: (f.properties.name + " " + (f.properties.commodities || []).map(k => k + " " + (D.tax[k] || ["", k])[1]).join(" ")).toLowerCase(), go: () => select({kind:"s2", id:f.properties.id})}));
+const norm = s => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+INDEX.forEach(i => i.n = norm(i.terms + " " + i.t));
+const q = $("#q"), res = $("#results");
+q.addEventListener("input", () => { const v = norm(q.value.trim()); if (v.length < 2) { res.hidden = true; return; }
+  const words = v.split(/\s+/); const hits = INDEX.filter(i => words.every(w => i.n.includes(w))).slice(0, 14);
+  res.innerHTML = hits.length ? hits.map((h, k) => `<button data-k="${k}"><span>${esc(h.t)}</span><small>${esc(h.sub)}</small></button>`).join("") : `<p style="padding:8px 10px;margin:0;font-size:13px">No match. Try an element symbol (Li, Nb, Cu), a mineral (spodumene) or a province (Huíla).</p>`;
+  res.hidden = false; res.querySelectorAll("button").forEach(b => b.onclick = () => { res.hidden = true; showView("atlas"); hits[+b.dataset.k].go(); }); });
+q.addEventListener("keydown", e => { if (e.key === "Enter") { const b = res.querySelector("button"); if (b) b.click(); } if (e.key === "Escape") res.hidden = true; });
+document.addEventListener("click", e => { if (!e.target.closest(".search")) res.hidden = true; });
+
+/* ---------- compare view ---------- */
+let L = null, R = null;
+const CMP_OPTS = [...D.overlays.map(o => [o.id, o.title]), ["domains", VEC.domains.title], ["occ", VEC.occ.title], ["planageo", VEC.planageo.title], ["s2", VEC.s2.title]];
+function initCompare(){
+  if (L) return; L = buildMap($("#mapL"), {interactive:false}); R = buildMap($("#mapR"), {interactive:false}); L.sync = R.sync = true; peers.push(L, R);
+  ["cmpL","cmpR"].forEach((id, i) => { $("#" + id).innerHTML = CMP_OPTS.map(([k, t]) => `<option value="${k}">${esc(t)}</option>`).join(""); $("#" + id).value = i ? "p09" : "p06"; $("#" + id).onchange = applyCompare; });
+  applyCompare();
+}
+function applyCompare(){
+  [[L, $("#cmpL").value], [R, $("#cmpR").value]].forEach(([st, v]) => {
+    const show = {gDom: v === "domains", gOcc: v === "occ", gPlan: v === "planageo", gS2: v === "s2", gCand: true, gRail: false};
+    Object.entries(show).forEach(([k, on]) => st.layers[k].style.display = on ? "" : "none");
+    setRaster(st, OVL[v] ? v : "", .85);
+  });
+  const fl = FAM_OF[$("#cmpL").value], fr = FAM_OF[$("#cmpR").value]; const w = $("#cmpwarn");
+  const fname = f => (D.families.find(x => x.id === f) || {name: f}).name;
+  if (fl === fr) { w.className = "cmpwarn"; w.innerHTML = `<b>Same survey family:</b> both sheets derive from ${esc(fname(fl))}. Where they agree, count it once.`; }
+  else { w.className = "cmpwarn okk"; w.innerHTML = `<b>Different families:</b> left ${esc(fname(fl))}; right ${esc(fname(fr))}. Coincidence between them is independent support, within the positional error of each layer.`; }
+}
+
+/* ---------- register views ---------- */
+function renderSources(){
+  const v = $("#v-sources"); let filt = "all";
+  const draw = () => {
+    const rows = D.claims.filter(c => filt === "all" || c.ev === filt);
+    v.innerHTML = `<div class="sheet"><h2>Source register</h2><p>Every material claim, traced to its source, date, scale, location precision, evidence type and survey family. A downloadable copy is in <span class="mono">atlas/registers/source_register.csv</span>.</p>
+    <div class="tbl"><table class="reg"><thead><tr><th>ID</th><th>Source</th><th>Author</th><th>Date</th><th>Kind</th><th>Note</th></tr></thead><tbody>${D.sources.map(s => `<tr><td class="mono">${s.id}</td><td>${esc(s.title)}</td><td>${esc(s.author)}</td><td class="mono">${esc(s.date)}</td><td>${esc(s.kind)}</td><td>${esc(s.note)}</td></tr>`).join("")}</tbody></table></div></div>
+    <div class="sheet"><h2>Survey families</h2><p>Items in the same family are one line of evidence. Maps derived from the same survey do not corroborate each other.</p>
+    <div class="tbl"><table class="reg"><thead><tr><th>Family</th><th>Name</th><th>Members</th><th>Note</th></tr></thead><tbody>${D.families.map(f => `<tr><td class="mono">${f.id}</td><td>${esc(f.name)}</td><td>${f.members.map(esc).join("<br>")}</td><td>${esc(f.note)}</td></tr>`).join("")}</tbody></table></div></div>
+    <div class="sheet"><h2>Material claims</h2><div class="filters">${["all", ...Object.keys(EVN)].map(k => `<button data-f="${k}" aria-pressed="${filt === k}">${k === "all" ? "All" : EVN[k]} <span class="mono">${k === "all" ? D.claims.length : D.claims.filter(c => c.ev === k).length}</span></button>`).join("")}</div>
+    <div class="tbl"><table class="reg"><thead><tr><th>ID</th><th>Claim</th><th>Evidence</th><th>Source</th><th>Date</th><th>Scale</th><th>Location precision</th><th>Family</th><th>Status / flag</th></tr></thead><tbody>${rows.map(c => `<tr><td class="mono">${c.id}</td><td>${esc(c.text)}</td><td>${evb(c.ev)}</td><td>${esc(SRC[c.src].short)}${c.page ? " p." + c.page : ""}</td><td class="mono">${esc(c.date)}</td><td>${esc(c.scale)}</td><td>${esc(c.prec)}</td><td class="mono">${esc(c.fam)}</td><td class="${/contradict|inconsisten|error|impossible|not credible/i.test(c.status) ? "flag" : ""}">${esc(c.status)}</td></tr>`).join("")}</tbody></table></div></div>`;
+    v.querySelectorAll("[data-f]").forEach(b => b.onclick = () => { filt = b.dataset.f; draw(); });
+  }; draw();
+}
+function renderRequests(){
+  $("#v-requests").innerHTML = `<div class="sheet"><h2>Prioritised primary-data requests</h2><p>Each request names what to ask for, from whom, in what format, and the investment decision it unlocks. Priority 1 items gate the most spending. Copy in <span class="mono">atlas/registers/data_requests.csv</span>.</p>
+  <div class="tbl"><table class="reg"><thead><tr><th>#</th><th>Priority</th><th>Request</th><th>From whom</th><th>Format</th><th>Decision it unlocks</th><th>Why it matters</th><th>Candidates</th></tr></thead><tbody>${D.requests.slice().sort((a, b) => a.pri - b.pri || a.id.localeCompare(b.id)).map(r => `<tr><td class="mono">${r.id}</td><td class="mono">P${r.pri}</td><td>${esc(r.what)}</td><td>${esc(r.whom)}</td><td>${esc(r.fmt)}</td><td>${esc(r.decision)}</td><td>${esc(r.unlocks)}</td><td class="mono">${r.for_.join(" ")}</td></tr>`).join("")}</tbody></table></div></div>`;
+}
+function renderVerify(){
+  const done = D.verify.filter(v => v.status === "completed").length;
+  $("#v-verify").innerHTML = `<div class="sheet"><h2>How an independent team can test each conclusion</h2><p>${done} of ${D.verify.length} conclusion-level tests were completed in this build, all of them desk or spatial checks. Every field, laboratory, drilling, metallurgical and tenure test is still required. 3-D subsurface modelling is limited to Chipindo, the only area with surveyed drilling, and waits on the collar and down-hole surveys (V09).</p>
+  <div class="tbl"><table class="reg"><thead><tr><th>#</th><th>Conclusion</th><th>Independent test</th><th>Who</th><th>Status</th><th>Result so far</th></tr></thead><tbody>${D.verify.map(v => `<tr><td class="mono">${v.id}</td><td>${esc(v.conclusion)}</td><td>${esc(v.test)}</td><td>${esc(v.who)}</td><td class="st-${v.status}">${v.status === "completed" ? "Completed" : "Still required"}</td><td>${esc(v.result)}</td></tr>`).join("")}</tbody></table></div></div>
+  <div class="sheet"><h2>Spatial QA log (completed in this build)</h2><p>GDAL 3.12 through rasterio, shapely and pyproj. QGIS was not available in the build environment; the GeoJSON layers in <span class="mono">atlas/data</span> open directly in QGIS for the re-check.</p>
+  <div class="tbl"><table class="reg"><thead><tr><th>Check</th><th>Method</th><th>Result</th></tr></thead><tbody>${D.qa.map(q => `<tr><td>${esc(q.check)}</td><td>${esc(q.method)}</td><td>${esc(q.result)}</td></tr>`).join("")}</tbody></table></div></div>
+  <div class="sheet"><h2>Coordinate systems and methods recorded in the sources</h2><div class="tbl"><table class="reg"><thead><tr><th>Dataset</th><th>Coordinate system</th><th>Acquisition / analytical method</th><th>Coverage</th><th>Quality control reported</th></tr></thead><tbody>
+    <tr><td>PLANAGEO division map (S1 p.4)</td><td>UTM zone 33S, WGS84 (stated)</td><td>Programme map</td><td>National; Leste pending</td><td>None stated</td></tr>
+    <tr><td>Airborne magnetics, radiometrics, DEM (S1 p.5)</td><td>Not stated on images; fitted to UTM 33S</td><td>Fixed-wing airborne, 1,000 m lines, ±120 m altitude; tie lines, sensors, year not given</td><td>National display; DEM/radiometric gap ≈27,000 km² near 19.2E 8.3S</td><td>None stated</td></tr>
+    <tr><td>Domains, occurrences, critical minerals (S1 p.6, 8, 9)</td><td>GCS WGS84, EPSG:4326 (stated)</td><td>Compilation / interpretation</td><td>National incl. Cabinda</td><td>None stated</td></tr>
+    <tr><td>IGEO laboratory (S1 p.11)</td><td>—</td><td>ICP-MS, GFAAS, AES, IC, XRF, XRD, EPMA</td><td>Luanda, Huíla, Saurimo</td><td>ISO/IEC 17025:2017, CNAS L15776 (claimed)</td></tr>
+    <tr><td>Chipindo (S2 p.27)</td><td>UTM 33S</td><td>Diamond drilling, trenches, chips, soils, pits; ALS laboratory; pXRF</td><td>Data extent ≈764 km²</td><td>Not reported in S2</td></tr>
+    <tr><td>Namibe lithium (S1 p.18)</td><td>UTM 33S (map grid)</td><td>Grab, trench and diamond core; lab not stated</td><td>Title 023/05/03/T.P</td><td>None shown</td></tr>
+    <tr><td>PLANAGEO sheets (S2)</td><td>WGS84</td><td>1:250,000 mapping; whole-rock geochemistry (method not stated)</td><td>D-33/M, 333, 334</td><td>Not reported</td></tr>
+  </tbody></table></div></div>`;
+}
+function renderFigures(){
+  $("#v-figures").innerHTML = `<div class="sheet"><h2>Figures used</h2><p>Every map, inset, legend, project plan and assay figure from the MIREMPET keynote that bears on mineral evidence, plus the Portfolio study maps cited in the cards. Governance charts, equipment photographs and sustainability imagery are not evidence and are left out.</p>
+  <div class="gallery">${D.figs.map(f => `<figure><button data-fig="${f.id}" aria-label="Enlarge ${esc(f.cap)}"><img src="img/${f.file}" alt="${esc(f.cap)}" loading="lazy"></button><figcaption>${evb(f.ev)}<span>${esc(f.cap)}</span><span class="mono" style="font-size:11px;color:var(--ink-2)">${esc(SRC[f.src].short)} · page ${f.page}</span></figcaption></figure>`).join("")}</div></div>`;
+  wireThumbs($("#v-figures"));
+}
+
+/* ---------- views & hash routing ---------- */
+const VIEWS = ["atlas","compare","sources","requests","verify","figures"]; const drawn = {};
+function showView(v){ if (!VIEWS.includes(v)) v = "atlas";
+  VIEWS.forEach(k => $("#v-" + k).hidden = k !== v); $$("nav.views button").forEach(b => b.setAttribute("aria-pressed", b.dataset.view === v));
+  if (!drawn[v]) { drawn[v] = 1; ({compare: initCompare, sources: renderSources, requests: renderRequests, verify: renderVerify, figures: renderFigures}[v] || (() => {}))(); }
+  if (v === "atlas") requestAnimationFrame(placeFloat);
+  if (location.hash.slice(1) !== v) history.replaceState(null, "", "#" + v);
+}
+$$("nav.views button").forEach(b => b.onclick = () => showView(b.dataset.view));
+addEventListener("hashchange", () => showView(location.hash.slice(1)));
+$("#foot").textContent = "Desk assessment from two presentations and three operator web pages read on 3 Nov 2026. Positions digitised from slides carry the stated errors and are for screening, not for staking. No site visit, sampling or legal review has been done. Base map: Natural Earth (public domain).";
+
+renderBoard(); setPath("project"); select({kind:"cand", id:"E01"}); showView(location.hash.slice(1) || "atlas");
+})();
+</script>

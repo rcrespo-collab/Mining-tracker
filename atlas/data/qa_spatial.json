@@ -1,0 +1,131 @@
+{
+ "generated": "2026-11-03",
+ "checks": [
+  {
+   "check": "National outline includes Cabinda exclave",
+   "method": "Count polygons in Natural Earth admin-1 union; test that Cabinda town (12.20E, 5.55S) falls inside",
+   "result": "3 polygon parts; Cabinda inside=True; area 1,244,411 km2",
+   "status": "completed"
+  },
+  {
+   "check": "Georeference MIREMPET slide 4 (PLANAGEO division map)",
+   "method": "36 GCPs from UTM 33S (EPSG:32733) frame ticks, least-squares affine (GDAL/rasterio)",
+   "result": "RMS 0.75 km, max 1.34 km; pixel size 1.95 km. Positional uncertainty dominated by slide resolution (~2 km/px) and tick reading (+/-1 px).",
+   "status": "completed"
+  },
+  {
+   "check": "Extract PLANAGEO 'Região Leste (por concluir)' extent",
+   "method": "Colour threshold of legend green on slide 4, morphological closing, vectorised with GDAL polygonize (rasterio.features.shapes), clipped to Natural Earth outline",
+   "result": "Leste (pending) = 450,112 km2 (36% of Angola); Norte+Sul (concluded) = 794,299 km2",
+   "status": "completed"
+  },
+  {
+   "check": "Georeference MIREMPET slide 6 (airborne geophysics domains)",
+   "method": "20 GCPs from WGS84 graticule ticks, affine",
+   "result": "RMS 0.35 km, max 0.53 km",
+   "status": "completed"
+  },
+  {
+   "check": "Digitise the nine airborne-geophysics domains",
+   "method": "Vertices read on gridded enlargements of slide 6, transformed with the slide-6 affine, clipped to Angola",
+   "result": "9 polygons; together 941,273 km2 = 76% of Angola (domains are not a full partition – NW, coastal basins and SE Kalahari cover are unassigned)",
+   "status": "completed"
+  },
+  {
+   "check": "Georeference MIREMPET slides 8 and 9 (occurrence maps)",
+   "method": "25 and 20 graticule GCPs, affine",
+   "result": "slide 8 RMS 0.72 km (pixel 2.6 km); slide 9 RMS 0.50 km (pixel 1.7 km)",
+   "status": "completed"
+  },
+  {
+   "check": "Digitise coloured critical-mineral symbols on slide 9 and test the '>300 points' statement",
+   "method": "Per-class colour distance to legend swatch, opening, connected components (GDAL-rasterised land mask), centroid; merged clusters counted by area/110 px. Grey classes (Mo+Cu, graphite) not extracted – indistinguishable from roads/text.",
+   "result": "190 coloured symbols recovered (Ag:6, Al:5, AuAg:48, CuCoAuPbZn:108, NiCoCuCr:8, PbCuZn:9, V:1, Zn:5). Consistent in order of magnitude with '>300'; exact count needs the IGEO occurrence table.",
+   "status": "completed"
+  },
+  {
+   "check": "Coverage of Total magnetic intensity (MIREMPET slide 5)",
+   "method": "Non-background pixel mask, bounding-box fit to Angola extremes in UTM 33S, polygonised and differenced against Natural Earth outline",
+   "result": "pixel 2.5 x 2.5 km (anisotropy 1.1%); 0 uncovered patch(es) >1,500 km2 totalling 0 km2",
+   "status": "completed"
+  },
+  {
+   "check": "Coverage of Digital elevation model (MIREMPET slide 5)",
+   "method": "Non-background pixel mask, bounding-box fit to Angola extremes in UTM 33S, polygonised and differenced against Natural Earth outline",
+   "result": "pixel 2.7 x 2.6 km (anisotropy 2.9%); 3 uncovered patch(es) >1,500 km2 totalling 38,233 km2 centred near 19.2E 8.4S, 23.5E 11.2S, 23.6E 12.9S",
+   "status": "completed"
+  },
+  {
+   "check": "Coverage of Radiometric ternary K–Th–U (MIREMPET slide 5)",
+   "method": "Non-background pixel mask, bounding-box fit to Angola extremes in UTM 33S, polygonised and differenced against Natural Earth outline",
+   "result": "pixel 2.8 x 2.7 km (anisotropy 3.2%); 3 uncovered patch(es) >1,500 km2 totalling 30,889 km2 centred near 19.1E 8.3S, 21.2E 17.8S, 16.3E 17.4S",
+   "status": "completed"
+  },
+  {
+   "check": "Survey-coverage gaps common to the DEM and radiometric products",
+   "method": "Intersection of the no-data patches of the two independently masked slide-5 images (single-image edge artefacts discarded)",
+   "result": "1 consistent gap(s): 27,202 km2 centred 19.2E 8.3S. The magnetic image shows data there, so the magnetic grid may merge a different survey – confirm with flight-line database.",
+   "status": "completed"
+  },
+  {
+   "check": "Spatial join of every candidate",
+   "method": "Point-in-polygon against Natural Earth provinces, digitised domains, PLANAGEO regions, airborne gap; straight-line distance (Africa Albers) to approximate rail polylines and ports; digitised slide-9 symbols within 25 km",
+   "result": "19 candidates joined; access distances are proxies, not route lengths",
+   "status": "completed"
+  },
+  {
+   "check": "Stated vs computed province for each candidate",
+   "method": "Compare authored province text with point-in-polygon result",
+   "result": "all consistent",
+   "status": "completed"
+  },
+  {
+   "check": "Do the digitised Ni+Co+Cu+Cr occurrences fall in the 'Cunene Complex' domain (D3)?",
+   "method": "Point-in-polygon, 0.05° tolerance",
+   "result": "6 of 7 digitised Ni-Co-Cu-Cr symbol clusters inside D3 – supports G01 as a two-family coincidence (F-OCC on F-AIR)",
+   "status": "completed"
+  },
+  {
+   "check": "Occurrence support inside the 'Copper Belt' domain (D1)",
+   "method": "Count digitised slide-9 symbols inside D1",
+   "result": "8 symbol clusters, all within ~1.5° of the northern (Cazombo) edge or the Namibia border; none in the Kalahari-covered core – the core is interpretation only (G03 deferred)",
+   "status": "completed"
+  },
+  {
+   "check": "How much of D1 lies in the unfinished PLANAGEO Leste region",
+   "method": "Area intersection (Africa Albers)",
+   "result": "51% of Domain 1",
+   "status": "completed"
+  },
+  {
+   "check": "Spatial join of every candidate",
+   "method": "Point-in-polygon against Natural Earth provinces, digitised domains, PLANAGEO regions, airborne gap; straight-line distance (Africa Albers) to approximate rail polylines and ports; digitised slide-9 symbols within 25 km",
+   "result": "19 candidates joined; access distances are proxies, not route lengths",
+   "status": "completed"
+  },
+  {
+   "check": "Stated vs computed province for each candidate",
+   "method": "Compare authored province text with point-in-polygon result",
+   "result": "all consistent",
+   "status": "completed"
+  },
+  {
+   "check": "Do the digitised Ni+Co+Cu+Cr occurrences fall in the 'Cunene Complex' domain (D3)?",
+   "method": "Point-in-polygon, 0.05° tolerance",
+   "result": "6 of 7 digitised Ni-Co-Cu-Cr symbol clusters inside D3 – supports G01 as a two-family coincidence (F-OCC on F-AIR)",
+   "status": "completed"
+  },
+  {
+   "check": "Occurrence support inside the 'Copper Belt' domain (D1)",
+   "method": "Count digitised slide-9 symbols inside D1",
+   "result": "8 symbol clusters, all within ~1.5° of the northern (Cazombo) edge or the Namibia border; none in the Kalahari-covered core – the core is interpretation only (G03 deferred)",
+   "status": "completed"
+  },
+  {
+   "check": "How much of D1 lies in the unfinished PLANAGEO Leste region",
+   "method": "Area intersection (Africa Albers)",
+   "result": "51% of Domain 1",
+   "status": "completed"
+  }
+ ]
+}
